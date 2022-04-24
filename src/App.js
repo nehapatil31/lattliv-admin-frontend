@@ -1,27 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+
+import './App.scss';
+import {
+  BrowserRouter,
+  Switch,
+  Routes,
+  Link,
+  Route
+} from "react-router-dom";
+import Home from './pages/home/Home';
+import Login from './pages/login/Login';
+import Product from './pages/product/Product';
+import { productInputs, userInputs } from "./formSource";
+import New from "./pages/newProduct/New";
 
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
-    <div>
-      test react project
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path='/'>
+            <Route index element={<Home />}/>
+            <Route path="login" element={<Login />}/>
+            <Route path="products">
+              <Route index element={<Product/>}/>
+              <Route
+                path="new"
+                element={<New inputs={productInputs} title="Add New Product" />}
+              />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
+
   );
 }
 
