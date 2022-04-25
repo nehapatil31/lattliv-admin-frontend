@@ -15,8 +15,8 @@ export const userColumns = [
   },
   {
     field: "price",
-    headerName: "Price",
-    width: 230,
+    headerName: "Price (Rs)",
+    width: 100,
   },
   {
     field: "category",
