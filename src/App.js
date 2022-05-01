@@ -27,6 +27,7 @@ function App() {
                 path="new"
                 element={<New inputs={productInputs} title="Add New Product" />}
               />
+              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} />
             </Route>
           </Route>
         </Routes>

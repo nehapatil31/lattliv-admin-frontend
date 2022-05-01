@@ -1,7 +1,7 @@
 import "./new.scss";
 import URL from '../../config'
 import { nanoid,customAlphabet } from 'nanoid'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { Grid, Button } from "@mui/material";
@@ -20,53 +20,7 @@ const availabilityItems = [
     title: 'Out of stock'
   }
 ]
-const catergories = [
-  { id: '1', title: 'Development',
-  children:[
-    {
-      id:'1',
-      title: 'test1'
-    },
-    {
-      id:'2',
-      title: 'test2'
-    }
-  ]
- },
-    { id: '2', title: 'Marketing' ,
-    children:[
-      {
-        id:'2',
-        title: 'test21'
-      },
-      {
-        id:'2',
-        title: 'test22'
-      }
-    ]},
-    { id: '3', title: 'Accounting',
-    children:[
-      {
-        id:'3',
-        title: 'test31'
-      },
-      {
-        id:'2',
-        title: 'test32'
-      }
-    ] },
-    { id: '4', title: 'HR' ,
-    children:[
-      {
-        id:'4',
-        title: 'test41'
-      },
-      {
-        id:'2',
-        title: 'test42'
-      }
-    ]},
-]
+
 const initialFormValues = {
   availability: 'in_stock',
   sku: '',
@@ -84,11 +38,25 @@ const initialFormValues = {
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
-  const submitForm = function(){
+  const [catergories, setcatergories] = useState([]);
 
-const nanoid = customAlphabet('1234567890abcdef', 10)
-    let body = {...values,
+  useEffect(()=>{
+    const nanoid = customAlphabet('1234567890abcdef', 10)
+    setValues({
+      ...values,
       sku: nanoid(5),
+    })
+
+    //get categories data
+    fetch(`${URL.base_url}/categories`)
+    .then(results => results.json())
+    .then(data => {
+      setcatergories(data);
+    });
+  },[])
+
+  const submitForm = function(){
+    let body = {...values,
       state: 1,
       createdBy: 1
     }
@@ -134,7 +102,7 @@ const nanoid = customAlphabet('1234567890abcdef', 10)
             <Form>
               <Grid container>
                 <Grid item xs={6}>
-                  <h2 style={{marginLeft : '8px'}}>SKU : 123</h2>
+                  <h2 style={{marginLeft : '8px'}}>SKU : {values.sku}</h2>
                   <Controls.Input
                   name='name'
                   label="Name"

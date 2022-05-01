@@ -16,10 +16,8 @@ const ProductDatatable = () => {
     fetch(`${URL.base_url}/products`)
       .then(results => results.json())
       .then(data => {
-        // const {name} = data.results[0];
         setData(data);
         console.log(data)
-        // setLastName(name.last);
       });
   }, []);
 
@@ -29,9 +27,10 @@ const ProductDatatable = () => {
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
+        let url = `/products/${params.id}`
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link to={url} style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
             <div
