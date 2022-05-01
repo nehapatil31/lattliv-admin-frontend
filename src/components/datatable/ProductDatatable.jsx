@@ -1,4 +1,5 @@
 import "./datatable.scss";
+import URL from '../../config'
 import { useState,useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { userColumns, userRows } from "../../datatablesource";
@@ -12,7 +13,7 @@ const ProductDatatable = () => {
   };
 
   useEffect(() => {
-    fetch('http://65.2.126.231:1337/products')
+    fetch(`${URL.base_url}/products`)
       .then(results => results.json())
       .then(data => {
         // const {name} = data.results[0];

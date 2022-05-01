@@ -1,8 +1,10 @@
 import "./new.scss";
+import URL from '../../config'
+import { nanoid,customAlphabet } from 'nanoid'
 import { useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import { Grid } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 
 import { useForm, Form } from "../../components/form/useForm";
 import Controls from '../../components/form/Controls'
@@ -22,11 +24,11 @@ const catergories = [
   { id: '1', title: 'Development',
   children:[
     {
-      id:'1.1',
+      id:'1',
       title: 'test1'
     },
     {
-      id:'1.2',
+      id:'2',
       title: 'test2'
     }
   ]
@@ -34,39 +36,38 @@ const catergories = [
     { id: '2', title: 'Marketing' ,
     children:[
       {
-        id:'2.1',
+        id:'2',
         title: 'test21'
       },
       {
-        id:'2.2',
+        id:'2',
         title: 'test22'
       }
     ]},
     { id: '3', title: 'Accounting',
     children:[
       {
-        id:'3.1',
+        id:'3',
         title: 'test31'
       },
       {
-        id:'3.2',
+        id:'2',
         title: 'test32'
       }
     ] },
     { id: '4', title: 'HR' ,
     children:[
       {
-        id:'4.1',
+        id:'4',
         title: 'test41'
       },
       {
-        id:'4.2',
+        id:'2',
         title: 'test42'
       }
     ]},
 ]
 const initialFormValues = {
-  id: 0,
   availability: 'in_stock',
   sku: '',
   name: '',
@@ -83,7 +84,23 @@ const initialFormValues = {
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
+  const submitForm = function(){
 
+const nanoid = customAlphabet('1234567890abcdef', 10)
+    let body = {...values,
+      sku: nanoid(5),
+      state: 1,
+      createdBy: 1
+    }
+    
+    fetch(`${URL.base_url}/products/create`, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    }).then(()=>{
+      console.log('done')
+    })
+  }
 
   const {
     values,
@@ -184,6 +201,10 @@ const New = ({ inputs, title }) => {
                   onChange={handleInputChange}
                   />
               </Grid>
+              <Button 
+              variant="contained"
+              onClick={submitForm}
+              >Submit</Button>
             </Form>
               
           </div>
