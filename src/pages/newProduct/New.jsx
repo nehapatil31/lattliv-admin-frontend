@@ -1,15 +1,23 @@
 import "./new.scss";
 import URL from '../../config'
+import { useParams } from "react-router-dom";
 import { nanoid,customAlphabet } from 'nanoid'
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Stack } from "@mui/material";
 
 import { useForm, Form } from "../../components/form/useForm";
 import Controls from '../../components/form/Controls'
 
-
+const state_enum = {
+  saved: 1,
+  published: 2,
+  trashed: 3,
+  hidden: 4,
+  deleted: 5,
+  review: 6
+}
 const availabilityItems = [
   {
     id:'in_stock',
@@ -39,13 +47,31 @@ const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
   const [catergories, setcatergories] = useState([]);
+  const {productId} = useParams();
+  const {
+    values,
+    setValues,
+    errors,
+    setErrors,
+    handleInputChange,
+    resetForm
+} = useForm(initialFormValues);
 
   useEffect(()=>{
-    const nanoid = customAlphabet('1234567890abcdef', 10)
-    setValues({
-      ...values,
-      sku: nanoid(5),
-    })
+    if(productId){
+      //get product data
+      fetch(`${URL.base_url}/product/${productId}`)
+      .then(results => results.json())
+      .then(data => {
+        setValues(data);
+      });
+    }else {
+      const nanoid = customAlphabet('1234567890abcdef', 10)
+      setValues({
+        ...values,
+        sku: nanoid(5),
+      })
+    }
 
     //get categories data
     fetch(`${URL.base_url}/categories`)
@@ -55,13 +81,13 @@ const New = ({ inputs, title }) => {
     });
   },[])
 
-  const submitForm = function(){
+  const submitForm = function(state){
     let body = {...values,
-      state: 1,
+      state: state,
       createdBy: 1
     }
-    
-    fetch(`${URL.base_url}/products/create`, {
+    let url = productId ? `${URL.base_url}/products/update/${productId}` :`${URL.base_url}/products/create`
+    fetch(url, {
       method: 'POST',
       headers: { "Content-Type": "application/json"},
       body: JSON.stringify(body)
@@ -70,14 +96,7 @@ const New = ({ inputs, title }) => {
     })
   }
 
-  const {
-    values,
-    setValues,
-    errors,
-    setErrors,
-    handleInputChange,
-    resetForm
-} = useForm(initialFormValues);
+
   
   return (
     <div className="new">
@@ -114,7 +133,6 @@ const New = ({ inputs, title }) => {
                   label="Category"
                   value={values.category}
                   onChange={(e)=>{
-                    console.log(e.target.value)
                     let category = catergories.find(i=>i.id===e.target.value)
 
                     // reset subcategory value
@@ -169,10 +187,37 @@ const New = ({ inputs, title }) => {
                   onChange={handleInputChange}
                   />
               </Grid>
-              <Button 
-              variant="contained"
-              onClick={submitForm}
-              >Submit</Button>
+              <Stack direction="row" spacing={2} style={{marginLeft : '8px', marginTop: '21px'}}>
+                <Button 
+                 onClick={()=>{
+                  submitForm(state_enum.saved)
+                 }}
+                variant="contained" color="warning">
+                  Save
+                </Button>
+                <Button 
+                 onClick={()=>{
+                  submitForm(state_enum.review)
+                 }}
+                variant="contained" color="info">
+                  Ready for review
+                </Button>
+                <Button
+                 onClick={()=>{
+                  submitForm(state_enum.published)
+                 }}
+                 variant="contained" color="success">
+                  Publish
+                </Button>
+                <Button
+                 onClick={()=>{
+                  submitForm(state_enum.hidden)
+                 }}
+                 variant="contained" color="error">
+                  Hide
+                </Button>
+              </Stack>
+              
             </Form>
               
           </div>
