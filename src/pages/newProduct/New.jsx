@@ -1,15 +1,99 @@
 import "./new.scss";
+import { useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState } from "react";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { Grid } from "@mui/material";
 
+import { useForm, Form } from "../../components/form/useForm";
+import Controls from '../../components/form/Controls'
+
+
+const availabilityItems = [
+  {
+    id:'in_stock',
+    title: 'In stock'
+  },
+  {
+    id:'out_of_stock',
+    title: 'Out of stock'
+  }
+]
+const catergories = [
+  { id: '1', title: 'Development',
+  children:[
+    {
+      id:'1.1',
+      title: 'test1'
+    },
+    {
+      id:'1.2',
+      title: 'test2'
+    }
+  ]
+ },
+    { id: '2', title: 'Marketing' ,
+    children:[
+      {
+        id:'2.1',
+        title: 'test21'
+      },
+      {
+        id:'2.2',
+        title: 'test22'
+      }
+    ]},
+    { id: '3', title: 'Accounting',
+    children:[
+      {
+        id:'3.1',
+        title: 'test31'
+      },
+      {
+        id:'3.2',
+        title: 'test32'
+      }
+    ] },
+    { id: '4', title: 'HR' ,
+    children:[
+      {
+        id:'4.1',
+        title: 'test41'
+      },
+      {
+        id:'4.2',
+        title: 'test42'
+      }
+    ]},
+]
+const initialFormValues = {
+  id: 0,
+  availability: 'in_stock',
+  sku: '',
+  name: '',
+  shortDesc: '',
+  longDesc: '',
+  price: '',
+  specification: {},
+  category: '',
+  subcategory: '',
+  state: '',
+  slug:'',
+  createdBy: ''
+}
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
+  const [subcatergories, setSubcatergories] = useState([]);
 
+
+  const {
+    values,
+    setValues,
+    errors,
+    setErrors,
+    handleInputChange,
+    resetForm
+} = useForm(initialFormValues);
+  
   return (
     <div className="new">
       <Sidebar />
@@ -30,51 +114,78 @@ const New = ({ inputs, title }) => {
             />
           </div>
           <div className="right">
-            <form>
-              {/* <div className="formInput">
-                <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-              </div> */}
+            <Form>
+              <Grid container>
+                <Grid item xs={6}>
+                  <h2 style={{marginLeft : '8px'}}>SKU : 123</h2>
+                  <Controls.Input
+                  name='name'
+                  label="Name"
+                  value={values.name}
+                  onChange={handleInputChange}
+                  />
+                  <Controls.Select
+                  name='category'
+                  label="Category"
+                  value={values.category}
+                  onChange={(e)=>{
+                    console.log(e.target.value)
+                    let category = catergories.find(i=>i.id===e.target.value)
 
-              {/* {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
-                  <label>{input.label}</label>
-                  <input type={input.type} placeholder={input.placeholder} />
-                </div>
-              ))} */}
-              <TextField
-                // onChange={onTextChange}
-                // value={textValue}
-                label={"SKU"} //optional
-              />
-              <TextField
-                // onChange={onTextChange}
-                // value={textValue}
-                label={"URL"} //optional
-              />
-              <br />
-              <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="warning">
-                  Save
-                </Button>
-                <Button variant="contained" color="info">
-                  Ready for review
-                  </Button>
-                <Button variant="contained" color="success">
-                  Publish
-                  </Button>
-                <Button variant="contained" color="error">
-                  Hide
-                  </Button>
-              </Stack>
-            </form>
+                    // reset subcategory value
+                    setValues({
+                      ...values,
+                      subcategory: ''
+                    })
+                    
+                    setSubcatergories(category.children)
+                    handleInputChange(e)
+                  }}
+                  options={catergories}
+                  />
+                  <Controls.Input
+                  name='slug'
+                  label="URL"
+                  value={values.slug}
+                  onChange={handleInputChange}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Controls.RadioGroup
+                    name="availability"
+                    value={values.availability}
+                    onChange = {handleInputChange}       
+                    items = {availabilityItems}
+                  />
+                  <Controls.Input
+                  name='price'
+                  label="Price"
+                  value={values.price}
+                  onChange={handleInputChange}
+                  />
+                  <Controls.Select
+                  name='subcategory'
+                  label="Sub-Category"
+                  value={values.subcategory}
+                  onChange={handleInputChange}
+                  options={subcatergories}
+                  />
+                </Grid>
+                <Controls.Input
+                  name='shortDesc'
+                  label="Primary Content"
+                  value={values.shortDesc}
+                  onChange={handleInputChange}
+                  />
+                <Controls.Input
+                  name='longDesc'
+                  label="Secondary Content"
+                  value={values.longDesc}
+                  onChange={handleInputChange}
+                  />
+              </Grid>
+            </Form>
+              
           </div>
         </div>
       </div>

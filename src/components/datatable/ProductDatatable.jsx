@@ -1,15 +1,26 @@
 import "./datatable.scss";
+import { useState,useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { userColumns, userRows } from "../../datatablesource";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
-const Datatable = () => {
-  const [data, setData] = useState(userRows);
+const ProductDatatable = () => {
+  const [data, setData] = useState();
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
+
+  useEffect(() => {
+    fetch('http://65.2.126.231:1337/products')
+      .then(results => results.json())
+      .then(data => {
+        // const {name} = data.results[0];
+        setData(data);
+        console.log(data)
+        // setLastName(name.last);
+      });
+  }, []);
 
   const actionColumn = [
     {
@@ -36,16 +47,16 @@ const Datatable = () => {
   return (
     <div className="datatable">
       
-      <DataGrid
+      {data && <DataGrid
         className="datagrid"
         rows={data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
-      />
+      />}
     </div>
   );
 };
 
-export default Datatable;
+export default ProductDatatable;

@@ -1,10 +1,11 @@
 import './product.scss'
 import { Link } from "react-router-dom";
-import Datatable from '../../components/datatable/Datatable';
+import ProductDatatable from '../../components/datatable/ProductDatatable';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 
 function Product() {
+   
     return (<div className='home'>
         <Sidebar />
         <div className="homeContainer">
@@ -15,7 +16,7 @@ function Product() {
                     Add New Product
                 </Link>
             </div>
-            <Datatable />
+            <ProductDatatable/>
         </div>
     </div>);
 }

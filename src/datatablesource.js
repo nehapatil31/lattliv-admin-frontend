@@ -1,7 +1,7 @@
 export const userColumns = [
-  { field: "id", headerName: "SKU", width: 70 },
+  { field: "sku", headerName: "SKU", width: 100 },
   {
-    field: "productName",
+    field: "name",
     headerName: "Product Name",
     width: 230,
     // renderCell: (params) => {
@@ -18,17 +18,19 @@ export const userColumns = [
     headerName: "Price (Rs)",
     width: 100,
   },
+  // {
+  //   field: "category[name]",
+  //   headerName: "Category",
+  //   width: 230,
+  // },
   {
     field: "category",
     headerName: "Category",
     width: 230,
-  },
-
-  // {
-  //   field: "age",
-  //   headerName: "Age",
-  //   width: 100,
-  // },
+    renderCell: (params) => {
+      return <div className="rowitem">{params.row.category.name}</div>;
+    },
+},
   {
     field: "status",
     headerName: "Status",
