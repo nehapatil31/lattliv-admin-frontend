@@ -29,6 +29,14 @@ function App() {
               />
               <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} />
             </Route>
+            <Route path="users">
+              <Route index element={<Product/>}/>
+              <Route
+                path="new"
+                element={<New inputs={productInputs} title="Add New Product" />}
+              />
+              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

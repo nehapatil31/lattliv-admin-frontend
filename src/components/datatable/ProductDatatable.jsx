@@ -17,7 +17,6 @@ const ProductDatatable = () => {
       .then(results => results.json())
       .then(data => {
         setData(data);
-        console.log(data)
       });
   }, []);
 
@@ -31,7 +30,7 @@ const ProductDatatable = () => {
         return (
           <div className="cellAction">
             <Link to={url} style={{ textDecoration: "none" }}>
-              <div className="viewButton">View</div>
+              <div className="viewButton">Edit</div>
             </Link>
             <div
               className="deleteButton"

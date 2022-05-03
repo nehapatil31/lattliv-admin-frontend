@@ -1,5 +1,7 @@
 import "./new.scss";
 import URL from '../../config'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
 import { nanoid,customAlphabet } from 'nanoid'
 import { useEffect, useState } from "react";
@@ -43,11 +45,12 @@ const initialFormValues = {
   slug:'',
   createdBy: ''
 }
-const New = ({ inputs, title }) => {
+const New = (props) => {
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
   const [catergories, setcatergories] = useState([]);
   const {productId} = useParams();
+
   const {
     values,
     setValues,
@@ -57,13 +60,29 @@ const New = ({ inputs, title }) => {
     resetForm
 } = useForm(initialFormValues);
 
+
   useEffect(()=>{
-    if(productId){
+   //get categories data
+   fetch(`${URL.base_url}/categories/parents`)
+   .then(results => results.json())
+   .then(categoryData=> {
+     setcatergories(categoryData);
+
+     if(productId){
       //get product data
-      fetch(`${URL.base_url}/product/${productId}`)
+      fetch(`${URL.base_url}/products/${productId}`)
       .then(results => results.json())
       .then(data => {
-        setValues(data);
+        let dataObj = {...data}
+        dataObj.category = data.category.parent.id
+        dataObj.subcategory = data.category.id
+        dataObj.availability = data.inStock ? 'in_stock': 'out_of_stock'
+
+        let category = categoryData.find(i=>i.id===dataObj.category)
+        category.children && setSubcatergories(category.children)
+
+
+        setValues(dataObj);
       });
     }else {
       const nanoid = customAlphabet('1234567890abcdef', 10)
@@ -72,13 +91,11 @@ const New = ({ inputs, title }) => {
         sku: nanoid(5),
       })
     }
+   });
 
-    //get categories data
-    fetch(`${URL.base_url}/categories`)
-    .then(results => results.json())
-    .then(data => {
-      setcatergories(data);
-    });
+   
+
+   
   },[])
 
   const submitForm = function(state){
@@ -87,12 +104,22 @@ const New = ({ inputs, title }) => {
       createdBy: 1
     }
     let url = productId ? `${URL.base_url}/products/update/${productId}` :`${URL.base_url}/products/create`
+    body.inStock = body.availability === "in_stock"
+    body.category = body.subcategory
+    
     fetch(url, {
       method: 'POST',
       headers: { "Content-Type": "application/json"},
       body: JSON.stringify(body)
-    }).then(()=>{
-      console.log('done')
+    }).then((res)=>{
+      if(res.status===200){
+        let msg = productId ? "Product is updated !" :"Product is created !"
+        
+        window.location.href = '/products?msg='+ msg;
+      }else {
+        toast.error("Some error occurred")
+      }
+      
     })
   }
 
@@ -104,8 +131,9 @@ const New = ({ inputs, title }) => {
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>{title}</h1>
+          <h1>{props.title}</h1>
         </div>
+        <ToastContainer icon={false} autoClose={3000}/>
         <div className="bottom">
           <div className="img-container">
             <img
@@ -136,12 +164,12 @@ const New = ({ inputs, title }) => {
                     let category = catergories.find(i=>i.id===e.target.value)
 
                     // reset subcategory value
-                    setValues({
-                      ...values,
-                      subcategory: ''
-                    })
+                    // setValues({
+                    //   ...values,
+                    //   subcategory: ''
+                    // })
                     
-                    setSubcatergories(category.children)
+                    category.children && setSubcatergories(category.children)
                     handleInputChange(e)
                   }}
                   options={catergories}
@@ -157,7 +185,7 @@ const New = ({ inputs, title }) => {
                   <Controls.RadioGroup
                     name="availability"
                     value={values.availability}
-                    onChange = {handleInputChange}       
+                    onChange={handleInputChange}
                     items = {availabilityItems}
                   />
                   <Controls.Input
