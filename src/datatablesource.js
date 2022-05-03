@@ -1,11 +1,17 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 export const userColumns = [
   { field: "sku", headerName: "SKU", width: 100 },
   {
     field: "name",
     headerName: "Product Name",
     width: 230,
+    renderCell: (params) =>  (
+      <Tooltip title={params.row.name} >
+       <span className="table-cell-trucate">{params.row.name}</span>
+       </Tooltip>
+     ),
   },
   {
     field: "price",
@@ -17,7 +23,12 @@ export const userColumns = [
     headerName: "Category",
     width: 160,
     renderCell: (params) => {
-      return <div className="rowitem">{params.row.category.parent?.name}</div>;
+      return (
+        <Tooltip title={params.row.category.parent?.name} >
+       <span className="table-cell-trucate">{params.row.category.parent?.name}</span>
+       </Tooltip>
+      )
+      //return <div className="rowitem">{params.row.category.parent?.name}</div>;
     },
   },
   {
@@ -25,7 +36,11 @@ export const userColumns = [
     headerName: "SubCategory",
     width: 160,
     renderCell: (params) => {
-      return <div className="rowitem">{params.row.category.name}</div>;
+      return (
+        <Tooltip title={params.row.category.name} >
+       <span className="table-cell-trucate">{params.row.category.name}</span>
+       </Tooltip>
+      )//<div className="rowitem">{params.row.category.name}</div>;
     },
   },
   {
