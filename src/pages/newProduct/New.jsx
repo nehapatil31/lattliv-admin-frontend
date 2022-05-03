@@ -1,5 +1,5 @@
 import "./new.scss";
-import URL from '../../config'
+import {url, state_enum} from '../../config'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
@@ -12,14 +12,7 @@ import { Grid, Button, Stack } from "@mui/material";
 import { useForm, Form } from "../../components/form/useForm";
 import Controls from '../../components/form/Controls'
 
-const state_enum = {
-  saved: 1,
-  published: 2,
-  trashed: 3,
-  hidden: 4,
-  deleted: 5,
-  review: 6
-}
+
 const availabilityItems = [
   {
     id:'in_stock',
@@ -45,6 +38,7 @@ const initialFormValues = {
   slug:'',
   createdBy: ''
 }
+
 const New = (props) => {
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
@@ -63,14 +57,14 @@ const New = (props) => {
 
   useEffect(()=>{
    //get categories data
-   fetch(`${URL.base_url}/categories/parents`)
+   fetch(`${url.base_url}/categories/parents`)
    .then(results => results.json())
    .then(categoryData=> {
      setcatergories(categoryData);
 
      if(productId){
       //get product data
-      fetch(`${URL.base_url}/products/${productId}`)
+      fetch(`${url.base_url}/products/${productId}`)
       .then(results => results.json())
       .then(data => {
         let dataObj = {...data}
@@ -103,11 +97,11 @@ const New = (props) => {
       state: state,
       createdBy: 1
     }
-    let url = productId ? `${URL.base_url}/products/update/${productId}` :`${URL.base_url}/products/create`
+    let apiUrl = productId ? `${url.base_url}/products/update/${productId}` :`${url.base_url}/products/create`
     body.inStock = body.availability === "in_stock"
     body.category = body.subcategory
     
-    fetch(url, {
+    fetch(apiUrl, {
       method: 'POST',
       headers: { "Content-Type": "application/json"},
       body: JSON.stringify(body)
