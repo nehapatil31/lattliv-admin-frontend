@@ -25,12 +25,20 @@ export const userColumns = [
   // },
   {
     field: "category",
-    headerName: "Category",
-    width: 230,
+    headerName: "SubCategory",
+    width: 200,
     renderCell: (params) => {
       return <div className="rowitem">{params.row.category.name}</div>;
     },
-},
+  },
+  {
+    field: "category",
+    headerName: "Category",
+    width: 200,
+    renderCell: (params) => {
+      return <div className="rowitem">{params.row.category.parent?.name}</div>;
+    },
+  },
   {
     field: "status",
     headerName: "Status",
