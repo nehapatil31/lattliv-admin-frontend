@@ -7,7 +7,7 @@ import { nanoid, customAlphabet } from 'nanoid'
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import { Grid, Button, Stack, TextField, IconButton } from "@mui/material";
+import { Grid, Button, Stack, TextField, IconButton, Typography } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { useForm, Form } from "../../components/form/useForm";
@@ -57,75 +57,75 @@ const New = (props) => {
   } = useForm(initialFormValues);
 
   const [images, setImages] = useState([
-    { id: uuidv4(), imgName: '', alttag: '', url:'' },
+    { id: uuidv4(), imgName: '', alttag: '', url: '' },
   ]);
   const handleImageData = (id, event) => {
     const newInputFields = images.map(i => {
-      if(id === i.id) {
+      if (id === i.id) {
         i[event.target.name] = event.target.value
       }
       return i;
     })
-    
+
     setImages(newInputFields);
   }
   const handleAddImages = () => {
-    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur:'' }])
+    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur: '' }])
   }
 
   const handleRemoveImages = id => {
-    const values  = [...images];
+    const values = [...images];
     values.splice(values.findIndex(value => value.id === id), 1);
     setImages(values);
   }
-  const handleImageAdd = (id,event)=>{
+  const handleImageAdd = (id, event) => {
     event.preventDefault();
     const data = new FormData();
-    data.append('myFile',event.target.files[0] );
+    data.append('myFile', event.target.files[0]);
     console.log(data)
     fetch("http://localhost:1337/upload", {
-         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-        },
-         body: data
-    }) .then(res => res.json())
-    .then(
-      (result) => {
-        console.log(result)
-        const values  = [...images];
-        let img = values.find(value => value.id === id)
-        img.url = result.url
-        img.imgName = event.target.files[0].name
-        setImages(values);
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
       },
-      (error) => {
-        console.log(error)
-      }
-    )
+      body: data
+    }).then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result)
+          const values = [...images];
+          let img = values.find(value => value.id === id)
+          img.url = result.url
+          img.imgName = event.target.files[0].name
+          setImages(values);
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
   }
 
   const [specFields, setSpecFields] = useState([
     { id: uuidv4(), specName: '', specValue: '' },
   ]);
-  
+
   const handleChangeInput = (id, event) => {
     const newInputFields = specFields.map(i => {
-      if(id === i.id) {
+      if (id === i.id) {
         i[event.target.name] = event.target.value
       }
       return i;
     })
-    
+
     setSpecFields(newInputFields);
   }
 
   const handleAddFields = () => {
-    setSpecFields([...specFields, { id: uuidv4(),  specName: '', specValue: '' }])
+    setSpecFields([...specFields, { id: uuidv4(), specName: '', specValue: '' }])
   }
 
   const handleRemoveFields = id => {
-    const values  = [...specFields];
+    const values = [...specFields];
     values.splice(values.findIndex(value => value.id === id), 1);
     setSpecFields(values);
   }
@@ -150,10 +150,10 @@ const New = (props) => {
               let category = categoryData.find(i => i.id === dataObj.category)
               category.children && setSubcatergories(category.children)
 
-              if(data.specification?.specFields){
+              if (data.specification?.specFields) {
                 setSpecFields(data.specification?.specFields)
               }
-              if(data.images?.images){
+              if (data.images?.images) {
                 setImages(data.images?.images)
               }
 
@@ -178,7 +178,7 @@ const New = (props) => {
       ...values,
       state: state,
       createdBy: 1,
-      specification:{
+      specification: {
         specFields: specFields
       },
       images: {
@@ -217,65 +217,61 @@ const New = (props) => {
         </div>
         <ToastContainer icon={false} autoClose={3000} />
         <div className="bottom">
-          {/* <div className="img-container">
-            <img
-              src={
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-          </div> */}
           <div className="right">
-            {/* <form action="http://localhost:1337/upload" enctype="multipart/form-data" method="post"> */}
-              {/* <input type="text" name="title" /><br /> */}
-              
-              {/* <Button
-                  onClick={handleImageAdd}
-                  variant="contained">
-                  Add
-                </Button> */}
-              {/* <input type="submit" value="Upload" /> */}
-            {/* </form> */}
+            <h3>Images</h3>
             {images.map(inputField => (
-                <div key={inputField.id}>
-                  {
-                    inputField.imgName && inputField.imgName
-                  }
-                  {
-                    !inputField.imgName && (
-                      <>
+              <div key={inputField.id}>
+                {
+                  inputField.imgName && (
+                    <div>Image name: {inputField.imgName}</div>
+                      
+                  )
+                }
+                {
+                  !inputField.imgName && (
+                    <>
+                      <input type="file" id="myFile" onChange={event => handleImageAdd(inputField.id, event)} style={{ display: 'none' }} />
+                      <label for="myFile" style={{
+                        cursor: 'pointer',
+                        color: '#0288d1',
+                        marginRight: '12px'
+                      }}>Select File</label>
+                      <br />
+                      <br />
+                    </>
+                  )
+                }
 
-<input type="file" id="myFile" onChange={event=>handleImageAdd(inputField.id, event)} style={{display:'none'}}/>
-<label for="myFile">Select File</label>
-                      </>
-                    )
-                  }
-                  
-                  {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
-                  <TextField
-                    name="alttag"
-                    label="Alt Tag"
-                    variant="outlined"
-                    value={inputField.alttag}
-                    onChange={event => handleImageData(inputField.id, event)}
-                  />
-                  
-                  <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
-                    <RemoveIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleAddImages}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  {inputField.url && <a href={inputField.url} target="_blank">Check image</a>}
-                  <br />
-                  <br />
-                  <br />
-                </div>
-              ))}
+                {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
+                <TextField
+                  name="alttag"
+                  label="Alt Tag"
+                  variant="standard"
+                  value={inputField.alttag}
+                  style={{marginRight:"12px"}}
+                  onChange={event => handleImageData(inputField.id, event)}
+                />
+
+                {inputField.url && (
+                  <>
+                  <img src={inputField.url} style={{ height: '100px', width: '100px' }}/>
+                  {/* <a href={inputField.url} target="_blank">Check image</a> */}
+                  </>
+                ) }
+                <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
+                  <RemoveIcon />
+                </IconButton>
+                <IconButton
+                  onClick={handleAddImages}
+                >
+                  <AddIcon />
+                </IconButton>
+                {/* {inputField.url && <a href={inputField.url} target="_blank">Check image</a>} */}
+                <br />
+                <br />
+                <br />
+              </div>
+            ))}
             <Form>
               <Grid container>
                 <Grid item xs={6}>
