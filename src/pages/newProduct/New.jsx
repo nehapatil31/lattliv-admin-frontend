@@ -275,6 +275,9 @@ const New = (props) => {
                   >
                     <AddIcon />
                   </IconButton>
+                  <br />
+                  <br />
+                  <br />
                 </div>
               ))}
               <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
