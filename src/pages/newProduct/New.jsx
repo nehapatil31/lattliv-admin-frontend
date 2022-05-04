@@ -56,9 +56,59 @@ const New = (props) => {
     resetForm
   } = useForm(initialFormValues);
 
+  const [images, setImages] = useState([
+    { id: uuidv4(), imgName: '', alttag: '', url:'' },
+  ]);
+  const handleImageData = (id, event) => {
+    const newInputFields = images.map(i => {
+      if(id === i.id) {
+        i[event.target.name] = event.target.value
+      }
+      return i;
+    })
+    
+    setImages(newInputFields);
+  }
+  const handleAddImages = () => {
+    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur:'' }])
+  }
+
+  const handleRemoveImages = id => {
+    const values  = [...images];
+    values.splice(values.findIndex(value => value.id === id), 1);
+    setImages(values);
+  }
+  const handleImageAdd = (id,event)=>{
+    event.preventDefault();
+    const data = new FormData();
+    data.append('myFile',event.target.files[0] );
+    console.log(data)
+    fetch("http://localhost:1337/upload", {
+         method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+         body: data
+    }) .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result)
+        const values  = [...images];
+        let img = values.find(value => value.id === id)
+        img.url = result.url
+        img.imgName = event.target.files[0].name
+        setImages(values);
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
   const [specFields, setSpecFields] = useState([
     { id: uuidv4(), specName: '', specValue: '' },
   ]);
+  
   const handleChangeInput = (id, event) => {
     const newInputFields = specFields.map(i => {
       if(id === i.id) {
@@ -103,6 +153,9 @@ const New = (props) => {
               if(data.specification?.specFields){
                 setSpecFields(data.specification?.specFields)
               }
+              if(data.images?.images){
+                setImages(data.images?.images)
+              }
 
               setValues(dataObj);
             });
@@ -127,6 +180,9 @@ const New = (props) => {
       createdBy: 1,
       specification:{
         specFields: specFields
+      },
+      images: {
+        images: images
       }
     }
     let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
@@ -161,7 +217,7 @@ const New = (props) => {
         </div>
         <ToastContainer icon={false} autoClose={3000} />
         <div className="bottom">
-          <div className="img-container">
+          {/* <div className="img-container">
             <img
               src={
                 file
@@ -170,17 +226,56 @@ const New = (props) => {
               }
               alt=""
             />
-          </div>
+          </div> */}
           <div className="right">
-            <form action="http://localhost:1337/upload" enctype="multipart/form-data" method="post">
-              <input type="text" name="title" /><br />
-              <input type="file" name="myFile" /><br />
-              <input type="file" name="myFile2" /><br />
-              <input type="file" name="myFile3" /><br />
-              <input type="file" name="myFile4" /><br />
-              <input type="file" name="myFile5" /><br />
-              <input type="submit" value="Upload" />
-            </form>
+            {/* <form action="http://localhost:1337/upload" enctype="multipart/form-data" method="post"> */}
+              {/* <input type="text" name="title" /><br /> */}
+              
+              {/* <Button
+                  onClick={handleImageAdd}
+                  variant="contained">
+                  Add
+                </Button> */}
+              {/* <input type="submit" value="Upload" /> */}
+            {/* </form> */}
+            {images.map(inputField => (
+                <div key={inputField.id}>
+                  {
+                    inputField.imgName && inputField.imgName
+                  }
+                  {
+                    !inputField.imgName && (
+                      <>
+
+<input type="file" id="myFile" onChange={event=>handleImageAdd(inputField.id, event)} style={{display:'none'}}/>
+<label for="myFile">Select File</label>
+                      </>
+                    )
+                  }
+                  
+                  {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
+                  <TextField
+                    name="alttag"
+                    label="Alt Tag"
+                    variant="outlined"
+                    value={inputField.alttag}
+                    onChange={event => handleImageData(inputField.id, event)}
+                  />
+                  
+                  <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
+                    <RemoveIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleAddImages}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  {inputField.url && <a href={inputField.url} target="_blank">Check image</a>}
+                  <br />
+                  <br />
+                  <br />
+                </div>
+              ))}
             <Form>
               <Grid container>
                 <Grid item xs={6}>
@@ -280,6 +375,7 @@ const New = (props) => {
                   <br />
                 </div>
               ))}
+
               <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
                   onClick={() => {
