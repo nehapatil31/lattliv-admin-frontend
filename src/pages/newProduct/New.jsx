@@ -250,19 +250,20 @@ const New = (props) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+              <h3>Specifications</h3>
               {specFields.map(inputField => (
                 <div key={inputField.id}>
                   <TextField
                     name="specName"
                     label="Specification Name"
-                    variant="filled"
+                    variant="outlined"
                     value={inputField.specName}
                     onChange={event => handleChangeInput(inputField.id, event)}
                   />
                   <TextField
                     name="specValue"
                     label="Value"
-                    variant="filled"
+                    variant="outlined"
                     value={inputField.specValue}
                     onChange={event => handleChangeInput(inputField.id, event)}
                   />
