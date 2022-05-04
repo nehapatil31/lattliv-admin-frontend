@@ -25,7 +25,7 @@ export const userColumns = [
     renderCell: (params) => {
       return (
         <Tooltip title={params.row.category.parent?.name} >
-       <span className="table-cell-trucate">{params.row.category.parent?.name}</span>
+       <div className="rowitem">{params.row.category.parent?.name}</div>
        </Tooltip>
       )
       //return <div className="rowitem">{params.row.category.parent?.name}</div>;
@@ -38,7 +38,7 @@ export const userColumns = [
     renderCell: (params) => {
       return (
         <Tooltip title={params.row.category.name} >
-       <span className="table-cell-trucate">{params.row.category.name}</span>
+       <div className="rowitem">{params.row.category.name}</div>
        </Tooltip>
       )//<div className="rowitem">{params.row.category.name}</div>;
     },

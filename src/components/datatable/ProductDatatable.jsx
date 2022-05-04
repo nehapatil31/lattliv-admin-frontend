@@ -42,6 +42,27 @@ const ProductDatatable = () => {
     // setData(data.filter((item) => item.id !== id));
   };
 
+  const updateState = (state)=>{
+    let body = {
+      ids: selectionModel,
+      state: state,
+      type: "product"
+    }
+    fetch(`${url.base_url}/states/update/bulk`, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    }).then((res)=>{
+      if(res.status===200){
+        let msg = "Products are updated."
+        
+        window.location.href = '/products?msg='+ msg;
+      }else {
+        toast.error("Some error occurred")
+      }
+      
+    })
+  }
   useEffect(() => {
     fetch(`${url.base_url}/products`)
       .then(results => results.json())
@@ -92,19 +113,35 @@ const ProductDatatable = () => {
       >
         Are you sure you want to delete this post?
       </ConfirmDialog>
-      <ToastContainer icon={false} autoClose={3000}/>
+      <ToastContainer icon={false} limit={1} autoClose={2000}/>
       <div >
         <Stack direction="row" spacing={2} style={{ display: multiActionVisibility ? 'block' : 'none' }}>
-          <Button variant="outlined" color="error" startIcon={<DeleteIcon />}>
+          <Button 
+          onClick={()=>{
+            updateState(state_enum.trashed)
+           }}
+          variant="outlined" color="error" startIcon={<DeleteIcon />}>
             Delete
           </Button>
-          <Button variant="outlined" color="info" startIcon={<GradingIcon />}>
+          <Button 
+          onClick={()=>{
+            updateState(state_enum.review)
+           }}
+          variant="outlined" color="info" startIcon={<GradingIcon />}>
             Ready for review
           </Button>
-          <Button variant="outlined" color="warning" startIcon={<VisibilityOffIcon />}>
+          <Button
+          onClick={()=>{
+            updateState(state_enum.hidden)
+           }}
+           variant="outlined" color="warning" startIcon={<VisibilityOffIcon />}>
             Hide
           </Button>
-          <Button variant="outlined" color="success" startIcon={<CheckIcon />}>
+          <Button 
+          onClick={()=>{
+            updateState(state_enum.published)
+           }}
+          variant="outlined" color="success" startIcon={<CheckIcon />}>
             Publish
           </Button>
         </Stack>
@@ -127,6 +164,13 @@ const ProductDatatable = () => {
           setSelectionModel(newSelectionModel);
         }}
         selectionModel={selectionModel}
+        filterModel={{
+          items: [
+            { columnField: 'status',
+              operatorValue: 'contains', 
+              value: '' },
+          ],
+        }}
       />}
     </div>
   );
