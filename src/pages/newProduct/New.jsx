@@ -13,7 +13,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { useForm, Form } from "../../components/form/useForm";
 import Controls from '../../components/form/Controls'
 import { v4 as uuidv4 } from 'uuid';
-
+import { Editor } from "react-draft-wysiwyg";
+import {stateToHTML} from 'draft-js-export-html';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromHTML
+} from "draft-js"
 
 const availabilityItems = [
   {
@@ -42,6 +50,33 @@ const initialFormValues = {
 }
 
 const New = (props) => {
+  const setEditorValues = function(dataObj){
+    let content1 = dataObj?.shortDesc ? dataObj?.shortDesc : ''
+    let content2 = dataObj?.longDesc ? dataObj?.longDesc : ''
+    setEditorState(
+      () => {
+        const blocksFromHTML = convertFromHTML(content1)
+        const contentState = ContentState.createFromBlockArray(
+          blocksFromHTML.contentBlocks,
+          blocksFromHTML.entityMap
+        )
+    
+        return EditorState.createWithContent(contentState)
+      }
+    )
+    setEditorStateLong(() => {
+      const blocksFromHTML = convertFromHTML(content2)
+      const contentState = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap
+      )
+  
+      return EditorState.createWithContent(contentState)
+    })
+  }
+  const [editorState, setEditorState] = useState()
+  const [editorStateLong, setEditorStateLong] = useState()
+
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
   const [catergories, setcatergories] = useState([]);
@@ -158,6 +193,7 @@ const New = (props) => {
               }
 
               setValues(dataObj);
+              setEditorValues(dataObj);
             });
         } else {
           const nanoid = customAlphabet('1234567890abcdef', 10)
@@ -183,7 +219,9 @@ const New = (props) => {
       },
       images: {
         images: images
-      }
+      },
+      shortDesc: stateToHTML(editorState.getCurrentContent()),
+      longDesc: stateToHTML(editorStateLong.getCurrentContent())
     }
     let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
     body.inStock = body.availability === "in_stock"
@@ -224,7 +262,7 @@ const New = (props) => {
                 {
                   inputField.imgName && (
                     <div>Image name: {inputField.imgName}</div>
-                      
+
                   )
                 }
                 {
@@ -248,16 +286,16 @@ const New = (props) => {
                   label="Alt Tag"
                   variant="standard"
                   value={inputField.alttag}
-                  style={{marginRight:"12px"}}
+                  style={{ marginRight: "12px" }}
                   onChange={event => handleImageData(inputField.id, event)}
                 />
 
                 {inputField.url && (
                   <>
-                  <img src={inputField.url} style={{ height: '100px', width: '100px' }}/>
-                  {/* <a href={inputField.url} target="_blank">Check image</a> */}
+                    <img src={inputField.url} style={{ height: '100px', width: '100px' }} />
+                    {/* <a href={inputField.url} target="_blank">Check image</a> */}
                   </>
-                ) }
+                )}
                 <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
                   <RemoveIcon />
                 </IconButton>
@@ -328,7 +366,33 @@ const New = (props) => {
                     options={subcatergories}
                   />
                 </Grid>
-                <Controls.Input
+                <p>Primary Content</p>
+                <Editor
+                  wrapperStyle={{border: "1px solid #ddd", minHeight: "200px", margin:"8px"}}
+                  // editorState={editorState}
+                  editorState={editorState}
+                  
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={(editorState)=>{
+                  setEditorState(editorState)
+                  }}
+                />
+                <p>Secondary Content</p>
+                <Editor
+                  wrapperStyle={{border: "1px solid #ddd", minHeight: "200px", margin:"8px"}}
+                  // editorState={editorState}
+                  editorState={editorStateLong}
+                  
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={(editorState)=>{
+                  setEditorStateLong(editorState)
+                  }}
+                />
+                {/* <Controls.Input
                   name='shortDesc'
                   label="Primary Content"
                   value={values.shortDesc}
@@ -339,7 +403,7 @@ const New = (props) => {
                   label="Secondary Content"
                   value={values.longDesc}
                   onChange={handleInputChange}
-                />
+                /> */}
               </Grid>
               <h3>Specifications</h3>
               {specFields.map(inputField => (
