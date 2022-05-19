@@ -1,5 +1,6 @@
 const url = {
     base_url: 'http://65.2.126.231:1337'
+    // base_url: 'http://localhost:1337'
 }
 const state_enum = {
     saved: 1,

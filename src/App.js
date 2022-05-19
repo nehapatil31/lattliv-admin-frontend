@@ -9,9 +9,10 @@ import {
 } from "react-router-dom";
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
-import Product from './pages/product/Product';
+import ProductList from './pages/product/list/Product';
 import { productInputs, userInputs } from "./formSource";
-import New from "./pages/newProduct/New";
+import NewProduct from "./pages/product/create/New";
+import Category from './pages/category/Category';
 
 function App() {
   return (
@@ -22,20 +23,24 @@ function App() {
             <Route index element={<Home />}/>
             <Route path="login" element={<Login />}/>
             <Route path="products">
-              <Route index element={<Product/>}/>
+              <Route index element={<ProductList/>}/>
               <Route
                 path="new"
-                element={<New inputs={productInputs} title="Add New Product" />}
+                element={<NewProduct inputs={productInputs} title="Add New Product" />}
               />
-              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} />
+              <Route path=":productId" element={<NewProduct inputs={productInputs} title="Edit Product" />} />
             </Route>
             <Route path="users">
-              <Route index element={<Product/>}/>
-              <Route
+              <Route index element={<ProductList/>}/>
+              
+            </Route>
+            <Route path="categories">
+              <Route index element={<Category/>}/>
+              {/* <Route
                 path="new"
                 element={<New inputs={productInputs} title="Add New Product" />}
               />
-              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} />
+              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} /> */}
             </Route>
           </Route>
         </Routes>

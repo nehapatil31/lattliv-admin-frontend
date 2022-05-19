@@ -45,10 +45,12 @@ function Sidebar() {
                             <span>Products</span>
                         </li>
                     </Link>
-                    <li>
-                        <CreditCardIcon className="icon" />
-                        <span>Categories</span>
-                    </li>
+                    <Link to="/categories" style={{ textDecoration: "none" }}>
+                        <li>
+                            <CreditCardIcon className="icon" />
+                            <span>Categories</span>
+                        </li>
+                    </Link>
 
                     {/* <p className="title">USEFUL</p>
                     <li>
@@ -83,7 +85,7 @@ function Sidebar() {
                     </li>
                 </ul>
             </div>
-            <div className="bottom">
+            {/* <div className="bottom">
                 <div
                     className="colorOption"
                     onClick={() => dispatch({ type: "LIGHT" })}
@@ -92,7 +94,7 @@ function Sidebar() {
                     className="colorOption"
                     onClick={() => dispatch({ type: "DARK" })}
                 ></div>
-            </div>
+            </div> */}
         </div>
     );
 }

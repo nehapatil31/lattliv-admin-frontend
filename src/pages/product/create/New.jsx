@@ -1,17 +1,17 @@
 import "./new.scss";
-import { url, state_enum } from '../../config'
+import { url, state_enum } from '../../../config'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
 import { nanoid, customAlphabet } from 'nanoid'
 import { useEffect, useState } from "react";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../../../components/sidebar/Sidebar";
+import Navbar from "../../../components/navbar/Navbar";
 import { Grid, Button, Stack, TextField, IconButton, Typography } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { useForm, Form } from "../../components/form/useForm";
-import Controls from '../../components/form/Controls'
+import { useForm, Form } from "../../../components/form/useForm";
+import Controls from '../../../components/form/Controls'
 import { v4 as uuidv4 } from 'uuid';
 import { Editor } from "react-draft-wysiwyg";
 import {stateToHTML} from 'draft-js-export-html';
@@ -49,7 +49,7 @@ const initialFormValues = {
   createdBy: ''
 }
 
-const New = (props) => {
+const NewProduct = (props) => {
   const setEditorValues = function(dataObj){
     let content1 = dataObj?.shortDesc ? dataObj?.shortDesc : ''
     let content2 = dataObj?.longDesc ? dataObj?.longDesc : ''
@@ -476,4 +476,4 @@ const New = (props) => {
   );
 };
 
-export default New;
+export default NewProduct;
