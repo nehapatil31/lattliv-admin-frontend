@@ -23,7 +23,7 @@ function UserList() {
             <Navbar />
             <div className="datatableTitle">
                 All Users
-                <Link to="/products/new" className="link">
+                <Link to="/users/new" className="link">
                     Add New User
                 </Link>
             </div>

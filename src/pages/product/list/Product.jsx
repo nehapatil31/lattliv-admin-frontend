@@ -22,7 +22,7 @@ function ProductList() {
         <div className="homeContainer">
             <Navbar />
             <div className="datatableTitle">
-                All products
+                All Products
                 <Link to="/products/new" className="link">
                     Add New Product
                 </Link>

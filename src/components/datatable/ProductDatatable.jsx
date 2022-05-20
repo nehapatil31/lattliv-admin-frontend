@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from 'react-toastify';
 import ConfirmDialog from "../confirm/ConfirmDialog";
 import { DataGrid } from "@mui/x-data-grid";
-import { userColumns, userRows } from "../../datatablesource";
+import { userColumns } from "../../datatablesource";
 import { Link } from "react-router-dom";
 
 import Button from '@mui/material/Button';

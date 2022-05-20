@@ -2,18 +2,17 @@
 import './App.scss';
 import {
   BrowserRouter,
-  Switch,
   Routes,
-  Link,
   Route
 } from "react-router-dom";
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import ProductList from './pages/product/list/Product';
 import UserList from './pages/user/list/userList';
-import { productInputs, userInputs } from "./formSource";
+import { productInputs } from "./formSource";
 import NewProduct from "./pages/product/create/New";
 import Category from './pages/category/Category';
+import NewUser from './pages/user/create/New';
 
 function App() {
   return (
@@ -33,7 +32,10 @@ function App() {
             </Route>
             <Route path="users">
               <Route index element={<UserList/>}/>
-              
+              <Route
+                path="new"
+                element={<NewUser inputs={productInputs} title="Add New User" />}
+              />
             </Route>
             <Route path="categories">
               <Route index element={<Category/>}/>
