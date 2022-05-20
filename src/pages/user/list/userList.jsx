@@ -1,10 +1,10 @@
 import './userList.scss'
 import { Link, useSearchParams } from "react-router-dom";
-// import ProductDatatable from '../../../components/datatable/ProductDatatable';
 import Navbar from '../../../components/navbar/Navbar';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
+import UserDatatable from '../../../components/datatable/UserDatatable';
 
 function UserList() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -27,7 +27,7 @@ function UserList() {
                     Add New User
                 </Link>
             </div>
-            {/* <ProductDatatable/> */}
+            <UserDatatable/>
         </div>
     </div>);
 }

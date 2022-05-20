@@ -150,6 +150,7 @@ const ProductDatatable = () => {
       {data && <DataGrid
         className="datagrid"
         disableSelectionOnClick
+        disableColumnSelector
         rows={data}
         columns={userColumns.concat(actionColumn)}
         pageSize={10}
@@ -164,13 +165,6 @@ const ProductDatatable = () => {
           setSelectionModel(newSelectionModel);
         }}
         selectionModel={selectionModel}
-        filterModel={{
-          items: [
-            { columnField: 'status',
-              operatorValue: 'contains', 
-              value: '' },
-          ],
-        }}
       />}
     </div>
   );
