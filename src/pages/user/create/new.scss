@@ -5,9 +5,7 @@
   .newContainer {
     flex: 6;
 
-    .form-container{
-      margin-left: 12px;
-    }
+    
     .top,
     .bottom {
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
@@ -22,4 +20,7 @@
       }
     }
   }
+}
+.form-container{
+  margin-left: 20px;
 }

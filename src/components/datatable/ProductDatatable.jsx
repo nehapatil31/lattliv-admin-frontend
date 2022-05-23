@@ -13,6 +13,7 @@ import GradingIcon from '@mui/icons-material/Grading';
 import CheckIcon from '@mui/icons-material/Check';
 import Stack from '@mui/material/Stack';
 import {url, state_enum} from '../../config'
+import * as api from '../../api';
 
 const ProductDatatable = () => {
   const [data, setData] = useState();
@@ -64,10 +65,12 @@ const ProductDatatable = () => {
     })
   }
   useEffect(() => {
-    fetch(`${url.base_url}/products`)
-      .then(results => results.json())
-      .then(data => {
-        setData(data);
+    api.fetchProducts()//fetch(`${url.base_url}/products`)
+      // .then(results => results.json())
+      .then(response => {
+        setData(response.data);
+      }).catch(error=>{
+        console.log(error)
       });
   }, []);
 
