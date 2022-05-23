@@ -10,7 +10,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 
 const Navbar = () => {
-  const { dispatch } = useContext(DarkModeContext);
+  const user = JSON.parse(localStorage.getItem('profile'));
 
   return (
     <div className="navbar">
@@ -19,7 +19,7 @@ const Navbar = () => {
           <input type="text" placeholder="Search..." />
           <SearchOutlinedIcon />
         </div>
-        <div className="items">
+        {/* <div className="items">
           <div className="item">
             <LanguageOutlinedIcon className="icon" />
             English
@@ -51,7 +51,9 @@ const Navbar = () => {
               className="avatar"
             />
           </div>
-        </div>
+        </div> */}
+  {user
+&& user.data.name }
       </div>
     </div>
   );

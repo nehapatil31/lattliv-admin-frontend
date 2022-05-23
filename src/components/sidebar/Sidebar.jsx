@@ -79,10 +79,12 @@ function Sidebar() {
                         <AccountCircleOutlinedIcon className="icon" />
                         <span>Profile</span>
                     </li>
-                    <li>
-                        <ExitToAppIcon className="icon" />
-                        <span>Logout</span>
-                    </li>
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                        <li>
+                            <CreditCardIcon className="icon" />
+                            <span onClick={()=>{localStorage.clear();}}>Logout</span>
+                        </li>
+                    </Link>
                 </ul>
             </div>
             {/* <div className="bottom">
