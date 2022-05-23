@@ -5,12 +5,10 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import './category.scss'
 import { Link, useSearchParams } from "react-router-dom";
-import ProductDatatable from '../../components/datatable/ProductDatatable';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@mui/material';
 import * as api from '../../api';
 import CategoryDatatable from '../../components/datatable/CategoryDatatable';
 import SubCategoryDatatable from '../../components/datatable/SubCategoryDatatable';
@@ -49,24 +47,6 @@ function Category() {
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-            {/* <div className="datatableTitle">
-                <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                        All Categories
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Link to="/categories/new" className="link">
-                            Add New Category
-                        </Link>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Link to="/subcategories/new" className="link">
-                            Add New Sub Category
-                        </Link>
-                    </Grid>
-                </Grid>
-            </div>
-            <ProductDatatable /> */}
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
