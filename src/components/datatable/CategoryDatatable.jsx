@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { url } from '../../config'
 import * as api from '../../api';
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 
 const columns = [
   // { field: 'id', headerName: 'ID', width: 70 },
@@ -11,18 +12,45 @@ const columns = [
     {
       field: 'fullName',
       headerName: 'Created by',
-      description: 'This column has a value getter and is not sortable.',
+      // description: 'This column has a value getter and is not sortable.',
       sortable: false,
       width: 160,
       valueGetter: (params) =>
         `${params.row.createdBy.name}`,
     },
+    {
+      field: 'children',
+      headerName: 'Sub Category',
+      width: 230,
+      renderCell: (params) =>{
+        if(!params.row.children.length) return (<div>No sub categories</div>)
+        let children = ''
+        for(let item of params.row.children){
+          children += item.name
+          children += ', '
+        }
+        return (
+          <Tooltip title={children} >
+          <div className="rowitem">{children}</div>
+          </Tooltip>
+        )
+      }
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 160,
+      renderCell: (params) => {
+        return (
+          <div className={`cellWithStatus ${params.row.state.name}`}>
+            {params.row.state.name}
+          </div>
+        );
+      },
+    },
 ];
 
 export default function CategoryDatatable({categories}) {
-  const [data, setData] = useState();
-
-  
   const actionColumn = [
     {
       field: "action",

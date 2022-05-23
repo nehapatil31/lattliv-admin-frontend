@@ -54,7 +54,7 @@ function Category() {
                         <Tab label="Sub-categories" value="2" />
                     </TabList>
                 </Box>
-                <TabPanel value="1">
+                <TabPanel value="1" style={{height: '81%'}}>
                     <div className="datatableTitle">
                         All Categories
                         <Link to="/categories/new" className="link">
@@ -70,7 +70,7 @@ function Category() {
                             Add New Sub Category
                         </Link>
                     </div>
-                    <SubCategoryDatatable subCategories={subCategories}/>
+                    <SubCategoryDatatable categories={categories} subCategories={subCategories}/>
                 </TabPanel>
             </TabContext>
         </div>
