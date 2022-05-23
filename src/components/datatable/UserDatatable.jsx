@@ -48,7 +48,7 @@ export default function UserDatatable() {
       width: 200,
       disableColumnFilter: true,
       renderCell: (params) => {
-        let apiUrl = `/user/${params.id}`
+        let apiUrl = `/users/${params.id}`
         return (
           <div className="cellAction">
             <Link to={apiUrl} style={{ textDecoration: "none" }}>

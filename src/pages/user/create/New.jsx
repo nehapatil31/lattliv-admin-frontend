@@ -11,6 +11,8 @@ import Box from '@mui/material/Box';
 import * as React from 'react'
 import * as api from '../../../api'
 import './new.scss'
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const initialFormValues = {
   name: '',
@@ -41,6 +43,7 @@ const initialFormValues = {
 }
 
 const NewUser = (props) => {
+  const { userId } = useParams();
   const {
     values,
     setValues,
@@ -49,6 +52,18 @@ const NewUser = (props) => {
     handleInputChange,
     resetForm
   } = useForm(initialFormValues);
+
+  useEffect(() => {
+    if (userId) {
+      api.fetchUser(userId)
+      .then(response => {
+        setValues(response.data);
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error)
+      });
+    }
+  }, []);
 
   const submitForm = async function (state) {
 
