@@ -6,38 +6,21 @@ import * as api from '../../api';
 import { Link } from "react-router-dom";
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
+  // { field: 'id', headerName: 'ID', width: 70 },
   { field: 'name', headerName: 'Name', width: 200 },
-  { field: 'email', headerName: 'Email', width: 220 },
-  {
-    field: 'phone',
-    headerName: 'Phone',
-    type: 'number',
-    width: 130,
-  },
-  //   {
-  //     field: 'fullName',
-  //     headerName: 'Full name',
-  //     description: 'This column has a value getter and is not sortable.',
-  //     sortable: false,
-  //     width: 160,
-  //     valueGetter: (params) =>
-  //       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  //   },
+    {
+      field: 'fullName',
+      headerName: 'Created by',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 160,
+      valueGetter: (params) =>
+        `${params.row.createdBy.name}`,
+    },
 ];
 
-export default function UserDatatable() {
+export default function CategoryDatatable({categories}) {
   const [data, setData] = useState();
-
-  useEffect(() => {
-    api.fetchUsers()
-      .then(response => {
-        setData(response.data);
-        console.log(response.data)
-      }).catch(error => {
-        console.log(error)
-      });
-  }, []);
 
   
   const actionColumn = [
@@ -72,10 +55,14 @@ export default function UserDatatable() {
       },
     },
   ];
+
+  if(!categories){
+    return null
+  }
   return (
     <div className="datatable">
-      {data && <DataGrid
-        rows={data}
+      {categories && <DataGrid
+        rows={categories}
         className="datagrid"
         columns={columns.concat(actionColumn)}
         pageSize={10}

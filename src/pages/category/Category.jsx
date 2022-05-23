@@ -1,15 +1,37 @@
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import './category.scss'
 import { Link, useSearchParams } from "react-router-dom";
 import ProductDatatable from '../../components/datatable/ProductDatatable';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
+import * as api from '../../api';
+import CategoryDatatable from '../../components/datatable/CategoryDatatable';
+import SubCategoryDatatable from '../../components/datatable/SubCategoryDatatable';
 
 function Category() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [categories, setCategories] = useState();
+    const [subCategories, setSubCategories] = useState();
     let isToastcalled = false
+
+    useEffect(() => {
+        api.fetchCategories()
+            .then(response => {
+                let subcategories  = response.data.filter((item)=>item.parent)
+                let categories  = response.data.filter((item)=>!item.parent)
+                setCategories(categories);
+                setSubCategories(subcategories);
+            }).catch(error => {
+                console.log(error)
+            });
+    }, [])
     useEffect(() => {
         if (!isToastcalled && searchParams.get("msg")) {
             isToastcalled = true
@@ -17,12 +39,17 @@ function Category() {
         }
     }, [])
 
+    const [value, setValue] = React.useState('1');
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (<div className='home'>
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-            <div className="datatableTitle">
+            {/* <div className="datatableTitle">
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
                         All Categories
@@ -39,7 +66,33 @@ function Category() {
                     </Grid>
                 </Grid>
             </div>
-            <ProductDatatable />
+            <ProductDatatable /> */}
+            <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <Tab label="Categories" value="1" />
+                        <Tab label="Sub-categories" value="2" />
+                    </TabList>
+                </Box>
+                <TabPanel value="1">
+                    <div className="datatableTitle">
+                        All Categories
+                        <Link to="/categories/new" className="link">
+                            Add New Category
+                        </Link>
+                    </div>
+                    <CategoryDatatable categories={categories}/>
+                </TabPanel>
+                <TabPanel value="2" style={{height: '81%'}}>
+                    <div className="datatableTitle">
+                        All Sub Categories
+                        <Link to="/subcategories/new" className="link">
+                            Add New Sub Category
+                        </Link>
+                    </div>
+                    <SubCategoryDatatable subCategories={subCategories}/>
+                </TabPanel>
+            </TabContext>
         </div>
     </div>);
 }

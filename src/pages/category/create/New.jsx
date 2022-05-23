@@ -13,36 +13,13 @@ import * as api from '../../../api'
 import './new.scss'
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { state_enum } from '../../../config'
 
 const initialFormValues = {
   name: '',
-  email: '',
-  phone: '',
-  access: {
-    "products": {
-      "create": false,
-      "edit": false,
-      "delete": false,
-      "publish": false,
-      "view": false
-    },
-    "categories": {
-      "create": false,
-      "edit": false,
-      "delete": false,
-      "view": false,
-      "publish": false,
-    },
-    "users": {
-      "create": false,
-      "edit": false,
-      "delete": false,
-      "view": false
-    }
-  }
 }
 
-const NewUser = (props) => {
+const NewCategory = (props) => {
   const { userId } = useParams();
   const {
     values,
@@ -70,7 +47,7 @@ const NewUser = (props) => {
     try {
       let body = {
         ...values,
-        state: 2
+        state: state
       }
       if(userId){
         const response = await api.updateUser(userId, body);
@@ -84,12 +61,12 @@ const NewUser = (props) => {
           toast.error("Some error occurred")
         }
       } else {
-        const response = await api.createUser(body);
+        const response = await api.createCategory(body);
         console.log(response)
         if (response.status === 201) {
-          let msg = "User is created !" 
+          let msg = "Category is created !" 
   
-          window.location.href = '/users?msg=' + msg;
+          window.location.href = '/categories?msg=' + msg;
   
         } else {
           toast.error("Some error occurred")
@@ -101,43 +78,6 @@ const NewUser = (props) => {
     }
   }
 
-
-  let accessHtml;
-  if (initialFormValues.access) {
-    let access = initialFormValues.access
-    accessHtml = Object.keys(access).map(key =>
-      <div key={key}>
-        <Typography variant="h6" gutterBottom component="div">
-          {key}
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-          {Object.keys(access[key]).map(item => {
-            return (<FormControlLabel
-              key={item}
-              label={item}
-              control={<Checkbox
-                checked={values.access[key][item]}
-                name={`${key}-${item}`}
-                onChange={function (e) {
-                  let { name, checked } = e.target
-                  let [key, item] = name.split('-')
-                  let new_access =JSON.parse(JSON.stringify(values.access));;
-                  new_access[key][item]= checked
-                  setValues({
-                    ...values,
-                    access: new_access
-                  })
-
-                }}
-              />}
-            />)
-          }
-          )}
-        </Box>
-      </div>
-    )
-
-  }
   return (
     <div className="new">
       <Sidebar />
@@ -152,36 +92,46 @@ const NewUser = (props) => {
               value={values.name}
               onChange={handleInputChange}
             />
-            <Controls.Input
-              name='email'
-              label="Email"
-              value={values.email}
-              onChange={handleInputChange}
-            />
-            <Controls.Input
-              name='phone'
-              label="Phone"
-              value={values.phone}
-              onChange={handleInputChange}
-            />
-            <Controls.Input
-              name='password'
-              label="password"
-              value={values.password}
-              onChange={handleInputChange}
-            />
+            
             <br />
-            <br />
-            <h3>Permissions</h3>
-            {accessHtml}
+            <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
+                <Button
+                  onClick={() => {
+                    submitForm(state_enum.saved)
+                  }}
+                  variant="contained" color="warning">
+                  Save
+                </Button>
+                <Button
+                  onClick={() => {
+                    submitForm(state_enum.review)
+                  }}
+                  variant="contained" color="info">
+                  Ready for review
+                </Button>
+                <Button
+                  onClick={() => {
+                    submitForm(state_enum.published)
+                  }}
+                  variant="contained" color="success">
+                  Publish
+                </Button>
+                <Button
+                  onClick={() => {
+                    submitForm(state_enum.hidden)
+                  }}
+                  variant="contained" color="error">
+                  Hide
+                </Button>
+              </Stack>
           </Form>
-          <Button
+          {/* <Button
             onClick={() => {
               submitForm()
             }}
             variant="contained" color="info">
             Submit
-          </Button>
+          </Button> */}
           <br/>
           <br/>
           <br/>
@@ -192,4 +142,4 @@ const NewUser = (props) => {
   )
 };
 
-export default NewUser;
+export default NewCategory;

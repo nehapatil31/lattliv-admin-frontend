@@ -13,6 +13,8 @@ import { productInputs } from "./formSource";
 import NewProduct from "./pages/product/create/New";
 import Category from './pages/category/Category';
 import NewUser from './pages/user/create/New';
+import NewCategory from './pages/category/create/New';
+import NewSubCategory from './pages/subcategory/create/New';
 
 function App() {
   return (
@@ -40,11 +42,19 @@ function App() {
             </Route>
             <Route path="categories">
               <Route index element={<Category/>}/>
-              {/* <Route
+              <Route
                 path="new"
-                element={<New inputs={productInputs} title="Add New Product" />}
+                element={<NewCategory title="Add New Category" />}
               />
-              <Route path=":productId" element={<New inputs={productInputs} title="Edit Product" />} /> */}
+              {/* <Route path=":productId" element={<New title="Edit Product" />} /> */}
+            </Route>
+            <Route path="subcategories">
+              <Route index element={<Category/>}/>
+              <Route
+                path="new"
+                element={<NewSubCategory title="Add New Sub-Category" />}
+              />
+              {/* <Route path=":productId" element={<New title="Edit Product" />} /> */}
             </Route>
           </Route>
         </Routes>

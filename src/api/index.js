@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:1337' });
+const API = axios.create({ baseURL: 'http://65.2.126.231:1337' });
 // const url = 'http://localhost:5000/posts';
 // const url = 'https://impressions01.herokuapp.com/posts';
 
@@ -14,9 +14,15 @@ export const signin = (data) => API.post('/user/login', data);
 
 export const fetchProducts = () => API.get('/products');
 export const fetchUsers = () => API.get('/user');
+export const fetchCategories = () => API.get('/categories');
+
 export const fetchUser = (id) => API.get(`/user/${id}`);
 
 export const createUser = (newUser) => API.post('/user/register', newUser);
+export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
+
+export const createCategory = (newCategory) => API.post('categories/create', newCategory);
+
 
 export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
 
