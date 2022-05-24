@@ -20,7 +20,7 @@ const ProductDatatable = () => {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
-
+ 
   const handleDelete = () => {
     console.log(confirmOpen.id)
     let body = {

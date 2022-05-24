@@ -17,6 +17,10 @@ import NewCategory from './pages/category/create/New';
 import NewSubCategory from './pages/subcategory/create/New';
 
 function App() {
+  const user = JSON.parse(localStorage.getItem('profile'));
+  if(!user && window.location.pathname !='/login'){
+    window.location.href = '/login';
+  }
   return (
     <div className="App">
       <BrowserRouter>

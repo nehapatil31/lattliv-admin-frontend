@@ -57,7 +57,7 @@ const NewUser = (props) => {
     if (userId) {
       api.fetchUser(userId)
       .then(response => {
-        setValues(response.data.user);
+        setValues(response.data);
         console.log(response.data)
       }).catch(error => {
         console.log(error)

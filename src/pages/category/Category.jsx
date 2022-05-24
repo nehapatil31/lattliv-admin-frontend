@@ -51,7 +51,7 @@ function Category() {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Categories" value="1" />
-                        <Tab label="Sub-categories" value="2" />
+                        <Tab label="Sub categories" value="2" />
                     </TabList>
                 </Box>
                 <TabPanel value="1" style={{height: '81%'}}>
