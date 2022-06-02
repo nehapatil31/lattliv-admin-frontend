@@ -1,6 +1,6 @@
 import "./sidebar.scss";
 import { Link } from "react-router-dom";
-
+import React from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 

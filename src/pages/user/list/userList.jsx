@@ -6,7 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import UserDatatable from '../../../components/datatable/UserDatatable';
 import * as access from '../../../access'
-
+import React from "react";
 
 function UserList() {
     const [searchParams, setSearchParams] = useSearchParams();

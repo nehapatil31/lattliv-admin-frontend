@@ -6,6 +6,7 @@ import Sidebar from '../../../components/sidebar/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import * as access from '../../../access'
+import React from "react";
 
 function ProductList() {
     const [searchParams, setSearchParams] = useSearchParams();

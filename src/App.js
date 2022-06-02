@@ -15,6 +15,7 @@ import Category from './pages/category/Category';
 import NewUser from './pages/user/create/New';
 import NewCategory from './pages/category/create/New';
 import NewSubCategory from './pages/subcategory/create/New';
+import React from "react";
 
 function App() {
   const user = JSON.parse(localStorage.getItem('profile'));
