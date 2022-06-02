@@ -28,8 +28,8 @@ export default function SubCategoryDatatable({subCategories, categories}) {
         // description: 'This column has a value getter and is not sortable.',
         sortable: false,
         width: 160,
-        valueGetter: (params) =>
-          `${params.row.createdBy.name}`,
+        valueGetter: (params) =>params.row.createdBy?.name ? `${params.row.createdBy?.name}`:'-'
+         
       },
       {
         field: "status",

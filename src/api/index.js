@@ -19,6 +19,7 @@ export const fetchCategories = () => API.get('/categories');
 export const fetchUser = (id) => API.get(`/user/${id}`);
 
 export const createUser = (newUser) => API.post('/user/register', newUser);
+export const createSubcategory = (newUser) => API.post('/categories/create', newUser);
 export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
 
 export const createCategory = (newCategory) => API.post('categories/create', newCategory);

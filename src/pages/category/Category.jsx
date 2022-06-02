@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import * as api from '../../api';
 import CategoryDatatable from '../../components/datatable/CategoryDatatable';
 import SubCategoryDatatable from '../../components/datatable/SubCategoryDatatable';
+import * as access from '../../access'
 
 function Category() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -22,8 +23,8 @@ function Category() {
     useEffect(() => {
         api.fetchCategories()
             .then(response => {
-                let subcategories  = response.data.filter((item)=>item.parent)
-                let categories  = response.data.filter((item)=>!item.parent)
+                let subcategories = response.data.filter((item) => item.parent)
+                let categories = response.data.filter((item) => !item.parent)
                 setCategories(categories);
                 setSubCategories(subcategories);
             }).catch(error => {
@@ -54,23 +55,37 @@ function Category() {
                         <Tab label="Sub categories" value="2" />
                     </TabList>
                 </Box>
-                <TabPanel value="1" style={{height: '81%'}}>
-                    <div className="datatableTitle">
-                        All Categories
-                        <Link to="/categories/new" className="link">
-                            Add New Category
-                        </Link>
-                    </div>
-                    <CategoryDatatable categories={categories}/>
+                <TabPanel value="1" style={{ height: '81%' }}>
+
+                    {!access.category_read && 'No categories read access'}
+                    {access.category_read &&
+                        <>
+                            <div className="datatableTitle">
+                                All Categories
+                                <Link to="/categories/new" className="link">
+                                    Add New Category
+                                </Link>
+                            </div>
+                            <CategoryDatatable categories={categories} />
+                        </>
+                    }
+
                 </TabPanel>
-                <TabPanel value="2" style={{height: '81%'}}>
-                    <div className="datatableTitle">
-                        All Sub Categories
-                        <Link to="/subcategories/new" className="link">
-                            Add New Sub Category
-                        </Link>
-                    </div>
-                    <SubCategoryDatatable categories={categories} subCategories={subCategories}/>
+                <TabPanel value="2" style={{ height: '81%' }}>
+
+                    {!access.subcategory_read && 'No subcategories read access'}
+                    {access.subcategory_read &&
+                        <>
+                            <div className="datatableTitle">
+                                All Sub Categories
+                                <Link to="/subcategories/new" className="link">
+                                    Add New Sub Category
+                                </Link>
+                            </div>
+                            <SubCategoryDatatable categories={categories} subCategories={subCategories} />
+                        </>
+                    }
+
                 </TabPanel>
             </TabContext>
         </div>

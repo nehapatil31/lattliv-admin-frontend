@@ -18,19 +18,25 @@ function ProductList() {
         }
     }, [])
 
+    if(!access.product_read){
+        <div>No product read access</div>
+    }
     return (<div className='home'>
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000}/>
         <div className="homeContainer">
             <Navbar />
+            {!access.product_read && 'No products read access'}
+            {access.product_read &&
+            (<>
             <div className="datatableTitle">
                 All Products
                 <Link to="/products/new" className="link">
                     Add New Product
                 </Link>
             </div>
-            {!access.product_read && 'No products read access'}
-            {access.product_read && <ProductDatatable/>}
+           <ProductDatatable/>
+            </>)}
             
         </div>
     </div>);

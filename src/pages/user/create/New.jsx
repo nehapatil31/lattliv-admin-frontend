@@ -33,6 +33,13 @@ const initialFormValues = {
       "view": false,
       "publish": false,
     },
+    "subcategories": {
+      "create": false,
+      "edit": false,
+      "delete": false,
+      "view": false,
+      "publish": false,
+    },
     "users": {
       "create": false,
       "edit": false,

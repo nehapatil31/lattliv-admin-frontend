@@ -11,15 +11,18 @@ import Box from '@mui/material/Box';
 import * as React from 'react'
 import * as api from '../../../api'
 import './new.scss'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { state_enum } from '../../../config'
 
 const initialFormValues = {
   name: '',
+  parent: '',
 }
 
 const NewSubCategory = (props) => {
-  const { userId } = useParams();
+  const { subcategoryId } = useParams();
+  const [categories, setCategories] = useState();
   const {
     values,
     setValues,
@@ -30,43 +33,55 @@ const NewSubCategory = (props) => {
   } = useForm(initialFormValues);
 
   useEffect(() => {
-    if (userId) {
-      api.fetchUser(userId)
-      .then(response => {
-        setValues(response.data.user);
-        console.log(response.data)
-      }).catch(error => {
-        console.log(error)
-      });
+    if (subcategoryId) {
+      api.fetchUser(subcategoryId)
+        .then(response => {
+          setValues(response.data.user);
+          console.log(response.data)
+        }).catch(error => {
+          console.log(error)
+        });
     }
   }, []);
+  useEffect(() => {
+    api.fetchCategories()
+        .then(response => {
+            // let subcategories = response.data.filter((item) => item.parent)
+            let categories = response.data.filter((item) => !item.parent)
+            setCategories(categories);
+            // setSubCategories(subcategories);
+        }).catch(error => {
+            console.log(error)
+        });
+}, [])
 
   const submitForm = async function (state) {
 
     try {
       let body = {
         ...values,
-        state: 2
+        state: state,
+        createdBy: 10
       }
-      if(userId){
-        const response = await api.updateUser(userId, body);
+      if (subcategoryId) {
+        const response = await api.updateUser(subcategoryId, body);
         console.log(response)
         if (response.status === 200) {
-          let msg = "User is updated !" 
-  
+          let msg = "User is updated !"
+
           window.location.href = '/users?msg=' + msg;
-  
+
         } else {
           toast.error("Some error occurred")
         }
       } else {
-        const response = await api.createUser(body);
+        const response = await api.createSubcategory(body);
         console.log(response)
-        if (response.status === 201) {
-          let msg = "User is created !" 
-  
-          window.location.href = '/users?msg=' + msg;
-  
+        if (response.status === 200) {
+          let msg = "Subcategory is created !"
+
+          window.location.href = '/categories?msg=' + msg;
+
         } else {
           toast.error("Some error occurred")
         }
@@ -85,26 +100,78 @@ const NewSubCategory = (props) => {
         <div className="form-container">
           <h1>{props.title}</h1>
           <Form>
+
+            {categories &&(
+              <Controls.Select
+              name='parent'
+              label="Category"
+              value={values.parent}
+              onChange={(e) => {
+                // let category = catergories.find(i => i.id === e.target.value)
+
+                // reset subcategory value
+                // setValues({
+                //   ...values,
+                //   subcategory: ''
+                // })
+
+                // category.children && setSubcatergories(category.children)
+                handleInputChange(e)
+              }}
+              options={categories}
+            />
+            )}
+
             <Controls.Input
               name='name'
               label="Name"
               value={values.name}
               onChange={handleInputChange}
             />
-            
+
+
             <br />
-            
+            <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
+              <Button
+                onClick={() => {
+                  submitForm(state_enum.saved)
+                }}
+                variant="contained" color="warning">
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  submitForm(state_enum.review)
+                }}
+                variant="contained" color="info">
+                Ready for review
+              </Button>
+              <Button
+                onClick={() => {
+                  submitForm(state_enum.published)
+                }}
+                variant="contained" color="success">
+                Publish
+              </Button>
+              <Button
+                onClick={() => {
+                  submitForm(state_enum.hidden)
+                }}
+                variant="contained" color="error">
+                Hide
+              </Button>
+            </Stack>
           </Form>
-          <Button
+          {/* <Button
             onClick={() => {
               submitForm()
             }}
             variant="contained" color="info">
             Submit
-          </Button>
-          <br/>
-          <br/>
-          <br/>
+          </Button> */}
+          <br />
+          <br />
+          <br />
 
         </div>
       </div>
