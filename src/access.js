@@ -6,6 +6,7 @@ export const product_create = user?.data?.access?.products?.create;
 export const product_delete = user?.data?.access?.products?.delete;
 export const product_edit = user?.data?.access?.products?.edit;
 export const product_publish = user?.data?.access?.products?.publish;
+export const product_hide = user?.data?.access?.products?.hide;
 
 
 export const category_read = user?.data?.access?.categories?.view;

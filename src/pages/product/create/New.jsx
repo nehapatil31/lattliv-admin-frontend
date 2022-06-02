@@ -1,3 +1,4 @@
+import * as access from '../../../access'
 import "./new.scss";
 import { url, state_enum } from '../../../config'
 import { toast, ToastContainer } from 'react-toastify';
@@ -16,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Editor } from "react-draft-wysiwyg";
 import {stateToHTML} from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import React from "react";
 import {
   EditorState,
   convertToRaw,
@@ -459,6 +461,7 @@ const NewProduct = (props) => {
                   Publish
                 </Button>
                 <Button
+                disabled={access.product_hide}
                   onClick={() => {
                     submitForm(state_enum.hidden)
                   }}

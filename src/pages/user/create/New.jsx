@@ -24,7 +24,8 @@ const initialFormValues = {
       "edit": false,
       "delete": false,
       "publish": false,
-      "view": false
+      "view": false,
+      "hide":false
     },
     "categories": {
       "create": false,
