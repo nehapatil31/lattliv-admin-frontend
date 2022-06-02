@@ -20,7 +20,7 @@ function ProductList() {
     }, [])
 
     if(!access.product_read){
-        <div>No product read access</div>
+       return ( <div>No product read access</div>)
     }
     return (<div className='home'>
         <Sidebar />
