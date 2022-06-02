@@ -1,6 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import React from "react";
 export const userColumns = [
   { field: "sku", headerName: "SKU", width: 100 },
   {
