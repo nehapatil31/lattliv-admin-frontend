@@ -1,3 +1,4 @@
+import * as api from '../../../api'
 import * as access from '../../../access'
 import "./new.scss";
 import { url, state_enum } from '../../../config'
@@ -15,7 +16,7 @@ import { useForm, Form } from "../../../components/form/useForm";
 import Controls from '../../../components/form/Controls'
 import { v4 as uuidv4 } from 'uuid';
 import { Editor } from "react-draft-wysiwyg";
-import {stateToHTML} from 'draft-js-export-html';
+import { stateToHTML } from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import React from "react";
 import {
@@ -52,7 +53,7 @@ const initialFormValues = {
 }
 
 const NewProduct = (props) => {
-  const setEditorValues = function(dataObj){
+  const setEditorValues = function (dataObj) {
     let content1 = dataObj?.shortDesc ? dataObj?.shortDesc : ''
     let content2 = dataObj?.longDesc ? dataObj?.longDesc : ''
     setEditorState(
@@ -62,7 +63,7 @@ const NewProduct = (props) => {
           blocksFromHTML.contentBlocks,
           blocksFromHTML.entityMap
         )
-    
+
         return EditorState.createWithContent(contentState)
       }
     )
@@ -72,7 +73,7 @@ const NewProduct = (props) => {
         blocksFromHTML.contentBlocks,
         blocksFromHTML.entityMap
       )
-  
+
       return EditorState.createWithContent(contentState)
     })
   }
@@ -168,12 +169,12 @@ const NewProduct = (props) => {
   }
 
   useEffect(() => {
-    //get categories data
-    fetch(`${url.base_url}/categories/parents`)
-      .then(results => results.json())
-      .then(categoryData => {
-        setcatergories(categoryData);
-
+    api.fetchCategories()
+    .then(response => {
+        // let subcategories = response.data.filter((item) => item.parent)
+        let categories = response.data.filter((item) => !item.parent)
+        setcatergories(categories);
+       
         if (productId) {
           //get product data
           fetch(`${url.base_url}/products/${productId}`)
@@ -184,7 +185,7 @@ const NewProduct = (props) => {
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
 
-              let category = categoryData.find(i => i.id === dataObj.category)
+              let category = categories.find(i => i.id === dataObj.category)
               category.children && setSubcatergories(category.children)
 
               if (data.specification?.specFields) {
@@ -204,10 +205,9 @@ const NewProduct = (props) => {
             sku: nanoid(5),
           })
         }
-      });
-
-
-
+    }).catch(error => {
+        console.log(error)
+    });
 
   }, [])
 
@@ -244,8 +244,6 @@ const NewProduct = (props) => {
 
     })
   }
-
-
 
   return (
     <div className="new">
@@ -370,28 +368,28 @@ const NewProduct = (props) => {
                 </Grid>
                 <p>Primary Content</p>
                 <Editor
-                  wrapperStyle={{border: "1px solid #ddd", minHeight: "200px", margin:"8px"}}
+                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
                   // editorState={editorState}
                   editorState={editorState}
-                  
+
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
-                  onEditorStateChange={(editorState)=>{
-                  setEditorState(editorState)
+                  onEditorStateChange={(editorState) => {
+                    setEditorState(editorState)
                   }}
                 />
                 <p>Secondary Content</p>
                 <Editor
-                  wrapperStyle={{border: "1px solid #ddd", minHeight: "200px", margin:"8px"}}
+                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
                   // editorState={editorState}
                   editorState={editorStateLong}
-                  
+
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
-                  onEditorStateChange={(editorState)=>{
-                  setEditorStateLong(editorState)
+                  onEditorStateChange={(editorState) => {
+                    setEditorStateLong(editorState)
                   }}
                 />
                 {/* <Controls.Input
@@ -440,6 +438,7 @@ const NewProduct = (props) => {
 
               <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
+                  disabled={access.product_create ? false : true}
                   onClick={() => {
                     submitForm(state_enum.saved)
                   }}
@@ -447,6 +446,7 @@ const NewProduct = (props) => {
                   Save
                 </Button>
                 <Button
+                  disabled={access.product_create ? false : true}
                   onClick={() => {
                     submitForm(state_enum.review)
                   }}
@@ -454,6 +454,7 @@ const NewProduct = (props) => {
                   Ready for review
                 </Button>
                 <Button
+                  disabled={access.product_publish ? false : true}
                   onClick={() => {
                     submitForm(state_enum.published)
                   }}
@@ -461,7 +462,7 @@ const NewProduct = (props) => {
                   Publish
                 </Button>
                 <Button
-                disabled={access.product_hide}
+                  disabled={access.product_hide ? false : true}
                   onClick={() => {
                     submitForm(state_enum.hidden)
                   }}
