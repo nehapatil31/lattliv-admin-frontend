@@ -177,10 +177,10 @@ const NewProduct = (props) => {
        
         if (productId) {
           //get product data
-          fetch(`${url.base_url}/products/${productId}`)
-            .then(results => results.json())
-            .then(data => {
-              let dataObj = { ...data }
+          api.fetchProduct(productId)
+          .then(response => {
+            let data = response.data;
+            let dataObj = { ...response.data }
               dataObj.category = data.category.parent.id
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
@@ -197,7 +197,30 @@ const NewProduct = (props) => {
 
               setValues(dataObj);
               setEditorValues(dataObj);
-            });
+          }).catch(error => {
+            console.log(error)
+          });
+          // fetch(`${url.base_url}/products/${productId}`)
+          //   .then(results => results.json())
+          //   .then(data => {
+          //     let dataObj = { ...data }
+          //     dataObj.category = data.category.parent.id
+          //     dataObj.subcategory = data.category.id
+          //     dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
+
+          //     let category = categories.find(i => i.id === dataObj.category)
+          //     category.children && setSubcatergories(category.children)
+
+          //     if (data.specification?.specFields) {
+          //       setSpecFields(data.specification?.specFields)
+          //     }
+          //     if (data.images?.images) {
+          //       setImages(data.images?.images)
+          //     }
+
+          //     setValues(dataObj);
+          //     setEditorValues(dataObj);
+          //   });
         } else {
           const nanoid = customAlphabet('1234567890abcdef', 10)
           setValues({
@@ -211,7 +234,7 @@ const NewProduct = (props) => {
 
   }, [])
 
-  const submitForm = function (state) {
+  const submitForm = async function (state) {
     let body = {
       ...values,
       state: state,
@@ -225,24 +248,48 @@ const NewProduct = (props) => {
       shortDesc: stateToHTML(editorState.getCurrentContent()),
       longDesc: stateToHTML(editorStateLong.getCurrentContent())
     }
-    let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
     body.inStock = body.availability === "in_stock"
     body.category = body.subcategory
 
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }).then((res) => {
-      if (res.status === 200) {
-        let msg = productId ? "Product is updated !" : "Product is created !"
+    let msg = productId ? "Product is updated !" : "Product is created !"
+    if(productId){
+      const response = await api.updateProduct(productId, body);
+      console.log(response)
 
+      if (response.status === 200) {
         window.location.href = '/products?msg=' + msg;
       } else {
         toast.error("Some error occurred")
       }
+    } else {
+      const response = await api.createProduct(body);
+      console.log(response)
+      if (response.status === 200) {
+        window.location.href = '/products?msg=' + msg;
 
-    })
+      } else {
+        toast.error("Some error occurred")
+      }
+    }
+
+
+    // let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
+    
+
+    // fetch(apiUrl, {
+    //   method: 'POST',
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(body)
+    // }).then((res) => {
+    //   if (res.status === 200) {
+    //     let msg = productId ? "Product is updated !" : "Product is created !"
+
+    //     window.location.href = '/products?msg=' + msg;
+    //   } else {
+    //     toast.error("Some error occurred")
+    //   }
+
+    // })
   }
 
   return (

@@ -11,15 +11,20 @@ API.interceptors.request.use((req) => {
     return req;
 })
 export const signin = (data) => API.post('/user/login', data);
+export const uploadFile = (data) => API.post('/upload', data);
 
 export const fetchProducts = () => API.get('/products');
 export const fetchUsers = () => API.get('/user');
 export const fetchCategories = () => API.get('/categories');
 
 export const fetchUser = (id) => API.get(`/user/${id}`);
+export const fetchProduct = (id) => API.get(`/products/${id}`);
 
+export const createProduct = (newProduct) => API.post('/products/create', newProduct);
 export const createUser = (newUser) => API.post('/user/register', newUser);
 export const createSubcategory = (newUser) => API.post('/categories/create', newUser);
+
+export const updateProduct = (id, product) => API.post(`/products/update/${id}`, product);
 export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
 
 export const createCategory = (newCategory) => API.post('categories/create', newCategory);

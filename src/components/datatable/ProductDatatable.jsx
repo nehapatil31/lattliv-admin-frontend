@@ -1,3 +1,4 @@
+import * as access from '../../access'
 import "./datatable.scss";
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from 'react-toastify';
@@ -12,7 +13,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GradingIcon from '@mui/icons-material/Grading';
 import CheckIcon from '@mui/icons-material/Check';
 import Stack from '@mui/material/Stack';
-import {url, state_enum} from '../../config'
+import { url, state_enum } from '../../config'
 import * as api from '../../api';
 
 const ProductDatatable = () => {
@@ -20,7 +21,7 @@ const ProductDatatable = () => {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
- 
+
   const handleDelete = () => {
     console.log(confirmOpen.id)
     let body = {
@@ -28,22 +29,22 @@ const ProductDatatable = () => {
     }
     fetch(`${url.base_url}/products/update/${confirmOpen.id}`, {
       method: 'POST',
-      headers: { "Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
-    }).then((res)=>{
-      if(res.status===200){
+    }).then((res) => {
+      if (res.status === 200) {
         let msg = "Product is deleted."
-        
-        window.location.href = '/products?msg='+ msg;
-      }else {
+
+        window.location.href = '/products?msg=' + msg;
+      } else {
         toast.error("Some error occurred")
       }
-      
+
     })
     // setData(data.filter((item) => item.id !== id));
   };
 
-  const updateState = (state)=>{
+  const updateState = (state) => {
     let body = {
       ids: selectionModel,
       state: state,
@@ -51,17 +52,17 @@ const ProductDatatable = () => {
     }
     fetch(`${url.base_url}/states/update/bulk`, {
       method: 'POST',
-      headers: { "Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
-    }).then((res)=>{
-      if(res.status===200){
+    }).then((res) => {
+      if (res.status === 200) {
         let msg = "Products are updated."
-        
-        window.location.href = '/products?msg='+ msg;
-      }else {
+
+        window.location.href = '/products?msg=' + msg;
+      } else {
         toast.error("Some error occurred")
       }
-      
+
     })
   }
   useEffect(() => {
@@ -69,7 +70,7 @@ const ProductDatatable = () => {
       // .then(results => results.json())
       .then(response => {
         setData(response.data);
-      }).catch(error=>{
+      }).catch(error => {
         console.log(error)
       });
   }, []);
@@ -85,10 +86,18 @@ const ProductDatatable = () => {
         let apiUrl = `/products/${params.id}`
         return (
           <div className="cellAction">
-            <Link to={apiUrl} style={{ textDecoration: "none" }}>
+            {/* <Link to={apiUrl} style={{ textDecoration: "none" }}>
               <div className="viewButton">Edit</div>
-            </Link>
-            <div
+            </Link> */}
+            <Button
+              disabled={access.product_edit ? false : true}
+              onClick={() => {
+                window.location.href = apiUrl
+              }}
+              variant="outlined" color="info" size="small">
+              Edit
+            </Button>
+            {/* <div
               className="deleteButton"
               // onClick={() => handleDelete(params.row.id)}
               onClick={(e) => {
@@ -100,7 +109,20 @@ const ProductDatatable = () => {
               }}
             >
               Delete
-            </div>
+            </div> */}
+
+            <Button
+              disabled={access.product_delete ? false : true}
+              onClick={(e) => {
+                e.preventDefault()
+                setConfirmOpen({
+                  state: true,
+                  id: params.row.id
+                })
+              }}
+              variant="outlined" color="error" size="small">
+              Delete
+            </Button>
           </div>
         );
       },
@@ -116,35 +138,35 @@ const ProductDatatable = () => {
       >
         Are you sure you want to delete this post?
       </ConfirmDialog>
-      <ToastContainer icon={false} limit={1} autoClose={2000}/>
+      <ToastContainer icon={false} limit={1} autoClose={2000} />
       <div >
         <Stack direction="row" spacing={2} style={{ display: multiActionVisibility ? 'block' : 'none' }}>
-          <Button 
-          onClick={()=>{
-            updateState(state_enum.trashed)
-           }}
-          variant="outlined" color="error" startIcon={<DeleteIcon />}>
+          <Button
+            onClick={() => {
+              updateState(state_enum.trashed)
+            }}
+            variant="outlined" color="error" startIcon={<DeleteIcon />}>
             Delete
           </Button>
-          <Button 
-          onClick={()=>{
-            updateState(state_enum.review)
-           }}
-          variant="outlined" color="info" startIcon={<GradingIcon />}>
+          <Button
+            onClick={() => {
+              updateState(state_enum.review)
+            }}
+            variant="outlined" color="info" startIcon={<GradingIcon />}>
             Ready for review
           </Button>
           <Button
-          onClick={()=>{
-            updateState(state_enum.hidden)
-           }}
-           variant="outlined" color="warning" startIcon={<VisibilityOffIcon />}>
+            onClick={() => {
+              updateState(state_enum.hidden)
+            }}
+            variant="outlined" color="warning" startIcon={<VisibilityOffIcon />}>
             Hide
           </Button>
-          <Button 
-          onClick={()=>{
-            updateState(state_enum.published)
-           }}
-          variant="outlined" color="success" startIcon={<CheckIcon />}>
+          <Button
+            onClick={() => {
+              updateState(state_enum.published)
+            }}
+            variant="outlined" color="success" startIcon={<CheckIcon />}>
             Publish
           </Button>
         </Stack>
