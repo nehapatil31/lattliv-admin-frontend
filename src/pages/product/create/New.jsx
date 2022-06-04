@@ -120,27 +120,16 @@ const NewProduct = (props) => {
     event.preventDefault();
     const data = new FormData();
     data.append('myFile', event.target.files[0]);
-    console.log(data)
-    fetch("http://localhost:1337/upload", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
-      body: data
-    }).then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result)
-          const values = [...images];
+    api.uploadFile(data)
+    .then(response => {
+      const values = [...images];
           let img = values.find(value => value.id === id)
-          img.url = result.url
+          img.url = response.data.url
           img.imgName = event.target.files[0].name
           setImages(values);
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+    }).catch(error => {
+      console.log(error)
+    });
   }
 
   const [specFields, setSpecFields] = useState([
