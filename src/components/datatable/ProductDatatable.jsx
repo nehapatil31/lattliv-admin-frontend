@@ -145,10 +145,12 @@ const ProductDatatable = () => {
             onClick={() => {
               updateState(state_enum.trashed)
             }}
+            disabled={access.product_delete ? false : true}
             variant="outlined" color="error" startIcon={<DeleteIcon />}>
             Delete
           </Button>
           <Button
+          disabled={access.product_edit ? false : true}
             onClick={() => {
               updateState(state_enum.review)
             }}
@@ -156,6 +158,7 @@ const ProductDatatable = () => {
             Ready for review
           </Button>
           <Button
+          disabled={access.product_hide ? false : true}
             onClick={() => {
               updateState(state_enum.hidden)
             }}
@@ -163,6 +166,7 @@ const ProductDatatable = () => {
             Hide
           </Button>
           <Button
+          disabled={access.product_publish ? false : true}
             onClick={() => {
               updateState(state_enum.published)
             }}
