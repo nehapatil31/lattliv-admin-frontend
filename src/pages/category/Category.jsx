@@ -13,6 +13,7 @@ import * as api from '../../api';
 import CategoryDatatable from '../../components/datatable/CategoryDatatable';
 import SubCategoryDatatable from '../../components/datatable/SubCategoryDatatable';
 import * as access from '../../access'
+import Button from '@mui/material/Button';
 
 function Category() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -62,9 +63,17 @@ function Category() {
                         <>
                             <div className="datatableTitle">
                                 All Categories
-                                <Link to="/categories/new" className="link">
+
+
+                                <Button
+                                    disabled={access.category_create ? false : true}
+                                    onClick={() => {
+                                        window.location.href = '/categories/new';
+                                    }}
+                                    variant="contained">
                                     Add New Category
-                                </Link>
+
+                                </Button>
                             </div>
                             <CategoryDatatable categories={categories} />
                         </>
@@ -78,9 +87,14 @@ function Category() {
                         <>
                             <div className="datatableTitle">
                                 All Sub Categories
-                                <Link to="/subcategories/new" className="link">
+                                <Button
+                                    disabled={access.subcategory_create ? false : true}
+                                    onClick={() => {
+                                        window.location.href = '/subcategories/new';
+                                    }}
+                                    variant="contained">
                                     Add New Sub Category
-                                </Link>
+                                </Button>
                             </div>
                             <SubCategoryDatatable categories={categories} subCategories={subCategories} />
                         </>
