@@ -31,8 +31,16 @@ export default function CategoryDatatable({categories}) {
             children += ', '
           }
           return (
-            <Tooltip title={children} >
-            <div className="rowitem">{children}</div>
+            <Tooltip
+              title={
+                <ul className="subcategory-list">
+                  {params.row.children.map(function (object) {
+                    return <li>{object.name}</li>;
+                  })}
+                </ul>
+              }
+            >
+              <div>{children}</div>
             </Tooltip>
           )
         }
