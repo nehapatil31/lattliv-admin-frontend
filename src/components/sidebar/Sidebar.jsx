@@ -75,10 +75,10 @@ function Sidebar() {
                         <span>Settings</span>
                     </li> */}
                     <p className="title">USER</p>
-                    <li>
+                    {/* <li>
                         <AccountCircleOutlinedIcon className="icon" />
                         <span>Profile</span>
-                    </li>
+                    </li> */}
                     <Link to="/login" style={{ textDecoration: "none" }}>
                         <li>
                             <CreditCardIcon className="icon" />

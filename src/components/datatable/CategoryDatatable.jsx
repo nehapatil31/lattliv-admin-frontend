@@ -28,7 +28,7 @@ export default function CategoryDatatable({categories}) {
           let children = ''
           for(let item of params.row.children){
             children += item.name
-            children += ', '
+            children += ' | '
           }
           return (
             <Tooltip
