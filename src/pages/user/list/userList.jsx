@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import UserDatatable from '../../../components/datatable/UserDatatable';
 import * as access from '../../../access'
 import React from "react";
+import Button from '@mui/material/Button';
 
 function UserList() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -29,9 +30,14 @@ function UserList() {
                 <>
                     <div className="datatableTitle">
                         All Users
-                        <Link to="/users/new" className="link">
+                        <Button
+                            disabled={access.user_create ? false : true}
+                            onClick={() => {
+                                window.location.href = '/products/new';
+                            }}
+                            variant="contained">
                             Add New User
-                        </Link>
+                        </Button>
                     </div>
                     <UserDatatable />
                 </>
