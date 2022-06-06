@@ -115,10 +115,11 @@ const NewUser = (props) => {
     let access = initialFormValues.access
     accessHtml = Object.keys(access).map(key =>
       <div key={key}>
+          <br />
         <Typography variant="h6" gutterBottom component="div">
           {key}
         </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+        <Box >
           {Object.keys(access[key]).map(item => {
             return (<FormControlLabel
               key={item}

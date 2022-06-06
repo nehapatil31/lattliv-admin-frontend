@@ -33,7 +33,7 @@ function UserList() {
                         <Button
                             disabled={access.user_create ? false : true}
                             onClick={() => {
-                                window.location.href = '/products/new';
+                                window.location.href = '/users/new';
                             }}
                             variant="contained">
                             Add New User

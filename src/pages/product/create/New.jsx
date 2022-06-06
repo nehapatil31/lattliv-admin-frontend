@@ -50,8 +50,8 @@ const initialFormValues = {
   state: '',
   slug: '',
   createdBy: '',
-  seo:{
-    title:'',
+  seo: {
+    title: '',
     description: '',
     keywords: ''
   }
@@ -194,27 +194,7 @@ const NewProduct = (props) => {
             }).catch(error => {
               console.log(error)
             });
-          // fetch(`${url.base_url}/products/${productId}`)
-          //   .then(results => results.json())
-          //   .then(data => {
-          //     let dataObj = { ...data }
-          //     dataObj.category = data.category.parent.id
-          //     dataObj.subcategory = data.category.id
-          //     dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
 
-          //     let category = categories.find(i => i.id === dataObj.category)
-          //     category.children && setSubcatergories(category.children)
-
-          //     if (data.specification?.specFields) {
-          //       setSpecFields(data.specification?.specFields)
-          //     }
-          //     if (data.images?.images) {
-          //       setImages(data.images?.images)
-          //     }
-
-          //     setValues(dataObj);
-          //     setEditorValues(dataObj);
-          //   });
         } else {
           const nanoid = customAlphabet('1234567890abcdef', 10)
           setValues({
@@ -266,24 +246,6 @@ const NewProduct = (props) => {
       }
     }
 
-
-    // let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
-
-
-    // fetch(apiUrl, {
-    //   method: 'POST',
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(body)
-    // }).then((res) => {
-    //   if (res.status === 200) {
-    //     let msg = productId ? "Product is updated !" : "Product is created !"
-
-    //     window.location.href = '/products?msg=' + msg;
-    //   } else {
-    //     toast.error("Some error occurred")
-    //   }
-
-    // })
   }
 
   return (
