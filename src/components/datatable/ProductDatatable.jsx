@@ -32,7 +32,7 @@ const ProductDatatable = () => {
       .then(response => {
         if (response.status === 200) {
           let msg = "Product is deleted."
-  
+
           window.location.href = '/products?msg=' + msg;
         } else {
           toast.error("Some error occurred")
@@ -41,21 +41,6 @@ const ProductDatatable = () => {
         toast.error("Some error occurred")
       });
 
-    // fetch(`${url.base_url}/products/update/${confirmOpen.id}`, {
-    //   method: 'POST',
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(body)
-    // }).then((res) => {
-    //   if (res.status === 200) {
-    //     let msg = "Product is deleted."
-
-    //     window.location.href = '/products?msg=' + msg;
-    //   } else {
-    //     toast.error("Some error occurred")
-    //   }
-
-    // })
-    // setData(data.filter((item) => item.id !== id));
   };
 
   const updateState = (state) => {
@@ -69,7 +54,7 @@ const ProductDatatable = () => {
       .then(response => {
         if (response.status === 200) {
           let msg = "Products are updated."
-  
+
           window.location.href = '/products?msg=' + msg;
         } else {
           toast.error("Some error occurred")
@@ -150,7 +135,7 @@ const ProductDatatable = () => {
             Delete
           </Button>
           <Button
-          disabled={access.product_edit ? false : true}
+            disabled={access.product_edit ? false : true}
             onClick={() => {
               updateState(state_enum.review)
             }}
@@ -158,7 +143,7 @@ const ProductDatatable = () => {
             Ready for review
           </Button>
           <Button
-          disabled={access.product_hide ? false : true}
+            disabled={access.product_hide ? false : true}
             onClick={() => {
               updateState(state_enum.hidden)
             }}
@@ -166,7 +151,7 @@ const ProductDatatable = () => {
             Hide
           </Button>
           <Button
-          disabled={access.product_publish ? false : true}
+            disabled={access.product_publish ? false : true}
             onClick={() => {
               updateState(state_enum.published)
             }}

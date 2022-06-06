@@ -14,12 +14,14 @@ export const category_create = user?.data?.access?.categories?.create;
 export const category_delete = user?.data?.access?.categories?.delete;
 export const category_edit = user?.data?.access?.categories?.edit;
 export const category_publish = user?.data?.access?.categories?.publish;
+export const category_hide = user?.data?.access?.categories?.hide;
 
 export const subcategory_read = user?.data?.access?.subcategories?.view;
 export const subcategory_create = user?.data?.access?.subcategories?.create;
 export const subcategory_delete = user?.data?.access?.subcategories?.delete;
 export const subcategory_edit = user?.data?.access?.subcategories?.edit;
 export const subcategory_publish = user?.data?.access?.subcategories?.publish;
+export const subcategory_hide = user?.data?.access?.subcategories?.hide;
 
 
 export const user_read = user?.data?.access?.users?.view;

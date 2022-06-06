@@ -1,3 +1,4 @@
+import * as access from '../../../access'
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
 import { useForm, Form } from "../../../components/form/useForm";
@@ -17,10 +18,15 @@ import { state_enum } from '../../../config'
 
 const initialFormValues = {
   name: '',
+  seo:{
+    title:'',
+    description: '',
+    keywords: ''
+  }
 }
 
 const NewCategory = (props) => {
-  const { userId } = useParams();
+  const { categoryId } = useParams();
   const {
     values,
     setValues,
@@ -31,10 +37,10 @@ const NewCategory = (props) => {
   } = useForm(initialFormValues);
 
   useEffect(() => {
-    if (userId) {
-      api.fetchUser(userId)
+    if (categoryId) {
+      api.fetchCategory(categoryId)
       .then(response => {
-        setValues(response.data.user);
+        setValues(response.data.category);
         console.log(response.data)
       }).catch(error => {
         console.log(error)
@@ -49,8 +55,8 @@ const NewCategory = (props) => {
         ...values,
         state: state
       }
-      if(userId){
-        const response = await api.updateUser(userId, body);
+      if(categoryId){
+        const response = await api.updateUser(categoryId, body);
         console.log(response)
         if (response.status === 200) {
           let msg = "User is updated !" 
@@ -61,9 +67,10 @@ const NewCategory = (props) => {
           toast.error("Some error occurred")
         }
       } else {
+        body.createdBy = access.user_id
         const response = await api.createCategory(body);
         console.log(response)
-        if (response.status === 201) {
+        if (response.status === 200) {
           let msg = "Category is created !" 
   
           window.location.href = '/categories?msg=' + msg;
@@ -94,6 +101,46 @@ const NewCategory = (props) => {
             />
             
             <br />
+            <h3>SEO Metatags</h3>
+              <Controls.Input
+                name='title'
+                label="Title"
+                value={values.seo.title}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='description'
+                label="Description"
+                value={values.seo.description}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='keywords'
+                label="Keywords"
+                value={values.seo.keywords}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
             <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
                   onClick={() => {
