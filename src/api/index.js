@@ -28,6 +28,8 @@ export const updateProduct = (id, product) => API.post(`/products/update/${id}`,
 export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
 
 export const createCategory = (newCategory) => API.post('categories/create', newCategory);
+export const updateBulk = (newData) => API.post('/states/update/bulk', newData);
+
 
 
 export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);

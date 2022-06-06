@@ -27,20 +27,34 @@ const ProductDatatable = () => {
     let body = {
       state: state_enum.trashed
     }
-    fetch(`${url.base_url}/products/update/${confirmOpen.id}`, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }).then((res) => {
-      if (res.status === 200) {
-        let msg = "Product is deleted."
-
-        window.location.href = '/products?msg=' + msg;
-      } else {
+    api.updateProduct(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
+      // .then(results => results.json())
+      .then(response => {
+        if (response.status === 200) {
+          let msg = "Product is deleted."
+  
+          window.location.href = '/products?msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
+      }).catch(error => {
         toast.error("Some error occurred")
-      }
+      });
 
-    })
+    // fetch(`${url.base_url}/products/update/${confirmOpen.id}`, {
+    //   method: 'POST',
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(body)
+    // }).then((res) => {
+    //   if (res.status === 200) {
+    //     let msg = "Product is deleted."
+
+    //     window.location.href = '/products?msg=' + msg;
+    //   } else {
+    //     toast.error("Some error occurred")
+    //   }
+
+    // })
     // setData(data.filter((item) => item.id !== id));
   };
 
@@ -50,20 +64,19 @@ const ProductDatatable = () => {
       state: state,
       type: "product"
     }
-    fetch(`${url.base_url}/states/update/bulk`, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }).then((res) => {
-      if (res.status === 200) {
-        let msg = "Products are updated."
-
-        window.location.href = '/products?msg=' + msg;
-      } else {
+    api.updateBulk(body)//fetch(`${url.base_url}/products`)
+      // .then(results => results.json())
+      .then(response => {
+        if (response.status === 200) {
+          let msg = "Products are updated."
+  
+          window.location.href = '/products?msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
+      }).catch(error => {
         toast.error("Some error occurred")
-      }
-
-    })
+      });
   }
   useEffect(() => {
     api.fetchProducts()//fetch(`${url.base_url}/products`)
@@ -97,19 +110,6 @@ const ProductDatatable = () => {
               variant="outlined" color="info" size="small">
               Edit
             </Button>
-            {/* <div
-              className="deleteButton"
-              // onClick={() => handleDelete(params.row.id)}
-              onClick={(e) => {
-                e.preventDefault()
-                setConfirmOpen({
-                  state: true,
-                  id: params.row.id
-                })
-              }}
-            >
-              Delete
-            </div> */}
 
             <Button
               disabled={access.product_delete ? false : true}
