@@ -30,6 +30,7 @@ export default function SignIn() {
       localStorage.setItem('profile', JSON.stringify({ ...data }));
       window.location.href = '/products'
     } catch (error) {
+      window.alert("Not correct email id or password")
       console.log(error)
     }
   };
