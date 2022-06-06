@@ -40,7 +40,7 @@ const NewSubCategory = (props) => {
 
   useEffect(() => {
     if (subcategoryId) {
-      api.fetchUser(subcategoryId)
+      api.fetchCategory(subcategoryId)
         .then(response => {
           setValues(response.data.user);
           console.log(response.data)

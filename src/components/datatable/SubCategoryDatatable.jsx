@@ -9,6 +9,11 @@ import Button from '@mui/material/Button';
 import { toast, ToastContainer } from 'react-toastify';
 import ConfirmDialog from "../confirm/ConfirmDialog";
 import { state_enum } from '../../config'
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import GradingIcon from '@mui/icons-material/Grading';
+import CheckIcon from '@mui/icons-material/Check';
+import Stack from '@mui/material/Stack';
 
 export default function SubCategoryDatatable({subCategories, categories}) {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
@@ -85,6 +90,25 @@ export default function SubCategoryDatatable({subCategories, categories}) {
       },
     },
   ];
+  const updateState = (state) => {
+    let body = {
+      ids: selectionModel,
+      state: state,
+      type: "category"
+    }
+    api.updateBulk(body)
+      .then(response => {
+        if (response.status === 200) {
+          let msg = "Sub Categories are updated."
+
+          window.location.href = '/categories?subcategory=true&&msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
+      }).catch(error => {
+        toast.error("Some error occurred")
+      });
+  }
   const handleDelete = () => {
     let body = {
       state: state_enum.trashed
@@ -118,13 +142,62 @@ export default function SubCategoryDatatable({subCategories, categories}) {
       >
         Are you sure you want to delete this sub category?
       </ConfirmDialog>
+      <div >
+        <ToastContainer icon={false} limit={1} autoClose={2000} />
+        <Stack direction="row" spacing={2} style={{ display: multiActionVisibility ? 'block' : 'none' }}>
+          <Button
+            onClick={() => {
+              updateState(state_enum.trashed)
+            }}
+            disabled={access.category_delete ? false : true}
+            variant="outlined" color="error" startIcon={<DeleteIcon />}>
+            Delete
+          </Button>
+          <Button
+            disabled={access.category_edit ? false : true}
+            onClick={() => {
+              updateState(state_enum.review)
+            }}
+            variant="outlined" color="info" startIcon={<GradingIcon />}>
+            Ready for review
+          </Button>
+          <Button
+            disabled={access.category_hide ? false : true}
+            onClick={() => {
+              updateState(state_enum.hidden)
+            }}
+            variant="outlined" color="warning" startIcon={<VisibilityOffIcon />}>
+            Hide
+          </Button>
+          <Button
+            disabled={access.category_publish ? false : true}
+            onClick={() => {
+              updateState(state_enum.published)
+            }}
+            variant="outlined" color="success" startIcon={<CheckIcon />}>
+            Publish
+          </Button>
+        </Stack>
+      </div>
+      <br/>
       {subCategories && <DataGrid
         rows={subCategories}
         className="datagrid"
+        disableSelectionOnClick
+        disableColumnSelector
         columns={columns.concat(actionColumn)}
         pageSize={10}
         rowsPerPageOptions={[10]}
         checkboxSelection
+        onSelectionModelChange={(newSelectionModel, a) => {
+          if (newSelectionModel.length) {
+            setMultiActionVisibility(true)
+          } else {
+            setMultiActionVisibility(false)
+          }
+          setSelectionModel(newSelectionModel);
+        }}
+        selectionModel={selectionModel}
       />}
     </div>
   );

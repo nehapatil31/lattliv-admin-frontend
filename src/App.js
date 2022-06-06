@@ -57,9 +57,9 @@ function App() {
               <Route index element={<Category/>}/>
               <Route
                 path="new"
-                element={<NewSubCategory title="Add New Sub-Category" />}
+                element={<NewSubCategory title="Add New Sub Category" />}
               />
-              {/* <Route path=":productId" element={<New title="Edit Product" />} /> */}
+              <Route path=":subcategoryId" element={<NewSubCategory title="Edit Sub Category" />} />
             </Route>
           </Route>
         </Routes>
