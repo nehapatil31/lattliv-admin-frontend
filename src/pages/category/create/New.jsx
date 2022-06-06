@@ -40,7 +40,7 @@ const NewCategory = (props) => {
     if (categoryId) {
       api.fetchCategory(categoryId)
       .then(response => {
-        setValues(response.data.category);
+        setValues(response.data);
         console.log(response.data)
       }).catch(error => {
         console.log(error)
@@ -56,12 +56,13 @@ const NewCategory = (props) => {
         state: state
       }
       if(categoryId){
-        const response = await api.updateUser(categoryId, body);
+        delete body?.parent;
+        const response = await api.updateCategory(categoryId, body);
         console.log(response)
         if (response.status === 200) {
-          let msg = "User is updated !" 
+          let msg = "Category is updated !" 
   
-          window.location.href = '/users?msg=' + msg;
+          window.location.href = '/categories?msg=' + msg;
   
         } else {
           toast.error("Some error occurred")

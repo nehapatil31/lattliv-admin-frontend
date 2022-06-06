@@ -113,7 +113,7 @@ export default function SubCategoryDatatable({subCategories, categories}) {
     let body = {
       state: state_enum.trashed
     }
-    api.updatecategory(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
+    api.updateCategory(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
       // .then(results => results.json())
       .then(response => {
         if (response.status === 200) {

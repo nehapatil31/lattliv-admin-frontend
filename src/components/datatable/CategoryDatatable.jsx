@@ -23,7 +23,7 @@ export default function CategoryDatatable({ categories }) {
     let body = {
       state: state_enum.trashed
     }
-    api.updatecategory(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
+    api.updateCategory(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
       // .then(results => results.json())
       .then(response => {
         if (response.status === 200) {
@@ -171,7 +171,7 @@ export default function CategoryDatatable({ categories }) {
         setOpen={setConfirmOpen}
         onConfirm={handleDelete}
       >
-        Are you sure you want to delete this post?
+        Are you sure you want to delete this category?
       </ConfirmDialog>
       <div >
         <ToastContainer icon={false} limit={1} autoClose={2000} />

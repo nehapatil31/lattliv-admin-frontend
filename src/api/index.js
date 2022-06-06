@@ -5,6 +5,7 @@ const API = axios.create({ baseURL: 'http://65.2.126.231:1337' });
 // const url = 'https://impressions01.herokuapp.com/posts';
 
 API.interceptors.request.use((req) => {
+    req.headers['Access-Control-Allow-Origin']= "*"
     if (localStorage.getItem('profile')) {
         req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
     }
@@ -26,7 +27,7 @@ export const createUser = (newUser) => API.post('/user/register', newUser);
 export const createSubcategory = (newUser) => API.post('/categories/create', newUser);
 
 export const updateProduct = (id, product) => API.post(`/products/update/${id}`, product);
-export const updatecategory = (id, category) => API.post(`/categories/update/${id}`, category);
+export const updateCategory = (id, category) => API.post(`/categories/update/${id}`, category);
 export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
 
 export const createCategory = (newCategory) => API.post('categories/create', newCategory);

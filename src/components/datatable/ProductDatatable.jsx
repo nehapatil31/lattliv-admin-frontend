@@ -121,7 +121,7 @@ const ProductDatatable = () => {
         setOpen={setConfirmOpen}
         onConfirm={handleDelete}
       >
-        Are you sure you want to delete this post?
+        Are you sure you want to delete this product?
       </ConfirmDialog>
       <ToastContainer icon={false} limit={1} autoClose={2000} />
       <div >

@@ -1,9 +1,12 @@
 import "./datatable.scss";
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from "react";
-import { url } from '../../config'
 import * as api from '../../api';
-import { Link } from "react-router-dom";
+import * as access from '../../access'
+import Button from '@mui/material/Button';
+import { state_enum } from '../../config'
+import ConfirmDialog from "../confirm/ConfirmDialog";
+import { toast, ToastContainer } from 'react-toastify';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -28,6 +31,28 @@ const columns = [
 
 export default function UserDatatable() {
   const [data, setData] = useState();
+  const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
+
+  const handleDelete = () => {
+    console.log(confirmOpen.id)
+    let body = {
+      state: state_enum.trashed
+    }
+    api.updateUser(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
+      // .then(results => results.json())
+      .then(response => {
+        if (response.status === 200) {
+          let msg = "User is deleted."
+
+          window.location.href = '/users?msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
+      }).catch(error => {
+        toast.error("Some error occurred")
+      });
+
+  };
 
   useEffect(() => {
     api.fetchUsers()
@@ -39,7 +64,7 @@ export default function UserDatatable() {
       });
   }, []);
 
-  
+
   const actionColumn = [
     {
       field: "action",
@@ -51,12 +76,17 @@ export default function UserDatatable() {
         let apiUrl = `/users/${params.id}`
         return (
           <div className="cellAction">
-            <Link to={apiUrl} style={{ textDecoration: "none" }}>
-              <div className="viewButton">Edit</div>
-            </Link>
-            {/* <div
-              className="deleteButton"
-              // onClick={() => handleDelete(params.row.id)}
+            <Button
+              disabled={access.user_edit ? false : true}
+              onClick={() => {
+                window.location.href = apiUrl
+              }}
+              variant="outlined" color="info" size="small">
+              Edit
+            </Button>
+
+            <Button
+              disabled={access.user_delete ? false : true}
               onClick={(e) => {
                 e.preventDefault()
                 setConfirmOpen({
@@ -64,9 +94,9 @@ export default function UserDatatable() {
                   id: params.row.id
                 })
               }}
-            >
+              variant="outlined" color="error" size="small">
               Delete
-            </div> */}
+            </Button>
           </div>
         );
       },
@@ -74,13 +104,22 @@ export default function UserDatatable() {
   ];
   return (
     <div className="datatable">
+      <ConfirmDialog
+        title="Delete Post?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={handleDelete}
+      >
+        Are you sure you want to delete this user?
+      </ConfirmDialog>
       {data && <DataGrid
+      disableSelectionOnClick
+      disableColumnSelector
         rows={data}
         className="datagrid"
         columns={columns.concat(actionColumn)}
         pageSize={10}
         rowsPerPageOptions={[10]}
-        checkboxSelection
       />}
     </div>
   );
