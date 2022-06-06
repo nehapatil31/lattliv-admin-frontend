@@ -49,7 +49,12 @@ const initialFormValues = {
   subcategory: '',
   state: '',
   slug: '',
-  createdBy: ''
+  createdBy: '',
+  seo:{
+    title:'',
+    description: '',
+    keywords: ''
+  }
 }
 
 const NewProduct = (props) => {
@@ -121,15 +126,15 @@ const NewProduct = (props) => {
     const data = new FormData();
     data.append('myFile', event.target.files[0]);
     api.uploadFile(data)
-    .then(response => {
-      const values = [...images];
-          let img = values.find(value => value.id === id)
-          img.url = response.data.url
-          img.imgName = event.target.files[0].name
-          setImages(values);
-    }).catch(error => {
-      console.log(error)
-    });
+      .then(response => {
+        const values = [...images];
+        let img = values.find(value => value.id === id)
+        img.url = response.data.url
+        img.imgName = event.target.files[0].name
+        setImages(values);
+      }).catch(error => {
+        console.log(error)
+      });
   }
 
   const [specFields, setSpecFields] = useState([
@@ -159,17 +164,17 @@ const NewProduct = (props) => {
 
   useEffect(() => {
     api.fetchCategories()
-    .then(response => {
+      .then(response => {
         // let subcategories = response.data.filter((item) => item.parent)
         let categories = response.data.filter((item) => !item.parent)
         setcatergories(categories);
-       
+
         if (productId) {
           //get product data
           api.fetchProduct(productId)
-          .then(response => {
-            let data = response.data;
-            let dataObj = { ...response.data }
+            .then(response => {
+              let data = response.data;
+              let dataObj = { ...response.data }
               dataObj.category = data.category.parent.id
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
@@ -186,9 +191,9 @@ const NewProduct = (props) => {
 
               setValues(dataObj);
               setEditorValues(dataObj);
-          }).catch(error => {
-            console.log(error)
-          });
+            }).catch(error => {
+              console.log(error)
+            });
           // fetch(`${url.base_url}/products/${productId}`)
           //   .then(results => results.json())
           //   .then(data => {
@@ -217,9 +222,9 @@ const NewProduct = (props) => {
             sku: nanoid(5),
           })
         }
-    }).catch(error => {
+      }).catch(error => {
         console.log(error)
-    });
+      });
 
   }, [])
 
@@ -241,7 +246,7 @@ const NewProduct = (props) => {
     body.category = body.subcategory
 
     let msg = productId ? "Product is updated !" : "Product is created !"
-    if(productId){
+    if (productId) {
       const response = await api.updateProduct(productId, body);
       console.log(response)
 
@@ -263,7 +268,7 @@ const NewProduct = (props) => {
 
 
     // let apiUrl = productId ? `${url.base_url}/products/update/${productId}` : `${url.base_url}/products/create`
-    
+
 
     // fetch(apiUrl, {
     //   method: 'POST',
@@ -292,60 +297,8 @@ const NewProduct = (props) => {
         <ToastContainer icon={false} autoClose={3000} />
         <div className="bottom">
           <div className="right">
-            <h3>Images</h3>
-            {images.map(inputField => (
-              <div key={inputField.id}>
-                {
-                  inputField.imgName && (
-                    <div>Image name: {inputField.imgName}</div>
 
-                  )
-                }
-                {
-                  !inputField.imgName && (
-                    <>
-                      <input type="file" id="myFile" onChange={event => handleImageAdd(inputField.id, event)} style={{ display: 'none' }} />
-                      <label for="myFile" style={{
-                        cursor: 'pointer',
-                        color: '#0288d1',
-                        marginRight: '12px'
-                      }}>Select File</label>
-                      <br />
-                      <br />
-                    </>
-                  )
-                }
 
-                {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
-                <TextField
-                  name="alttag"
-                  label="Alt Tag"
-                  variant="standard"
-                  value={inputField.alttag}
-                  style={{ marginRight: "12px" }}
-                  onChange={event => handleImageData(inputField.id, event)}
-                />
-
-                {inputField.url && (
-                  <>
-                    <img src={inputField.url} style={{ height: '100px', width: '100px' }} />
-                    {/* <a href={inputField.url} target="_blank">Check image</a> */}
-                  </>
-                )}
-                <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
-                  <RemoveIcon />
-                </IconButton>
-                <IconButton
-                  onClick={handleAddImages}
-                >
-                  <AddIcon />
-                </IconButton>
-                {/* {inputField.url && <a href={inputField.url} target="_blank">Check image</a>} */}
-                <br />
-                <br />
-                <br />
-              </div>
-            ))}
             <Form>
               <Grid container>
                 <Grid item xs={6}>
@@ -471,7 +424,100 @@ const NewProduct = (props) => {
                   <br />
                 </div>
               ))}
+              <h3>Images</h3>
+              {images.map(inputField => (
+                <div key={inputField.id}>
+                  {
+                    inputField.imgName && (
+                      <div>Image name: {inputField.imgName}</div>
 
+                    )
+                  }
+                  {
+                    !inputField.imgName && (
+                      <>
+                        <input type="file" id="myFile" onChange={event => handleImageAdd(inputField.id, event)} style={{ display: 'none' }} />
+                        <label for="myFile" style={{
+                          cursor: 'pointer',
+                          color: '#0288d1',
+                          marginRight: '12px'
+                        }}>Select File</label>
+                        <br />
+                        <br />
+                      </>
+                    )
+                  }
+
+                  {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
+                  <TextField
+                    name="alttag"
+                    label="Alt Tag"
+                    variant="standard"
+                    value={inputField.alttag}
+                    style={{ marginRight: "12px" }}
+                    onChange={event => handleImageData(inputField.id, event)}
+                  />
+
+                  {inputField.url && (
+                    <>
+                      <img src={inputField.url} style={{ height: '100px', width: '100px' }} />
+                      {/* <a href={inputField.url} target="_blank">Check image</a> */}
+                    </>
+                  )}
+                  <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
+                    <RemoveIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleAddImages}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  {/* {inputField.url && <a href={inputField.url} target="_blank">Check image</a>} */}
+                  <br />
+                  <br />
+                  <br />
+                </div>
+              ))}
+              <h3>SEO Metatags</h3>
+              <Controls.Input
+                name='title'
+                label="Title"
+                value={values.seo.title}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='description'
+                label="Description"
+                value={values.seo.description}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='keywords'
+                label="Keywords"
+                value={values.seo.keywords}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
               <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
                   disabled={access.product_create ? false : true}
