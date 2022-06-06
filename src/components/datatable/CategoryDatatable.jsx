@@ -2,9 +2,7 @@ import * as access from '../../access'
 import "./datatable.scss";
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from "react";
-import { url } from '../../config'
 import * as api from '../../api';
-import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import Button from '@mui/material/Button';
 import ConfirmDialog from "../confirm/ConfirmDialog";

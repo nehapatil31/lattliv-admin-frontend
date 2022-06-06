@@ -4,11 +4,16 @@ import React, { useState, useEffect } from "react";
 import { url } from '../../config'
 import * as api from '../../api';
 import { Link } from "react-router-dom";
-
-
+import * as access from '../../access'
+import Button from '@mui/material/Button';
+import { toast, ToastContainer } from 'react-toastify';
+import ConfirmDialog from "../confirm/ConfirmDialog";
+import { state_enum } from '../../config'
 
 export default function SubCategoryDatatable({subCategories, categories}) {
-
+  const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
+  const [multiActionVisibility, setMultiActionVisibility] = useState(false);
+  const [selectionModel, setSelectionModel] = React.useState([]);
   const columns = [
     // { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Name', width: 200 },
@@ -52,15 +57,19 @@ export default function SubCategoryDatatable({subCategories, categories}) {
       width: 200,
       disableColumnFilter: true,
       renderCell: (params) => {
-        let apiUrl = `/users/${params.id}`
+        let apiUrl = `/subcategories/${params.id}`
         return (
           <div className="cellAction">
-            <Link to={apiUrl} style={{ textDecoration: "none" }}>
-              <div className="viewButton">Edit</div>
-            </Link>
-            {/* <div
-              className="deleteButton"
-              // onClick={() => handleDelete(params.row.id)}
+            <Button
+              disabled={access.subcategory_edit ? false : true}
+              onClick={() => {
+                window.location.href = apiUrl
+              }}
+              variant="outlined" color="info" size="small">
+              Edit
+            </Button>
+            <Button
+              disabled={access.subcategory_delete ? false : true}
               onClick={(e) => {
                 e.preventDefault()
                 setConfirmOpen({
@@ -68,20 +77,47 @@ export default function SubCategoryDatatable({subCategories, categories}) {
                   id: params.row.id
                 })
               }}
-            >
+              variant="outlined" color="error" size="small">
               Delete
-            </div> */}
+            </Button>
           </div>
         );
       },
     },
   ];
+  const handleDelete = () => {
+    let body = {
+      state: state_enum.trashed
+    }
+    api.updatecategory(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
+      // .then(results => results.json())
+      .then(response => {
+        if (response.status === 200) {
+          let msg = "SubCategory is deleted."
+
+          window.location.href = '/categories?subcategory=true&&msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
+      }).catch(error => {
+        toast.error("Some error occurred")
+      });
+    // setData(data.filter((item) => item.id !== id));
+  };
 
   if(!subCategories){
     return null
   }
   return (
     <div className="datatable">
+      <ConfirmDialog
+        title="Delete Post?"
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={handleDelete}
+      >
+        Are you sure you want to delete this sub category?
+      </ConfirmDialog>
       {subCategories && <DataGrid
         rows={subCategories}
         className="datagrid"

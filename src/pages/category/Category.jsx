@@ -16,18 +16,24 @@ import * as access from '../../access'
 import Button from '@mui/material/Button';
 
 function Category() {
+    const [value, setValue] = React.useState('1');
     const [searchParams, setSearchParams] = useSearchParams();
     const [categories, setCategories] = useState();
     const [subCategories, setSubCategories] = useState();
     let isToastcalled = false
-
+   
     useEffect(() => {
+        
         api.fetchCategories()
             .then(response => {
                 let subcategories = response.data.filter((item) => item.parent)
                 let categories = response.data.filter((item) => !item.parent)
                 setCategories(categories);
                 setSubCategories(subcategories);
+
+                if(searchParams.get("subcategory")){
+                    setValue("2");
+                }
             }).catch(error => {
                 console.log(error)
             });
@@ -39,7 +45,7 @@ function Category() {
         }
     }, [])
 
-    const [value, setValue] = React.useState('1');
+    
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
