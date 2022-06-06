@@ -62,3 +62,14 @@
 .subcategory-list {
   font-size: 14px;
 }
+.MuiDataGrid-renderingZone {
+  max-height: none !important;
+}
+.MuiDataGrid-cell {
+  line-height: unset !important;
+  max-height: none !important;
+  white-space: normal;
+}
+.MuiDataGrid-row{
+  max-height: none !important;
+}

@@ -60,19 +60,19 @@ export default function CategoryDatatable({ categories }) {
   }
   const columns = [
     // { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'name', headerName: 'Name', flex:1 },
     {
       field: 'fullName',
       headerName: 'Created by',
       // description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 160,
+      flex:1,
       valueGetter: (params) => params.row.createdBy?.name ? `${params.row.createdBy?.name}` : '-'
     },
     {
       field: 'children',
       headerName: 'Sub Category',
-      width: 230,
+      flex:1,
       renderCell: (params) => {
         if (!params.row.children.length) return (<div>No sub categories</div>)
         let children = ''
@@ -90,7 +90,11 @@ export default function CategoryDatatable({ categories }) {
               </ul>
             }
           >
-            <div>{children}</div>
+            <div><ul className="subcategory-list">
+                {params.row.children.map(function (object) {
+                  return <li>{object.name}</li>;
+                })}
+              </ul></div>
           </Tooltip>
         )
       }
@@ -98,7 +102,7 @@ export default function CategoryDatatable({ categories }) {
     {
       field: "status",
       headerName: "Status",
-      width: 160,
+      flex:1,
       renderCell: (params) => {
         return (
           <div className={`cellWithStatus ${params.row.state.name}`}>
@@ -112,9 +116,10 @@ export default function CategoryDatatable({ categories }) {
   const actionColumn = [
     {
       field: "action",
+      autoHeight: true,
       headerName: "Action",
       sortable: false,
-      width: 200,
+      flex:1,
       disableColumnFilter: true,
       renderCell: (params) => {
         let apiUrl = `/categories/${params.id}`
@@ -140,23 +145,11 @@ export default function CategoryDatatable({ categories }) {
               variant="outlined" color="error" size="small">
               Delete
             </Button>
-            {/* <div
-              className="deleteButton"
-              // onClick={() => handleDelete(params.row.id)}
-              onClick={(e) => {
-                e.preventDefault()
-                setConfirmOpen({
-                  state: true,
-                  id: params.row.id
-                })
-              }}
-            >
-              Delete
-            </div> */}
+            
           </div>
         );
       },
-    },
+    }
   ];
 
   if (!categories) {
