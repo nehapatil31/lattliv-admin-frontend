@@ -232,7 +232,7 @@ const NewProduct = (props) => {
     let body = {
       ...values,
       state: state,
-      createdBy: 1,
+      createdBy: access.user_id,
       specification: {
         specFields: specFields
       },

@@ -14,10 +14,16 @@ import './new.scss'
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { state_enum } from '../../../config'
+import * as access from '../../../access'
 
 const initialFormValues = {
   name: '',
   parent: '',
+  seo:{
+    title:'',
+    description: '',
+    keywords: ''
+  }
 }
 
 const NewSubCategory = (props) => {
@@ -61,7 +67,7 @@ const NewSubCategory = (props) => {
       let body = {
         ...values,
         state: state,
-        createdBy: 10
+        createdBy: access.user_id
       }
       if (subcategoryId) {
         const response = await api.updateUser(subcategoryId, body);
@@ -129,6 +135,46 @@ const NewSubCategory = (props) => {
               onChange={handleInputChange}
             />
 
+<h3>SEO Metatags</h3>
+              <Controls.Input
+                name='title'
+                label="Title"
+                value={values.seo.title}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='description'
+                label="Description"
+                value={values.seo.description}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
+              <Controls.Input
+                name='keywords'
+                label="Keywords"
+                value={values.seo.keywords}
+                onChange={(e) => {
+                  let { name, value } = e.target
+                  let new_values = JSON.parse(JSON.stringify(values));;
+                  new_values.seo[name] = value
+                  setValues({
+                    ...new_values
+                  })
+                }}
+              />
 
             <br />
             <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
