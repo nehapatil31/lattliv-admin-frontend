@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://65.2.126.231:1337' });
+const API = axios.create({ baseURL: 'https://adminapi.pratapindustries.in' });
 // const url = 'http://localhost:5000/posts';
 // const url = 'https://impressions01.herokuapp.com/posts';
 
