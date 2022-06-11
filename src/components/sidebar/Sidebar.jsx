@@ -57,6 +57,12 @@ function Sidebar() {
                             <span>Categories</span>
                         </li>
                     </Link>
+                    <Link to="/seo" style={{ textDecoration: "none" }}>
+                        <li>
+                            {/* <CreditCardIcon className="icon" /> */}
+                            <span>SEO</span>
+                        </li>
+                    </Link>
 
                     {/* <p className="title">USEFUL</p>
                     <li>
