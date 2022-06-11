@@ -4,3 +4,156 @@
         flex: 6;
     }
 }
+body {
+    font-family: 'Roboto', sans-serif;
+  }
+  .column{
+    vertical-align:top;
+    max-width:290px;
+    display: inline-block;
+    margin: .5em;
+    
+  }
+  
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    transition-duration: .25s;
+  }
+  
+  
+  body {
+    background: #e2e1e0;
+    text-align: center;
+  }
+  .number-container{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: rgb(33, 150, 243);
+  }
+  .number{
+    text-align: center;
+    font-size: 61px;
+  }
+  .number-text{
+    text-align: center;
+    font-size: 22px;
+  }
+  .card {
+    align:center;
+    display: inline-block;
+    background: #fff;
+    display: inline-block;
+    height: auto;
+    margin: .5rem;
+    position: relative;
+    width: 204px;
+    min-height: 170px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .0), 0 6px 6px rgba(0, 0, 0, 0.1);
+    transition-duration: .25s;
+    font-family: 'Roboto' sans-serif;
+    border-radius: 14px;
+    text-align:left;
+  }
+  
+  .card:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+  
+  .card-top {
+   width: auto;
+  }
+  
+  .card-top img{
+  max-width:100%;  
+  }
+  .card-top p{
+    font-size: 1.5em;
+    position: absolute;
+    margin-top:-1.7em;
+    margin-left:.6em;
+    color:white;
+    
+  }
+  
+  .card-body p{
+    position:relative;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-size: .9em;
+    
+  }
+  
+  .card-footer {
+    bottom: 0;
+  }
+  
+  .card-footer li {
+    display: inline;
+    padding-right: 10px;
+    position: relative;
+    color:#E65100;
+  }
+  .card-actions {}
+  #sub{
+    color:grey;
+  }
+  .teal{
+    background-color: #006064;
+    color: white;
+  }
+  .teal a{
+    color: white;
+  }
+  .pink{
+    background-color:#EF9A9A;
+    color:black;
+  }
+  .red{
+    background-color:#880E4F;
+    color:white;
+  }
+  
+  #info-header{
+    font-size:1.5em;
+    padding-left:.5em;
+  }
+  #info-body{
+    margin-top:-1.2em;  
+    padding-left:1em;
+    font-size:.9em;
+    font-weight:300;
+  }
+  #info-action{
+      padding-left:.9em;
+  }
+  .info {
+    display:table;
+  }
+  .info-text {
+    display:table-cell;
+    width:60%;
+    vertical-align:top;
+  
+  }
+  .info-text p{
+    width:100%;
+    vertical-align:top;
+  }
+  .info-image{
+    padding:.6em;
+    vertical-align:bottom;
+  
+  }
+  .info-image img{
+    display:table-cell;
+    max-width:100%;  
+  }
+  
