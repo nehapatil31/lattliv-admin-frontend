@@ -76,7 +76,7 @@ const SeoDatatable = ({ data }) => {
     ];
 
     return (
-        <div className="datatable">
+        <div className="datatable" style={{height: '95%'}}>
             {data && <DataGrid
                 className="datagrid"
                 disableSelectionOnClick
