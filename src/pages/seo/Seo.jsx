@@ -20,12 +20,20 @@ function Seo() {
     const [value, setValue] = React.useState('1');
     const [searchParams, setSearchParams] = useSearchParams();
     const [categories, setCategories] = useState();
+    const [products, setProducts] = useState();
     const [subCategories, setSubCategories] = useState();
     let isToastcalled = false
    
     useEffect(() => {
-        
-        api.fetchCategories()
+        if(value=='1'){
+            api.fetchProducts()
+            .then(response => {
+                setProducts(response.data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }else {
+            api.fetchCategories()
             .then(response => {
                 let subcategories = response.data.filter((item) => item.parent)
                 let categories = response.data.filter((item) => !item.parent)
@@ -42,6 +50,7 @@ function Seo() {
             }).catch(error => {
                 console.log(error)
             });
+        }
     }, [])
     useEffect(() => {
         if (!isToastcalled && searchParams.get("msg")) {
@@ -76,7 +85,7 @@ function Seo() {
                             <div className="datatableTitle">
                                 All Products
                             </div>
-                            <SeoDatatable categories={categories} />
+                            <SeoDatatable data={products} />
                         </>
                     }
 
