@@ -63,6 +63,9 @@ function App() {
               />
               <Route path=":subcategoryId" element={<NewSubCategory title="Edit Sub Category" />} />
             </Route>
+            <Route path="seo">
+              <Route index element={<Seo/>}/>
+            </Route>
             <Route path="trash">
               <Route index element={<Trash/>}/>
             </Route>
