@@ -9,7 +9,7 @@ function Home() {
             <Sidebar />
             <div className="homeContainer">
                 <Navbar />
-                <h2>Products</h2>
+                <h2 style={{marginLeft: "12px"}}>Products</h2>
                 <div class="row">
                     <div class="card">
                         <div class="card-top">
@@ -37,7 +37,7 @@ function Home() {
                         <div class="card-body">
                             <div className="number-container" style={{color:"rgb(244, 67, 54)"}}>
                             <div className="number">97 </div>
-                            <div className="number-text">Hidder</div>
+                            <div className="number-text">Hidden</div>
                             </div>
                         </div>
                     </div>

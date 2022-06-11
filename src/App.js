@@ -14,6 +14,7 @@ import NewProduct from "./pages/product/create/New";
 import Category from './pages/category/Category';
 import NewUser from './pages/user/create/New';
 import Seo from './pages/seo/Seo';
+import Trash from './pages/trash/Trash';
 import NewCategory from './pages/category/create/New';
 import NewSubCategory from './pages/subcategory/create/New';
 import React from "react";
@@ -62,8 +63,8 @@ function App() {
               />
               <Route path=":subcategoryId" element={<NewSubCategory title="Edit Sub Category" />} />
             </Route>
-            <Route path="seo">
-              <Route index element={<Seo/>}/>
+            <Route path="trash">
+              <Route index element={<Trash/>}/>
             </Route>
           </Route>
         </Routes>
