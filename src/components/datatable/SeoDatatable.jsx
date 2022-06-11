@@ -7,10 +7,10 @@ import Tooltip from "@mui/material/Tooltip";
 
 const SeoDatatable = ({ data }) => {
     const tableColumns = [
-        { field: "sku", headerName: "SKU", width: 100 },
+        // { field: "sku", headerName: "SKU", width: 100 },
         {
             field: "name",
-            headerName: "Product Name",
+            headerName: "Name",
             width: 230,
             renderCell: (params) => (
                 <Tooltip title={params.row.name} >
@@ -29,7 +29,7 @@ const SeoDatatable = ({ data }) => {
         {
             field: "description",
             headerName: "Description",
-            width: 200,
+            width: 230,
             renderCell: (params) => {
                 return (
                     <div className="rowitem">{params.row.seo?.description}</div>
@@ -39,7 +39,7 @@ const SeoDatatable = ({ data }) => {
         {
             field: "keywords",
             headerName: "Keywords",
-            width: 160,
+            width: 230,
             renderCell: (params) => {
                 return (
                     <div className="rowitem">{params.row.seo?.keywords}</div>

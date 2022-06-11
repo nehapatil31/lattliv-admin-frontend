@@ -25,6 +25,8 @@ function Seo() {
     let isToastcalled = false
    
     useEffect(() => {
+        
+
         if(value=='1'){
             api.fetchProducts()
             .then(response => {
@@ -39,20 +41,19 @@ function Seo() {
                 let categories = response.data.filter((item) => !item.parent)
                 setCategories(categories);
                 setSubCategories(subcategories);
-
-                if(searchParams.get("products")){
-                    setValue("1");
-                }else if(searchParams.get("categories")){
-                    setValue("2");
-                }else if(searchParams.get("subcategories")){
-                    setValue("3");
-                }
             }).catch(error => {
                 console.log(error)
             });
         }
-    }, [])
+    }, [value])
     useEffect(() => {
+        if(searchParams.get("products")){
+            setValue("1");
+        }else if(searchParams.get("categories")){
+            setValue("2");
+        }else if(searchParams.get("subcategories")){
+            setValue("3");
+        }
         if (!isToastcalled && searchParams.get("msg")) {
             isToastcalled = true
             toast.success(searchParams.get("msg"))
@@ -97,19 +98,8 @@ function Seo() {
                         <>
                             <div className="datatableTitle">
                                 All Categories
-
-
-                                <Button
-                                    disabled={access.category_create ? false : true}
-                                    onClick={() => {
-                                        window.location.href = '/categories/new';
-                                    }}
-                                    variant="contained">
-                                    Add New Category
-
-                                </Button>
                             </div>
-                            <CategoryDatatable categories={categories} />
+                            <SeoDatatable data={categories} />
                         </>
                     }
 
@@ -121,16 +111,8 @@ function Seo() {
                         <>
                             <div className="datatableTitle">
                                 All Sub Categories
-                                <Button
-                                    disabled={access.subcategory_create ? false : true}
-                                    onClick={() => {
-                                        window.location.href = '/subcategories/new';
-                                    }}
-                                    variant="contained">
-                                    Add New Sub Category
-                                </Button>
                             </div>
-                            <SubCategoryDatatable categories={categories} subCategories={subCategories} />
+                            <SeoDatatable data={subCategories} />
                         </>
                     }
 
