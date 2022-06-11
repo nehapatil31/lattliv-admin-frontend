@@ -5,40 +5,40 @@ import * as access from '../../access'
 import { DataGrid } from "@mui/x-data-grid";
 import Tooltip from "@mui/material/Tooltip";
 
-const SeoDatatable = ({data}) => {
+const SeoDatatable = ({ data }) => {
     const tableColumns = [
         { field: "sku", headerName: "SKU", width: 100 },
         {
             field: "name",
             headerName: "Product Name",
             width: 230,
-            renderCell: (params) =>  (
-              <Tooltip title={params.row.name} >
-               <span className="table-cell-trucate">{params.row.name}</span>
-               </Tooltip>
-             ),
-          },
+            renderCell: (params) => (
+                <Tooltip title={params.row.name} >
+                    <span className="table-cell-trucate">{params.row.name}</span>
+                </Tooltip>
+            ),
+        },
         {
             field: "title",
             headerName: "Title",
             width: 230,
             renderCell: (params) => (
-                    <span className="table-cell-trucate">{params.row.seo?.title}</span>
+                <span className="table-cell-trucate">{params.row.seo?.title}</span>
             ),
         },
         {
-            field: "category",
-            headerName: "Category",
-            width: 160,
+            field: "description",
+            headerName: "Description",
+            width: 200,
             renderCell: (params) => {
                 return (
-                        <div className="rowitem">{params.row.seo?.description}</div>
+                    <div className="rowitem">{params.row.seo?.description}</div>
                 )
             },
         },
         {
-            field: "subcategory",
-            headerName: "SubCategory",
+            field: "keywords",
+            headerName: "Keywords",
             width: 160,
             renderCell: (params) => {
                 return (
@@ -74,7 +74,7 @@ const SeoDatatable = ({data}) => {
             },
         },
     ];
-    console.log(data)
+
     return (
         <div className="datatable">
             {data && <DataGrid
