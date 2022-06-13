@@ -17,6 +17,7 @@ export const uploadFile = (data) => API.post('/upload', data);
 export const fetchProducts = () => API.get('/products');
 export const fetchUsers = () => API.get('/user');
 export const fetchCategories = () => API.get('/categories');
+export const fetchTrashedItems = () => API.get('/trash');
 
 export const fetchUser = (id) => API.get(`/user/${id}`);
 export const fetchCategory = (id) => API.get(`/categories/${id}`);

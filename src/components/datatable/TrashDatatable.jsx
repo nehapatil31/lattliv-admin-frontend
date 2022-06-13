@@ -19,33 +19,33 @@ const TrashDatatable = ({ data }) => {
             ),
         },
         {
-            field: "title",
-            headerName: "Title",
+            field: "type",
+            headerName: "Type",
             width: 230,
             renderCell: (params) => (
-                <span className="table-cell-trucate">{params.row.seo?.title}</span>
+                <span className="table-cell-trucate">{params.row.type}</span>
             ),
         },
-        {
-            field: "description",
-            headerName: "Description",
-            width: 230,
-            renderCell: (params) => {
-                return (
-                    <div className="rowitem">{params.row.seo?.description}</div>
-                )
-            },
-        },
-        {
-            field: "keywords",
-            headerName: "Keywords",
-            width: 230,
-            renderCell: (params) => {
-                return (
-                    <div className="rowitem">{params.row.seo?.keywords}</div>
-                )
-            },
-        }
+        // {
+        //     field: "description",
+        //     headerName: "Description",
+        //     width: 230,
+        //     renderCell: (params) => {
+        //         return (
+        //             <div className="rowitem">{params.row.seo?.description}</div>
+        //         )
+        //     },
+        // },
+        // {
+        //     field: "keywords",
+        //     headerName: "Keywords",
+        //     width: 230,
+        //     renderCell: (params) => {
+        //         return (
+        //             <div className="rowitem">{params.row.seo?.keywords}</div>
+        //         )
+        //     },
+        // }
     ];
     const actionColumn = [
         {

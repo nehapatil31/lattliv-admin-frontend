@@ -15,15 +15,15 @@ import * as access from '../../access'
 
 
 function Trash() {
-    const [products, setProducts] = useState();
+    const [items, setItems] = useState();
     const [searchParams, setSearchParams] = useSearchParams();
     let isToastcalled = false
    
     useEffect(() => {
         
-            api.fetchProducts()
+            api.fetchTrashedItems()
             .then(response => {
-                setProducts(response.data)
+                setItems(response.data)
             }).catch(error => {
                 console.log(error)
             })
@@ -48,7 +48,7 @@ function Trash() {
                             <div className="datatableTitle">
                                 Trashed items
                             </div>
-                            <TrashDatatable data={products} />
+                            <TrashDatatable data={items} />
                         </>
                     }
         </div>
