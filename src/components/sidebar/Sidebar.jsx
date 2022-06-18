@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-
+import * as access from '../../access'
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -12,7 +12,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import TakeoutDiningOutlinedIcon from '@mui/icons-material/TakeoutDiningOutlined';
-
+import { ReactComponent as Logo } from './logo.svg';
 
 function Sidebar() {
     const { dispatch } = useContext(DarkModeContext);
@@ -20,7 +20,8 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <div className="top">
-                <span className="logo">Lattliv</span>
+                {/* <span className="logo">Lattliv</span> */}
+                <Logo style={{width: "100px" ,marginTop: "20px"}}/>
             </div>
             <div className="center">
                 <ul>
@@ -76,6 +77,11 @@ function Sidebar() {
                     </li>
                 </Link>
             </ul>
+
+           <div className="user-details">
+           <div className="name">{access?.user_name }</div>
+            <div className="email">{access?.user_email }</div>
+           </div>
             </div>
 
         </div>

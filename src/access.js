@@ -1,5 +1,7 @@
 const user = JSON.parse(localStorage.getItem('profile'));
 export const user_id = user?.data?.id;
+export const user_name = user?.data?.name;
+export const user_email = user?.data?.email;
 
 export const product_read = user?.data?.access?.products?.view;
 export const product_create = user?.data?.access?.products?.create;

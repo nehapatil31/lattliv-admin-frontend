@@ -6,7 +6,7 @@
     background-color: rgb(27, 35, 48);
   
     .top {
-      height: 50px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -46,12 +46,12 @@
           cursor: pointer;
   
           &:hover {
-            background-color: #ece8ff;
+            background-color: rgba(255, 255, 255, 0.05);
           }
   
           .icon {
             font-size: 22px;
-            color: #7451f8;
+            color: #7EC8E3; //#7451f8;
           }
   
           span{
@@ -65,11 +65,23 @@
     }
     .bottom{
       position: absolute;
-      bottom: 14px;
+      bottom: 20px;
       width: 100%;
       box-sizing: border-box;
     }
   
+    .user-details {
+      margin-top: 12px;
+      color: white;
+      padding-left: 8px;
+      .name{
+        margin-bottom: 4px;
+        font-weight: 700;
+      }
+      .email{
+        color: #ddd;
+      }
+    }
     // .bottom{
     //     // display: flex;
     //     // align-items: center;
