@@ -15,15 +15,24 @@ import * as access from '../../access'
 
 
 function Trash() {
-    const [items, setItems] = useState();
+    const [categories, setCategories] = useState();
+    const [products, setProducts] = useState();
     const [searchParams, setSearchParams] = useSearchParams();
     let isToastcalled = false
+    const [value, setValue] = React.useState('1');
+
    
     useEffect(() => {
         
             api.fetchTrashedItems()
             .then(response => {
-                setItems(response.data)
+
+                if(response?.data){
+                    let prod = response?.data.filter(i=>i.type=='product')
+                    setProducts(prod)
+                    let cat = response?.data.filter(i=>i.type=='category')
+                    setCategories(cat)
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -36,21 +45,50 @@ function Trash() {
         }
     }, [])
 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     return (<div className='home'>
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-            {!access.product_read && 'No product read access'}
+             <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <Tab label="Products" value="1" />
+                        <Tab label="Categories" value="2" />
+                    </TabList>
+                </Box>
+                <TabPanel value="1" style={{ height: '81%' }}>
+
+                    {!access.product_read && 'No product read access'}
                     {access.product_read &&
                         <>
                             <div className="datatableTitle">
-                                Trashed items
+                            Trashed Products
                             </div>
-                            <TrashDatatable data={items} />
+                            <TrashDatatable data={products} />
                         </>
                     }
+
+                </TabPanel>
+                <TabPanel value="2" style={{ height: '81%' }}>
+
+                    {!access.category_read && 'No categories read access'}
+                    {access.category_read &&
+                        <>
+                            <div className="datatableTitle">
+                            Trashed Categories
+                            </div>
+                            <TrashDatatable data={categories} />
+                        </>
+                    }
+
+                </TabPanel>
+            </TabContext>
+            
         </div>
     </div>);
 }
