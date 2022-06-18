@@ -63,16 +63,19 @@ function Sidebar() {
                             <span>Trash</span>
                         </li>
                     </Link>
-
-                    <p className="title">USER</p>
-
-                    <Link to="/login" style={{ textDecoration: "none" }}>
-                        <li>
-                            <LogoutOutlinedIcon className="icon" />
-                            <span onClick={() => { localStorage.clear(); }}>Logout</span>
-                        </li>
-                    </Link>
                 </ul>
+            </div>
+            <div className="bottom">
+            <ul>
+                <p className="title">USER</p>
+
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                    <li>
+                        <LogoutOutlinedIcon className="icon" />
+                        <span onClick={() => { localStorage.clear(); }}>Logout</span>
+                    </li>
+                </Link>
+            </ul>
             </div>
 
         </div>
