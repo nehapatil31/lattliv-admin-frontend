@@ -21,16 +21,20 @@ function Trash() {
     let isToastcalled = false
     const [value, setValue] = React.useState('1');
 
-   
+
     useEffect(() => {
-        
-            api.fetchTrashedItems()
+        if(searchParams.get("products")){
+            setValue("1");
+        }else if(searchParams.get("categories")){
+            setValue("2");
+        }
+        api.fetchTrashedItems()
             .then(response => {
 
-                if(response?.data){
-                    let prod = response?.data.filter(i=>i.type=='product')
+                if (response?.data) {
+                    let prod = response?.data.filter(i => i.type == 'product')
                     setProducts(prod)
-                    let cat = response?.data.filter(i=>i.type=='category')
+                    let cat = response?.data.filter(i => i.type == 'category')
                     setCategories(cat)
                 }
             }).catch(error => {
@@ -38,7 +42,7 @@ function Trash() {
             })
     }, [])
     useEffect(() => {
-       
+
         if (!isToastcalled && searchParams.get("msg")) {
             isToastcalled = true
             toast.success(searchParams.get("msg"))
@@ -54,7 +58,7 @@ function Trash() {
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-             <TabContext value={value}>
+            <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Products" value="1" />
@@ -67,9 +71,9 @@ function Trash() {
                     {access.product_read &&
                         <>
                             <div className="datatableTitle">
-                            Trashed Products
+                                Trashed Products
                             </div>
-                            <TrashDatatable data={products} />
+                            <TrashDatatable data={products} type={'product'} />
                         </>
                     }
 
@@ -80,15 +84,15 @@ function Trash() {
                     {access.category_read &&
                         <>
                             <div className="datatableTitle">
-                            Trashed Categories
+                                Trashed Categories
                             </div>
-                            <TrashDatatable data={categories} />
+                            <TrashDatatable data={categories} type={'category'} />
                         </>
                     }
 
                 </TabPanel>
             </TabContext>
-            
+
         </div>
     </div>);
 }

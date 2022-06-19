@@ -35,6 +35,12 @@ export const createCategory = (newCategory) => API.post('categories/create', new
 export const updateBulk = (newData) => API.post('/states/update/bulk', newData);
 
 
+export const restoreItem = (data) => API.patch('/trash', data);
+export const deleteItem = (data) => {
+    return API.delete('/trash', {data})
+};
+
+
 
 export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
 

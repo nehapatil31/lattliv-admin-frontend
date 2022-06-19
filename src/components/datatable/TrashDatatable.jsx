@@ -4,14 +4,15 @@ import Button from '@mui/material/Button';
 import * as access from '../../access'
 import { DataGrid } from "@mui/x-data-grid";
 import Tooltip from "@mui/material/Tooltip";
+import { deleteItem, restoreItem } from "../../api";
 
-const TrashDatatable = ({ data }) => {
+const TrashDatatable = ({ data, type }) => {
     const tableColumns = [
         // { field: "sku", headerName: "SKU", width: 100 },
         {
             field: "name",
             headerName: "Name",
-            width: 230,
+            width: 480,
             renderCell: (params) => (
                 <Tooltip title={params.row.name} >
                     <span className="table-cell-trucate">{params.row.name}</span>
@@ -55,28 +56,41 @@ const TrashDatatable = ({ data }) => {
             width: 200,
             disableColumnFilter: true,
             renderCell: (params) => {
-                let apiUrl = `/products/${params.id}`
                 return (
                     <div className="cellAction">
-                        {/* <Link to={apiUrl} style={{ textDecoration: "none" }}>
-                  <div className="viewButton">Edit</div>
-                </Link> */}
                         <Button
                             disabled={access.product_edit ? false : true}
                             onClick={() => {
-                                window.location.href = apiUrl
+                                restoreItem({
+                                    "data": [
+                                        {
+                                            "id": params.row.id,
+                                            "type": type
+                                        }
+                                    ]
+                                }).then(res=>{
+                                    window.location.href = type=='product'? '/products?msg=Product restored'
+                                    : '/categories?msg=Item restored '
+                                })
                             }}
                             variant="outlined" color="success" size="small">
                             Restore
                         </Button>
                         <Button
                             disabled={access.subcategory_delete ? false : true}
-                            onClick={(e) => {
-                                // e.preventDefault()
-                                // setConfirmOpen({
-                                //     state: true,
-                                //     id: params.row.id
-                                // })
+                            onClick={() => {
+                                deleteItem({
+                                    "data": [
+                                        {
+                                            "id": params.row.id,
+                                            "type": type
+                                        }
+                                    ]
+                                }).then(res=>{
+                                    let url = '/trash?msg=Item permanently deleted.';
+                                    window.location.href = type=='product'? `${url}`
+                                    : `${url}&categories=true`
+                                })
                             }}
                             variant="outlined" color="error" size="small">
                             Delete
