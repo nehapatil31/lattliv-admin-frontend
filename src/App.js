@@ -8,9 +8,11 @@ import {
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import ProductList from './pages/product/list/Product';
+import StoreList from './pages/store/list/Store';
 import UserList from './pages/user/list/userList';
 import { productInputs } from "./formSource";
 import NewProduct from "./pages/product/create/New";
+import NewStore from "./pages/store/create/New";
 import Category from './pages/category/Category';
 import NewUser from './pages/user/create/New';
 import Seo from './pages/seo/Seo';
@@ -38,6 +40,14 @@ function App() {
                 element={<NewProduct inputs={productInputs} title="Add New Product" />}
               />
               <Route path=":productId" element={<NewProduct inputs={productInputs} title="Edit Product" />} />
+            </Route>
+            <Route path="stores">
+              <Route index element={<StoreList/>}/>
+              <Route
+                path="new"
+                element={<NewStore title="Add New Store Location" />}
+              />
+              <Route path=":storeId" element={<NewStore  title="Edit Store Location" />} />
             </Route>
             <Route path="users">
               <Route index element={<UserList/>}/>

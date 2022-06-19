@@ -13,6 +13,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import TakeoutDiningOutlinedIcon from '@mui/icons-material/TakeoutDiningOutlined';
 import { ReactComponent as Logo } from './logo.svg';
+import StoreMallDirectoryOutlinedIcon from '@mui/icons-material/StoreMallDirectoryOutlined';
 
 function Sidebar() {
     const { dispatch } = useContext(DarkModeContext);
@@ -56,6 +57,12 @@ function Sidebar() {
                         <li>
                             <ManageSearchIcon className="icon" />
                             <span>SEO</span>
+                        </li>
+                    </Link>
+                    <Link to="/stores" style={{ textDecoration: "none" }}>
+                        <li>
+                            <StoreMallDirectoryOutlinedIcon className="icon" />
+                            <span>Store Locator</span>
                         </li>
                     </Link>
                     <Link to="/trash" style={{ textDecoration: "none" }}>

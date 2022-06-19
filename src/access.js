@@ -30,3 +30,8 @@ export const user_read = user?.data?.access?.users?.view;
 export const user_create = user?.data?.access?.users?.create;
 export const user_delete = user?.data?.access?.users?.delete;
 export const user_edit = user?.data?.access?.users?.edit;
+
+export const store_read = user?.data?.access?.stores?.view;
+export const store_create = user?.data?.access?.stores?.create;
+export const store_delete = user?.data?.access?.stores?.delete;
+export const store_edit = user?.data?.access?.stores?.edit;

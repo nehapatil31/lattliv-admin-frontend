@@ -46,6 +46,12 @@ const initialFormValues = {
       "edit": false,
       "delete": false,
       "view": false
+    },
+    "stores": {
+      "create": false,
+      "edit": false,
+      "delete": false,
+      "view": false
     }
   }
 }

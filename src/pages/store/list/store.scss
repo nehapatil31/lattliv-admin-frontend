@@ -1,0 +1,21 @@
+.datatableTitle{
+    width: 100%;
+    font-size: 24px;
+    color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+
+    .link{
+      text-decoration: none;
+      color: green;
+      font-size: 16px;
+      font-weight: 400;
+      border: 1px solid green;
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
