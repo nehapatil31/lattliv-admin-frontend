@@ -43,4 +43,6 @@ export const restoreItem = (data) => API.patch('/trash', data);
 export const deleteItem = (data) => {
     return API.delete('/trash', {data})
 };
-export const deleteStore = (data) => API.delete('/trash', data);
+export const deleteStore = (data) => {
+    return API.delete('/store', {data:data});
+};

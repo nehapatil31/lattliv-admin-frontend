@@ -23,17 +23,15 @@ const StoreDatatable = () => {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
 
   const handleDelete = () => {
-    console.log(confirmOpen.id)
     let body = {
-      state: state_enum.trashed
+      id: confirmOpen.id
     }
-    api.updateUser(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
-      // .then(results => results.json())
+    api.deleteStore(body)
       .then(response => {
         if (response.status === 200) {
-          let msg = "User is deleted."
+          let msg = "Store is deleted."
 
-          window.location.href = '/users?msg=' + msg;
+          window.location.href = '/stores?msg=' + msg;
         } else {
           toast.error("Some error occurred")
         }
