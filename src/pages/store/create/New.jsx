@@ -42,35 +42,16 @@ const NewStore = (props) => {
 
   useEffect(() => {
     if (storeId) {
-      //get product data
-      // api.fetchStore(storeId)
-      //   .then(response => {
-      //     let data = response.data;
-      //     let dataObj = { ...response.data }
+      //get store data
+      api.fetchStore(storeId)
+        .then(response => {
+          let dataObj = { ...response.data }
 
 
-      //     setValues(dataObj);
-      //   }).catch(error => {
-      //     console.log(error)
-      //   });
-      setValues( {
-        "createdAt": "2022-06-19T06:02:35.733Z",
-        "updatedAt": "2022-06-19T06:02:35.733Z",
-        "id": 2,
-        "name": "Store1",
-        "place": "Panvel",
-        "address": "123, Panvel",
-        "email": "store@email.com",
-        "number": [
-            "1234567890",
-            "9876543210"
-        ],
-        "manager": "Neha",
-        "map": "https://map.location.com",
-        "image": "abc.jpg",
-        "timings": "1-10 am"
-    },
-    );
+          setValues(dataObj);
+        }).catch(error => {
+          console.log(error)
+        });
     }
   }, [])
   const submitForm = async function (state) {
