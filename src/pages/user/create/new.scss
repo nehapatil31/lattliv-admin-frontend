@@ -1,11 +1,11 @@
 .new {
   width: 100%;
   display: flex;
-
+  max-height: 100vh;
   .newContainer {
     flex: 6;
 
-    
+    overflow: scroll;
     .top,
     .bottom {
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
