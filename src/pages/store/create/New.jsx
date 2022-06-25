@@ -31,6 +31,33 @@ const NewStore = (props) => {
   const [file, setFile] = useState("");
   const { storeId } = useParams();
 
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors }
+    if ('name' in fieldValues)
+        temp.name = fieldValues.name ? "" : "This field is required."
+    if ('place' in fieldValues)
+        temp.place = fieldValues.place ? "" : "This field is required."
+    if ('address' in fieldValues)
+        temp.address = fieldValues.address ? "" : "This field is required."
+    if ('email' in fieldValues){
+      temp.email = fieldValues.email ? "" : "This field is required."
+        if(fieldValues.email){
+          temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
+        }
+    }
+    if ('number' in fieldValues)
+      temp.number = fieldValues.number ? "" : "This field is required."
+    if ('map' in fieldValues)
+      temp.map = fieldValues.map ? "" : "This field is required."
+    if ('timings' in fieldValues)
+      temp.timings = fieldValues.timings ? "" : "This field is required."
+    setErrors({
+        ...temp
+    })
+
+    if (fieldValues == values)
+        return Object.values(temp).every(x => x == "")
+  }
   const {
     values,
     setValues,
@@ -38,7 +65,7 @@ const NewStore = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues);
+  } = useForm(initialFormValues, true, validate);
 
   useEffect(() => {
     if (storeId) {
@@ -57,31 +84,33 @@ const NewStore = (props) => {
   const submitForm = async function (state) {
 
     try {
-      let body = {
-        ...values
-      }
-      if (storeId) {
-        body.id = storeId;
-        const response = await api.updateStore( body);
-        console.log(response)
-        if (response.status === 200) {
-          let msg = "Store is updated !"
-
-          window.location.href = '/stores?msg=' + msg;
-
-        } else {
-          toast.error("Some error occurred")
+      if(validate()){
+        let body = {
+          ...values
         }
-      } else {
-        const response = await api.createStore(body);
-        console.log(response)
-        if (response.status === 200) {
-          let msg = "Store is created !"
-
-          window.location.href = '/stores?msg=' + msg;
-
+        if (storeId) {
+          body.id = storeId;
+          const response = await api.updateStore( body);
+          console.log(response)
+          if (response.status === 200) {
+            let msg = "Store is updated !"
+  
+            window.location.href = '/stores?msg=' + msg;
+  
+          } else {
+            toast.error("Some error occurred")
+          }
         } else {
-          toast.error("Some error occurred")
+          const response = await api.createStore(body);
+          console.log(response)
+          if (response.status === 200) {
+            let msg = "Store is created !"
+  
+            window.location.href = '/stores?msg=' + msg;
+  
+          } else {
+            toast.error("Some error occurred")
+          }
         }
       }
     } catch (error) {
@@ -111,6 +140,7 @@ const NewStore = (props) => {
                     label="Name"
                     value={values.name}
                     onChange={handleInputChange}
+                    error={errors.name}
                   />
 
                   <Controls.Input
@@ -118,18 +148,21 @@ const NewStore = (props) => {
                     label="Location"
                     value={values.place}
                     onChange={handleInputChange}
+                    error={errors.place}
                   />
                   <Controls.Input
                     name='address'
                     label="Address"
                     value={values.address}
                     onChange={handleInputChange}
+                    error={errors.address}
                   />
                   <Controls.Input
                   name='map'
                   label="Map link"
                   value={values.map}
                   onChange={handleInputChange}
+                  error={errors.map}
                 />
                 </Grid>
                 <Grid item xs={6}>
@@ -138,6 +171,7 @@ const NewStore = (props) => {
                     label="Email"
                     value={values.email}
                     onChange={handleInputChange}
+                    error={errors.email}
                   />
                   <Controls.Input
                     name='manager'
@@ -150,12 +184,14 @@ const NewStore = (props) => {
                     label="Number(s)"
                     value={values.number}
                     onChange={handleInputChange}
+                    error={errors.number}
                   />
                   <Controls.Input
                     name='timings'
                     label="timings"
                     value={values.timings}
                     onChange={handleInputChange}
+                    error={errors.timings}
                   />
                 </Grid>
                 
