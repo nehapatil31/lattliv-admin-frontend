@@ -18,6 +18,7 @@ const initialFormValues = {
   name: '',
   email: '',
   phone: '',
+  password: '',
   access: {
     "products": {
       "create": false,
@@ -58,6 +59,27 @@ const initialFormValues = {
 
 const NewUser = (props) => {
   const { userId } = useParams();
+
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors }
+    if ('name' in fieldValues)
+        temp.name = fieldValues.name ? "" : "This field is required."
+    if ('password' in fieldValues)
+        temp.password = fieldValues.password ? "" : "This field is required."
+    if ('email' in fieldValues)
+        temp.email = fieldValues.email ? "" : "This field is required."
+        if(fieldValues.email){
+          temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
+        }
+    if ('phone' in fieldValues)
+        temp.phone = fieldValues.phone.length > 9 ? "" : "Minimum 10 numbers required."
+    setErrors({
+        ...temp
+    })
+
+    if (fieldValues == values)
+        return Object.values(temp).every(x => x == "")
+  }
   const {
     values,
     setValues,
@@ -65,7 +87,7 @@ const NewUser = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues);
+  } = useForm(initialFormValues , true, validate);
 
   useEffect(() => {
     if (userId) {
@@ -82,31 +104,33 @@ const NewUser = (props) => {
   const submitForm = async function (state) {
 
     try {
-      let body = {
-        ...values,
-        state: 2
-      }
-      if(userId){
-        const response = await api.updateUser(userId, body);
-        console.log(response)
-        if (response.status === 200) {
-          let msg = "User is updated !" 
-  
-          window.location.href = '/users?msg=' + msg;
-  
-        } else {
-          toast.error("Some error occurred")
+      if (validate()){
+        let body = {
+          ...values,
+          state: 2
         }
-      } else {
-        const response = await api.createUser(body);
-        console.log(response)
-        if (response.status === 201) {
-          let msg = "User is created !" 
-  
-          window.location.href = '/users?msg=' + msg;
-  
+        if(userId){
+          const response = await api.updateUser(userId, body);
+          console.log(response)
+          if (response.status === 200) {
+            let msg = "User is updated !" 
+    
+            window.location.href = '/users?msg=' + msg;
+    
+          } else {
+            toast.error("Some error occurred")
+          }
         } else {
-          toast.error("Some error occurred")
+          const response = await api.createUser(body);
+          console.log(response)
+          if (response.status === 201) {
+            let msg = "User is created !" 
+    
+            window.location.href = '/users?msg=' + msg;
+    
+          } else {
+            toast.error("Some error occurred")
+          }
         }
       }
     } catch (error) {
@@ -166,24 +190,28 @@ const NewUser = (props) => {
               label="Name"
               value={values.name}
               onChange={handleInputChange}
+              error={errors.name}
             />
             <Controls.Input
               name='email'
               label="Email"
               value={values.email}
               onChange={handleInputChange}
+              error={errors.email}
             />
             <Controls.Input
               name='phone'
               label="Phone"
               value={values.phone}
               onChange={handleInputChange}
+              error={errors.phone}
             />
             <Controls.Input
               name='password'
               label="password"
               value={values.password}
               onChange={handleInputChange}
+              error={errors.password}
             />
             <br />
             <br />
