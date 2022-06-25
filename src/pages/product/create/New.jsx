@@ -90,6 +90,25 @@ const NewProduct = (props) => {
   const [catergories, setcatergories] = useState([]);
   const { productId } = useParams();
 
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors }
+    if ('name' in fieldValues)
+        temp.name = fieldValues.name ? "" : "This field is required."
+    if ('price' in fieldValues)
+        temp.price = fieldValues.price ? "" : "This field is required."
+    if ('category' in fieldValues)
+        temp.category = fieldValues.category ? "" : "This field is required."
+    if ('subcategory' in fieldValues)
+        temp.subcategory = fieldValues.subcategory ? "" : "This field is required."
+    if ('slug' in fieldValues)
+        temp.slug = fieldValues.slug ? "" : "This field is required."
+    setErrors({
+        ...temp
+    })
+
+    if (fieldValues == values)
+        return Object.values(temp).every(x => x == "")
+  }
   const {
     values,
     setValues,
@@ -209,42 +228,45 @@ const NewProduct = (props) => {
   }, [])
 
   const submitForm = async function (state) {
-    let body = {
-      ...values,
-      state: state,
-      createdBy: access.user_id,
-      specification: {
-        specFields: specFields
-      },
-      images: {
-        images: images
-      },
-      shortDesc: stateToHTML(editorState.getCurrentContent()),
-      longDesc: stateToHTML(editorStateLong.getCurrentContent())
-    }
-    body.inStock = body.availability === "in_stock"
-    body.category = body.subcategory
-
-    let msg = productId ? "Product is updated !" : "Product is created !"
-    if (productId) {
-      const response = await api.updateProduct(productId, body);
-      console.log(response)
-
-      if (response.status === 200) {
-        window.location.href = '/products?msg=' + msg;
-      } else {
-        toast.error("Some error occurred")
+    if(validate()){
+      let body = {
+        ...values,
+        state: state,
+        createdBy: access.user_id,
+        specification: {
+          specFields: specFields
+        },
+        images: {
+          images: images
+        },
+        shortDesc: stateToHTML(editorState.getCurrentContent()),
+        longDesc: stateToHTML(editorStateLong.getCurrentContent())
       }
-    } else {
-      const response = await api.createProduct(body);
-      console.log(response)
-      if (response.status === 200) {
-        window.location.href = '/products?msg=' + msg;
-
+      body.inStock = body.availability === "in_stock"
+      body.category = body.subcategory
+  
+      let msg = productId ? "Product is updated !" : "Product is created !"
+      if (productId) {
+        const response = await api.updateProduct(productId, body);
+        console.log(response)
+  
+        if (response.status === 200) {
+          window.location.href = '/products?msg=' + msg;
+        } else {
+          toast.error("Some error occurred")
+        }
       } else {
-        toast.error("Some error occurred")
+        const response = await api.createProduct(body);
+        console.log(response)
+        if (response.status === 200) {
+          window.location.href = '/products?msg=' + msg;
+  
+        } else {
+          toast.error("Some error occurred")
+        }
       }
     }
+    
 
   }
 
@@ -269,11 +291,13 @@ const NewProduct = (props) => {
                     name='name'
                     label="Name"
                     value={values.name}
+                    error={errors.name}
                     onChange={handleInputChange}
                   />
                   <Controls.Select
                     name='category'
                     label="Category"
+                    error={errors.category}
                     value={values.category}
                     onChange={(e) => {
                       let category = catergories.find(i => i.id === e.target.value)
@@ -294,6 +318,7 @@ const NewProduct = (props) => {
                     label="URL"
                     value={values.slug}
                     onChange={handleInputChange}
+                    error={errors.slug}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -307,11 +332,13 @@ const NewProduct = (props) => {
                     name='price'
                     label="Price"
                     value={values.price}
+                    error={errors.price}
                     onChange={handleInputChange}
                   />
                   <Controls.Select
                     name='subcategory'
                     label="Sub-Category"
+                    error={errors.subcategorys}
                     value={values.subcategory}
                     onChange={handleInputChange}
                     options={subcatergories}
