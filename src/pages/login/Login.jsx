@@ -8,16 +8,28 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { toast, ToastContainer } from 'react-toastify';
+import { useSearchParams } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import * as api from '../../api';
+import { useEffect } from 'react';
 
 
 const theme = createTheme();
 
 export default function SignIn() {
+  let isToastcalled = false
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (!isToastcalled && searchParams.get("msg")) {
+      isToastcalled = true
+      toast.error(searchParams.get("msg"))
+    }
+  }, [])
+
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
@@ -28,9 +40,9 @@ export default function SignIn() {
       }
       const { data } = await api.signin(body);
       localStorage.setItem('profile', JSON.stringify({ ...data }));
-      window.location.href = '/products'
+      window.location.href = '/'
     } catch (error) {
-      window.alert("Not correct email id or password")
+      window.location.href = '/login?msg=Not correct email id or password';
       console.log(error)
     }
   };
@@ -38,6 +50,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
+      <ToastContainer icon={false} limit={1} autoClose={2000} />
         <CssBaseline />
         <Box
           sx={{
