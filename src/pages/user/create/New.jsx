@@ -105,7 +105,7 @@ const NewUser = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues, true, validate);
+  } = useForm(initialFormValues, false, validate);
 
   useEffect(() => {
     if (userId) {
