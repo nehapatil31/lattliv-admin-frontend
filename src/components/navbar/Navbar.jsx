@@ -1,5 +1,6 @@
 import "./navbar.scss";
 import React from "react";
+import * as access from '../../access'
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -53,8 +54,10 @@ const Navbar = () => {
             />
           </div>
         </div> */}
-  {user
-&& user.data.name }
+        <div className="user-details">
+           <div className="name" style={{fontWeight:"600"}}>{access?.user_name }</div>
+            <div className="email">{access?.user_email }</div>
+           </div>
       </div>
     </div>
   );

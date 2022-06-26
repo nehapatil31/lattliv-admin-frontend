@@ -85,10 +85,10 @@ function Sidebar() {
                 </Link>
             </ul>
 
-           <div className="user-details">
+           {/* <div className="user-details">
            <div className="name">{access?.user_name }</div>
             <div className="email">{access?.user_email }</div>
-           </div>
+           </div> */}
             </div>
 
         </div>
