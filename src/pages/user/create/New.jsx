@@ -26,7 +26,7 @@ const initialFormValues = {
       "delete": false,
       "publish": false,
       "view": false,
-      "hide":false
+      "hide": false
     },
     "categories": {
       "create": false,
@@ -63,22 +63,40 @@ const NewUser = (props) => {
   const validate = (fieldValues = values) => {
     let temp = { ...errors }
     if ('name' in fieldValues)
-        temp.name = fieldValues.name ? "" : "This field is required."
+      temp.name = fieldValues.name ? "" : "This field is required."
     if ('password' in fieldValues)
-        temp.password = fieldValues.password ? "" : "This field is required."
+      temp.password = fieldValues.password ? "" : "This field is required."
     if ('email' in fieldValues)
-        temp.email = fieldValues.email ? "" : "This field is required."
-        if(fieldValues.email){
-          temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
-        }
+      temp.email = fieldValues.email ? "" : "This field is required."
+    if (fieldValues.email) {
+      temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
+    }
     if ('phone' in fieldValues)
-        temp.phone = fieldValues.phone.length > 9 ? "" : "Minimum 10 numbers required."
+      temp.phone = fieldValues.phone.length > 9 ? "" : "Minimum 10 numbers required."
     setErrors({
-        ...temp
+      ...temp
     })
 
+    let isAccessSelected = function () {
+      let access = values.access
+      let validated = false;
+      Object.keys(access).map(key => {
+        Object.keys(access[key]).map(item => {
+          if (access[key][item]) {
+            validated = true;
+          }
+        })
+      })
+      return validated;
+    }
+
+    if (!isAccessSelected()) {
+      toast.error('Please select at least one access checkbox.')
+      return false
+    }
+
     if (fieldValues == values)
-        return Object.values(temp).every(x => x == "")
+      return Object.values(temp).every(x => x == "")
   }
   const {
     values,
@@ -87,36 +105,36 @@ const NewUser = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues , true, validate);
+  } = useForm(initialFormValues, true, validate);
 
   useEffect(() => {
     if (userId) {
       api.fetchUser(userId)
-      .then(response => {
-        setValues(response.data);
-        console.log(response.data)
-      }).catch(error => {
-        console.log(error)
-      });
+        .then(response => {
+          setValues(response.data);
+          console.log(response.data)
+        }).catch(error => {
+          console.log(error)
+        });
     }
   }, []);
 
   const submitForm = async function (state) {
 
     try {
-      if (validate()){
+      if (validate()) {
         let body = {
           ...values,
           state: 2
         }
-        if(userId){
+        if (userId) {
           const response = await api.updateUser(userId, body);
           console.log(response)
           if (response.status === 200) {
-            let msg = "User is updated !" 
-    
+            let msg = "User is updated !"
+
             window.location.href = '/users?msg=' + msg;
-    
+
           } else {
             toast.error("Some error occurred")
           }
@@ -124,10 +142,10 @@ const NewUser = (props) => {
           const response = await api.createUser(body);
           console.log(response)
           if (response.status === 201) {
-            let msg = "User is created !" 
-    
+            let msg = "User is created !"
+
             window.location.href = '/users?msg=' + msg;
-    
+
           } else {
             toast.error("Some error occurred")
           }
@@ -145,7 +163,7 @@ const NewUser = (props) => {
     let access = initialFormValues.access
     accessHtml = Object.keys(access).map(key =>
       <div key={key}>
-          <br />
+        <br />
         <Typography variant="h6" gutterBottom component="div">
           {key}
         </Typography>
@@ -160,8 +178,8 @@ const NewUser = (props) => {
                 onChange={function (e) {
                   let { name, checked } = e.target
                   let [key, item] = name.split('-')
-                  let new_access =JSON.parse(JSON.stringify(values.access));;
-                  new_access[key][item]= checked
+                  let new_access = JSON.parse(JSON.stringify(values.access));;
+                  new_access[key][item] = checked
                   setValues({
                     ...values,
                     access: new_access
@@ -225,9 +243,9 @@ const NewUser = (props) => {
             variant="contained" color="info">
             Submit
           </Button>
-          <br/>
-          <br/>
-          <br/>
+          <br />
+          <br />
+          <br />
 
         </div>
       </div>

@@ -20,6 +20,7 @@ import Trash from './pages/trash/Trash';
 import NewCategory from './pages/category/create/New';
 import NewSubCategory from './pages/subcategory/create/New';
 import React from "react";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const user = JSON.parse(localStorage.getItem('profile'));
@@ -29,6 +30,7 @@ function App() {
   }
   return (
     <div className="App">
+       <ToastContainer icon={false} limit={1} autoClose={2000} />
       <BrowserRouter>
         <Routes>
           <Route path='/'>
