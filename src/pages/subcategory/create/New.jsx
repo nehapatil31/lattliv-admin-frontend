@@ -29,6 +29,33 @@ const initialFormValues = {
 const NewSubCategory = (props) => {
   const { subcategoryId } = useParams();
   const [categories, setCategories] = useState();
+
+  const validate = (fieldValues = values, state) => {
+    let temp = { ...errors }
+    if ('name' in fieldValues)
+      temp.name = fieldValues.name ? "" : "This field is required."
+    if ('parent' in fieldValues)
+      temp.parent = fieldValues.parent ? "" : "This field is required."
+
+    if (state == 2) {
+      if ('title' in fieldValues.seo)
+        temp.title = fieldValues.seo.title ? "" : "This field is required."
+      if ('description' in fieldValues.seo)
+        temp.description = fieldValues.seo.description ? "" : "This field is required."
+      if ('keywords' in fieldValues.seo)
+        temp.keywords = fieldValues.seo.keywords ? "" : "This field is required."
+    } else {
+      temp.title = ''
+      temp.description = ''
+      temp.keywords = ''
+    }
+    setErrors({
+      ...temp
+    })
+
+    if (fieldValues == values)
+      return Object.values(temp).every(x => x == "")
+  }
   const {
     values,
     setValues,
@@ -36,7 +63,7 @@ const NewSubCategory = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues);
+  } = useForm(initialFormValues, false, validate);
 
   useEffect(() => {
 
@@ -64,38 +91,40 @@ const NewSubCategory = (props) => {
 
   const submitForm = async function (state) {
 
-    try {
-      let body = {
-        ...values,
-        state: state,
-        createdBy: access.user_id
-      }
-      if (subcategoryId) {
-        const response = await api.updateCategory(subcategoryId, body);
-        console.log(response)
-        if (response.status === 200) {
-          let msg = "Sub category is updated !"
-
-          window.location.href = '/categories?subcategory=true&&msg=' + msg;
-
-        } else {
-          toast.error("Some error occurred")
+    if (validate(values, state)) {
+      try {
+        let body = {
+          ...values,
+          state: state,
+          createdBy: access.user_id
         }
-      } else {
-        const response = await api.createSubcategory(body);
-        console.log(response)
-        if (response.status === 200) {
-          let msg = "Subcategory is created !"
-
-          window.location.href = '/categories?subcategory=true&&msg=' + msg;
-
+        if (subcategoryId) {
+          const response = await api.updateCategory(subcategoryId, body);
+          console.log(response)
+          if (response.status === 200) {
+            let msg = "Sub category is updated !"
+  
+            window.location.href = '/categories?subcategory=true&&msg=' + msg;
+  
+          } else {
+            toast.error("Some error occurred")
+          }
         } else {
-          toast.error("Some error occurred")
+          const response = await api.createSubcategory(body);
+          console.log(response)
+          if (response.status === 200) {
+            let msg = "Subcategory is created !"
+  
+            window.location.href = '/categories?subcategory=true&&msg=' + msg;
+  
+          } else {
+            toast.error("Some error occurred")
+          }
         }
+      } catch (error) {
+        console.log(error)
+        toast.error("Some error occurred")
       }
-    } catch (error) {
-      console.log(error)
-      toast.error("Some error occurred")
     }
   }
 
@@ -111,6 +140,7 @@ const NewSubCategory = (props) => {
             {categories && (
               <Controls.Select
                 name='parent'
+                error={errors.parent}
                 label="Category"
                 value={values.parent}
                 onChange={(e) => {
@@ -131,6 +161,7 @@ const NewSubCategory = (props) => {
 
             <Controls.Input
               name='name'
+              error={errors.name}
               label="Name"
               value={values.name}
               onChange={handleInputChange}
@@ -141,6 +172,7 @@ const NewSubCategory = (props) => {
               name='title'
               label="Title"
               value={values?.seo?.title}
+              error={errors.title}
               onChange={(e) => {
                 let { name, value } = e.target
                 let new_values = JSON.parse(JSON.stringify(values));;
@@ -153,6 +185,7 @@ const NewSubCategory = (props) => {
             <Controls.Input
               name='description'
               label="Description"
+              error={errors.description}
               value={values.seo?.description}
               onChange={(e) => {
                 let { name, value } = e.target
@@ -166,6 +199,7 @@ const NewSubCategory = (props) => {
             <Controls.Input
               name='keywords'
               label="Keywords"
+              error={errors.keywords}
               value={values.seo?.keywords}
               onChange={(e) => {
                 let { name, value } = e.target
