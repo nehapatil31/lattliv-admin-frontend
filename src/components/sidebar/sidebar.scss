@@ -5,6 +5,13 @@
     min-height: 100vh;
     background-color: rgb(27, 35, 48);
   
+    .disabledCursor { 
+      cursor: default;
+      opacity: 0.5;
+    }
+    .disable {
+      opacity: 0.5;
+    }
     .top {
       height: 80px;
       display: flex;

@@ -24,7 +24,7 @@ function Sidebar() {
                 {/* <span className="logo">Lattliv</span> */}
                 <Link to="/">
 
-                <Logo style={{width: "100px" ,marginTop: "20px"}}/>
+                    <Logo style={{ width: "100px", marginTop: "20px" }} />
                 </Link>
             </div>
             <div className="center">
@@ -41,31 +41,60 @@ function Sidebar() {
                     <Link to="/users" style={{ textDecoration: "none" }}>
                         <li>
                             <PersonOutlineIcon className="icon" />
-                            <span>Users</span>
+                            {
+                                access?.user_read ? (
+                                    <span>Users</span>
+                                )
+                                    : <Link to="/" className="disabledCursor" onClick={(event) => event.preventDefault()}><span>Users</span></Link>
+                            }
+
                         </li>
                     </Link>
                     <Link to="/products" style={{ textDecoration: "none" }}>
                         <li>
-                            <TakeoutDiningOutlinedIcon className="icon" />
-                            <span>Products</span>
+                            <TakeoutDiningOutlinedIcon className={access?.product_read ? "icon" : "icon disable"} />
+                            {
+                                access?.product_read ? (
+                                    <span>Products</span>
+                                )
+                                : <Link to="/" className="disabledCursor" onClick={(event) => event.preventDefault()}><span>Products</span></Link>
+                            }
                         </li>
                     </Link>
                     <Link to="/categories" style={{ textDecoration: "none" }}>
                         <li>
-                            <CategoryOutlinedIcon className="icon" />
-                            <span>Categories</span>
+                            <CategoryOutlinedIcon className={access?.category_read ? "icon" : "icon disable"} />
+                            {
+                                access?.category_read ? (
+                                    <span>Categories</span>
+                                )
+                                : <Link to="/" className="disabledCursor" onClick={(event) => event.preventDefault()}><span>Categories</span></Link>
+                            }
+                            
                         </li>
                     </Link>
                     <Link to="/seo" style={{ textDecoration: "none" }}>
                         <li>
-                            <ManageSearchIcon className="icon" />
-                            <span>SEO</span>
+                            <ManageSearchIcon className={access?.product_read ? "icon" : "icon disable"} />
+                            {
+                                access?.product_read ? (
+                                    <span>SEO</span>
+                                )
+                                : <Link to="/" className="disabledCursor" onClick={(event) => event.preventDefault()}><span>SEO</span></Link>
+                            }
+                            
                         </li>
                     </Link>
                     <Link to="/stores" style={{ textDecoration: "none" }}>
                         <li>
-                            <StoreMallDirectoryOutlinedIcon className="icon" />
-                            <span>Store Locator</span>
+                            <StoreMallDirectoryOutlinedIcon className={access?.store_read ? "icon" : "icon disable"} />
+                            {
+                                access?.store_read ? (
+                                    <span>Store Locator</span>
+                                )
+                                : <Link to="/" className="disabledCursor" onClick={(event) => event.preventDefault()}><span>Store Locator</span></Link>
+                            }
+                            
                         </li>
                     </Link>
                     <Link to="/trash" style={{ textDecoration: "none" }}>
@@ -77,18 +106,18 @@ function Sidebar() {
                 </ul>
             </div>
             <div className="bottom">
-            <ul>
-                <p className="title">USER</p>
+                <ul>
+                    <p className="title">USER</p>
 
-                <Link to="/login" style={{ textDecoration: "none" }}>
-                    <li>
-                        <LogoutOutlinedIcon className="icon" />
-                        <span onClick={() => { localStorage.clear(); }}>Logout</span>
-                    </li>
-                </Link>
-            </ul>
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                        <li>
+                            <LogoutOutlinedIcon className="icon" />
+                            <span onClick={() => { localStorage.clear(); }}>Logout</span>
+                        </li>
+                    </Link>
+                </ul>
 
-           {/* <div className="user-details">
+                {/* <div className="user-details">
            <div className="name">{access?.user_name }</div>
             <div className="email">{access?.user_email }</div>
            </div> */}
