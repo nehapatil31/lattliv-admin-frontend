@@ -82,32 +82,71 @@ const NewProduct = (props) => {
       return EditorState.createWithContent(contentState)
     })
   }
-  const [editorState, setEditorState] = useState()
-  const [editorStateLong, setEditorStateLong] = useState()
+  const [editorState, setEditorState] = useState('')
+  const [editorStateLong, setEditorStateLong] = useState('')
 
   const [file, setFile] = useState("");
   const [subcatergories, setSubcatergories] = useState([]);
   const [catergories, setcatergories] = useState([]);
   const { productId } = useParams();
 
-  const validate = (fieldValues = values) => {
+  const validate = (fieldValues = values, state) => {
     let temp = { ...errors }
     if ('name' in fieldValues)
-        temp.name = fieldValues.name ? "" : "This field is required."
+      temp.name = fieldValues.name ? "" : "This field is required."
     if ('price' in fieldValues)
-        temp.price = fieldValues.price ? "" : "This field is required."
+      temp.price = fieldValues.price ? "" : "This field is required."
     if ('category' in fieldValues)
-        temp.category = fieldValues.category ? "" : "This field is required."
+      temp.category = fieldValues.category ? "" : "This field is required."
     if ('subcategory' in fieldValues)
-        temp.subcategory = fieldValues.subcategory ? "" : "This field is required."
+      temp.subcategory = fieldValues.subcategory ? "" : "This field is required."
     if ('slug' in fieldValues)
-        temp.slug = fieldValues.slug ? "" : "This field is required."
+      temp.slug = fieldValues.slug ? "" : "This field is required."
+    if(state==2){
+      if ('title' in fieldValues.seo)
+        temp.title = fieldValues.seo.title ? "" : "This field is required."
+      if ('description' in fieldValues.seo)
+        temp.description = fieldValues.seo.description ? "" : "This field is required."
+      if ('keywords' in fieldValues.seo)
+        temp.keywords = fieldValues.seo.keywords ? "" : "This field is required."
+    }else{
+      temp.title = ''
+      temp.description = ''
+      temp.keywords = ''
+    }
     setErrors({
-        ...temp
+      ...temp
     })
 
-    if (fieldValues == values)
-        return Object.values(temp).every(x => x == "")
+    if (!editorState) {
+      toast.error('Please add Primary Content.')
+      return false
+    }
+    if (!editorStateLong) {
+      toast.error('Please add Secondary Content.')
+      return false
+    }
+
+    //specifications validation
+    if (specFields[0].specName == '' || specFields[0].specValue == '') {
+      toast.error('Please add min one specification.')
+      return false
+    }
+    //images validation
+    if (images[0].url == '' ) {
+      toast.error('Please add at least one image.')
+      return false
+    }
+
+    if (fieldValues == values) {
+      let validated = Object.values(temp).every(x => x == "")
+      if (!validated) {
+        toast.error('Validation errors')
+        return false
+      } else {
+        return true
+      }
+    }
   }
   const {
     values,
@@ -116,7 +155,7 @@ const NewProduct = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues);
+  } = useForm(initialFormValues, false, validate);
 
   const [images, setImages] = useState([
     { id: uuidv4(), imgName: '', alttag: '', url: '' },
@@ -228,7 +267,7 @@ const NewProduct = (props) => {
   }, [])
 
   const submitForm = async function (state) {
-    if(validate()){
+    if (validate(values, state)) {
       let body = {
         ...values,
         state: state,
@@ -244,29 +283,34 @@ const NewProduct = (props) => {
       }
       body.inStock = body.availability === "in_stock"
       body.category = body.subcategory
-  
+
       let msg = productId ? "Product is updated !" : "Product is created !"
-      if (productId) {
-        const response = await api.updateProduct(productId, body);
-        console.log(response)
+      try {
+        if (productId) {
+          const response = await api.updateProduct(productId, body);
+          console.log(response)
   
-        if (response.status === 200) {
-          window.location.href = '/products?msg=' + msg;
+          if (response.status === 200) {
+            window.location.href = '/products?msg=' + msg;
+          } else {
+            toast.error("Some error occurred")
+          }
         } else {
-          toast.error("Some error occurred")
-        }
-      } else {
-        const response = await api.createProduct(body);
-        console.log(response)
-        if (response.status === 200) {
-          window.location.href = '/products?msg=' + msg;
+          const response = await api.createProduct(body);
+          console.log(response)
+          if (response.status === 200) {
+            window.location.href = '/products?msg=' + msg;
   
-        } else {
-          toast.error("Some error occurred")
-        }
+          } else {
+            toast.error("Some error occurred")
+          }
+        } 
+      } catch (error) {
+        console.log(error)
+        toast.error("Some error occurred")
       }
     }
-    
+
 
   }
 
@@ -278,7 +322,7 @@ const NewProduct = (props) => {
         <div className="top">
           <h1>{props.title}</h1>
         </div>
-        <ToastContainer icon={false} autoClose={3000} />
+        {/* <ToastContainer icon={false} autoClose={3000} /> */}
         <div className="bottom">
           <div className="right">
 
@@ -301,12 +345,6 @@ const NewProduct = (props) => {
                     value={values.category}
                     onChange={(e) => {
                       let category = catergories.find(i => i.id === e.target.value)
-
-                      // reset subcategory value
-                      // setValues({
-                      //   ...values,
-                      //   subcategory: ''
-                      // })
 
                       category.children && setSubcatergories(category.children)
                       handleInputChange(e)
@@ -338,7 +376,7 @@ const NewProduct = (props) => {
                   <Controls.Select
                     name='subcategory'
                     label="Sub-Category"
-                    error={errors.subcategorys}
+                    error={errors.subcategory}
                     value={values.subcategory}
                     onChange={handleInputChange}
                     options={subcatergories}
@@ -468,10 +506,12 @@ const NewProduct = (props) => {
                 </div>
               ))}
               <h3>SEO Metatags</h3>
+              {console.log(errors)}
               <Controls.Input
                 name='title'
                 label="Title"
                 value={values.seo.title}
+                error={errors.title}
                 onChange={(e) => {
                   let { name, value } = e.target
                   let new_values = JSON.parse(JSON.stringify(values));;
@@ -484,6 +524,7 @@ const NewProduct = (props) => {
               <Controls.Input
                 name='description'
                 label="Description"
+                error={errors.description}
                 value={values.seo.description}
                 onChange={(e) => {
                   let { name, value } = e.target
@@ -497,6 +538,7 @@ const NewProduct = (props) => {
               <Controls.Input
                 name='keywords'
                 label="Keywords"
+                error={errors.keywords}
                 value={values.seo.keywords}
                 onChange={(e) => {
                   let { name, value } = e.target
