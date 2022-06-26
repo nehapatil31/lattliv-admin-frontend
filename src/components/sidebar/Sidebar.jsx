@@ -22,7 +22,10 @@ function Sidebar() {
         <div className="sidebar">
             <div className="top">
                 {/* <span className="logo">Lattliv</span> */}
+                <Link to="/">
+
                 <Logo style={{width: "100px" ,marginTop: "20px"}}/>
+                </Link>
             </div>
             <div className="center">
                 <ul>
