@@ -13,7 +13,8 @@ import * as api from '../../../api'
 import './new.scss'
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-
+import { ThemeProvider } from '@mui/material/styles';
+import { mandatoryTheam } from '../../../utils'
 const initialFormValues = {
   name: '',
   email: '',
@@ -59,8 +60,9 @@ const initialFormValues = {
 
 const NewUser = (props) => {
   const { userId } = useParams();
-
+  
   const validate = (fieldValues = values) => {
+  
     let temp = { ...errors }
     if ('name' in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required."
@@ -73,12 +75,11 @@ const NewUser = (props) => {
     }
     if ('phone' in fieldValues)
       temp.phone = fieldValues.phone.length > 9 ? "" : "Minimum 10 numbers required."
-    setErrors({
-      ...temp
-    })
+
 
     let isAccessSelected = function () {
-      let access = values.access
+      let access = fieldValues.access ??values.access;
+     
       let validated = false;
       Object.keys(access).map(key => {
         Object.keys(access[key]).map(item => {
@@ -90,10 +91,16 @@ const NewUser = (props) => {
       return validated;
     }
 
-    if (!isAccessSelected()) {
-      toast.error('Please select at least one access checkbox.')
-      return false
+    if (!isAccessSelected() && 'access' in fieldValues) {
+      temp.access = "Please select at least one access."
+    }else{
+      temp.access  = ""
     }
+
+    setErrors({
+      ...temp
+    })
+
 
     if (fieldValues == values)
       return Object.values(temp).every(x => x == "")
@@ -105,7 +112,7 @@ const NewUser = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues, false, validate);
+  } = useForm(initialFormValues, true, validate);
 
   useEffect(() => {
     if (userId) {
@@ -127,6 +134,7 @@ const NewUser = (props) => {
           ...values,
           state: 2
         }
+    
         if (userId) {
           const response = await api.updateUser(userId, body);
           console.log(response)
@@ -178,13 +186,18 @@ const NewUser = (props) => {
                 onChange={function (e) {
                   let { name, checked } = e.target
                   let [key, item] = name.split('-')
-                  let new_access = JSON.parse(JSON.stringify(values.access));;
+                  let new_access = JSON.parse(JSON.stringify(values.access));
+                  if (item !== 'view') {
+                    if (checked) {
+                      new_access[key]['view'] = true;
+                    }
+                  }
                   new_access[key][item] = checked
                   setValues({
                     ...values,
                     access: new_access
                   })
-
+                  handleInputChange({ target: { name: 'access', value: new_access } });
                 }}
               />}
             />)
@@ -202,40 +215,51 @@ const NewUser = (props) => {
         <Navbar />
         <div className="form-container">
           <h1>{props.title}</h1>
-          <Form>
-            <Controls.Input
-              name='name'
-              label="Name"
-              value={values.name}
-              onChange={handleInputChange}
-              error={errors.name}
-            />
-            <Controls.Input
-              name='email'
-              label="Email"
-              value={values.email}
-              onChange={handleInputChange}
-              error={errors.email}
-            />
-            <Controls.Input
-              name='phone'
-              label="Phone"
-              value={values.phone}
-              onChange={handleInputChange}
-              error={errors.phone}
-            />
-            <Controls.Input
-              name='password'
-              label="password"
-              value={values.password}
-              onChange={handleInputChange}
-              error={errors.password}
-            />
-            <br />
-            <br />
-            <h3>Permissions</h3>
-            {accessHtml}
+
+         
+          <Form >
+            <ThemeProvider theme={mandatoryTheam}>
+              <Controls.Input
+                required
+                name='name'
+                label="Name"
+                value={values.name}
+                onChange={handleInputChange}
+                error={errors.name}
+              />
+
+              <Controls.Input
+                required
+                name='email'
+                label="Email"
+                value={values.email}
+                onChange={handleInputChange}
+                error={errors.email}
+              />
+              <Controls.Input
+                required
+                name='phone'
+                label="Phone"
+                value={values.phone}
+                onChange={handleInputChange}
+                error={errors.phone}
+              />
+              <Controls.Input
+                required
+                name='password'
+                label="Password"
+                value={values.password}
+                onChange={handleInputChange}
+                error={errors.password}
+              />
+              <br />
+              <br />
+              <h3>Permissions<span style={{color: "red" }}>*</span></h3>
+              {errors.access && <span style={{color: "red" }}>{errors.access}</span>}
+              {accessHtml}
+            </ThemeProvider>
           </Form>
+       
           <Button
             onClick={() => {
               submitForm()

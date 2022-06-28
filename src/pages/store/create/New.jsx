@@ -12,6 +12,8 @@ import { Grid, Button } from "@mui/material";
 import { useForm, Form } from "../../../components/form/useForm";
 import Controls from '../../../components/form/Controls'
 import React from "react";
+import { ThemeProvider } from '@mui/material/styles';
+import { mandatoryTheam } from '../../../utils'
 
 
 const initialFormValues = {
@@ -30,7 +32,7 @@ const NewStore = (props) => {
 
   const [file, setFile] = useState("");
   const { storeId } = useParams();
-
+  const [images, setImages] = useState({imgName: '', alttag: '', url: ''});
   const validate = (fieldValues = values) => {
     let temp = { ...errors }
     if ('name' in fieldValues)
@@ -66,6 +68,25 @@ const NewStore = (props) => {
     handleInputChange,
     resetForm
   } = useForm(initialFormValues, true, validate);
+
+  const handleImageAdd = (event) => {
+    event.preventDefault();
+    const data = new FormData();
+    data.append('myFile', event.target.files[0]);
+    api.uploadFile(data)
+      .then(response => {
+        console.log(response.data)
+        setImages({
+          ...images,
+          imgName: event.target.files[0].name,
+          alttag: event.target.files[0].name,
+          url: response.data.url
+        })
+
+      }).catch(error => {
+        console.log(error)
+      });
+  }
 
   useEffect(() => {
     if (storeId) {
@@ -133,9 +154,12 @@ const NewStore = (props) => {
 
 
             <Form>
+            <ThemeProvider theme={mandatoryTheam}>
               <Grid container>
                 <Grid item xs={6}>
+              
                   <Controls.Input
+                    required
                     name='name'
                     label="Name"
                     value={values.name}
@@ -144,6 +168,7 @@ const NewStore = (props) => {
                   />
 
                   <Controls.Input
+                    required
                     name='place'
                     label="Location"
                     value={values.place}
@@ -151,6 +176,7 @@ const NewStore = (props) => {
                     error={errors.place}
                   />
                   <Controls.Input
+                    required
                     name='address'
                     label="Address"
                     value={values.address}
@@ -158,6 +184,7 @@ const NewStore = (props) => {
                     error={errors.address}
                   />
                   <Controls.Input
+                  required
                   name='map'
                   label="Map link"
                   value={values.map}
@@ -167,6 +194,7 @@ const NewStore = (props) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Controls.Input
+                    required
                     name='email'
                     label="Email"
                     value={values.email}
@@ -174,12 +202,14 @@ const NewStore = (props) => {
                     error={errors.email}
                   />
                   <Controls.Input
+                    
                     name='manager'
                     label="Manager name"
                     value={values.manager}
                     onChange={handleInputChange}
                   />
                   <Controls.Input
+                    required
                     name='number'
                     label="Number(s)"
                     value={values.number}
@@ -187,6 +217,7 @@ const NewStore = (props) => {
                     error={errors.number}
                   />
                   <Controls.Input
+                    required
                     name='timings'
                     label="timings"
                     value={values.timings}
@@ -198,9 +229,12 @@ const NewStore = (props) => {
               </Grid>
 
               <br />
-
-              <input type="file" id="myFile" onChange={event => { }} style={{ marginLeft: "12px" }} />
-
+              <div className='image-container'>
+                <input type="file" id="myFile" onChange={event => handleImageAdd(event)}   style={{display: 'none' }} />
+                <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
+                {images.imgName && <div className='image-label'> {images.imgName}</div>}
+              </div>
+              
               <br />
               <br />
               <Button
@@ -211,6 +245,7 @@ const NewStore = (props) => {
                 variant="contained" color="info">
                 Submit
               </Button>
+            </ThemeProvider>
 
             </Form>
 

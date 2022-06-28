@@ -15,6 +15,8 @@ import './new.scss'
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { state_enum } from '../../../config'
+import { ThemeProvider } from '@mui/material/styles';
+import { mandatoryTheam } from '../../../utils'
 
 const initialFormValues = {
   name: '',
@@ -32,7 +34,7 @@ const NewCategory = (props) => {
     if ('name' in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required."
     
-    if(state==2){
+    if(state === 2  || state === 6){
       if ('title' in fieldValues.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required."
       if ('description' in fieldValues.seo)
@@ -48,8 +50,8 @@ const NewCategory = (props) => {
       ...temp
     })
 
-    if (fieldValues == values)
-      return Object.values(temp).every(x => x == "")
+    if (fieldValues === values)
+      return Object.values(temp).every(x => x === "")
   }
   const {
     values,
@@ -58,7 +60,7 @@ const NewCategory = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues, false, validate);
+  } = useForm(initialFormValues, true, validate);
 
   useEffect(() => {
     if (categoryId) {
@@ -120,58 +122,63 @@ const NewCategory = (props) => {
         <div className="form-container">
           <h1>{props.title}</h1>
           <Form>
-            <Controls.Input
-              name='name'
-              label="Name"
-              value={values.name}
-              onChange={handleInputChange}
-              error={errors.name}
-            />
-            
-            <br />
-            <h3>SEO Metatags</h3>
+            <ThemeProvider theme={mandatoryTheam}>
               <Controls.Input
-                name='title'
-                error={errors.title}
-                label="Title"
-                value={values.seo.title}
-                onChange={(e) => {
-                  let { name, value } = e.target
-                  let new_values = JSON.parse(JSON.stringify(values));;
-                  new_values.seo[name] = value
-                  setValues({
-                    ...new_values
-                  })
-                }}
+                required
+                name='name'
+                label="Name"
+                value={values.name}
+                onChange={handleInputChange}
+                error={errors.name}
               />
-              <Controls.Input
-                name='description'
-                label="Description"
-                value={values.seo.description}
-                error={errors.description}
-                onChange={(e) => {
-                  let { name, value } = e.target
-                  let new_values = JSON.parse(JSON.stringify(values));;
-                  new_values.seo[name] = value
-                  setValues({
-                    ...new_values
-                  })
-                }}
-              />
-              <Controls.Input
-                name='keywords'
-                error={errors.keywords}
-                label="Keywords"
-                value={values.seo.keywords}
-                onChange={(e) => {
-                  let { name, value } = e.target
-                  let new_values = JSON.parse(JSON.stringify(values));;
-                  new_values.seo[name] = value
-                  setValues({
-                    ...new_values
-                  })
-                }}
-              />
+              
+              <br />
+              <h3>SEO Metatags</h3>
+                <Controls.Input
+                  name='title'
+                  error={errors.title}
+                  label="Title"
+                  value={values.seo.title}
+                  onChange={(e) => {
+                    let { name, value } = e.target
+                    let new_values = JSON.parse(JSON.stringify(values));;
+                    new_values.seo[name] = value
+                    setValues({
+                      ...new_values
+                    })
+                    validate();
+                 
+                  }}
+                />
+                <Controls.Input
+                  name='description'
+                  label="Description"
+                  value={values.seo.description}
+                  error={errors.description}
+                  onChange={(e) => {
+                    let { name, value } = e.target
+                    let new_values = JSON.parse(JSON.stringify(values));;
+                    new_values.seo[name] = value
+                    setValues({
+                      ...new_values
+                    })
+                  }}
+                />
+                <Controls.Input
+                  name='keywords'
+                  error={errors.keywords}
+                  label="Keywords"
+                  value={values.seo.keywords}
+                  onChange={(e) => {
+                    let { name, value } = e.target
+                    let new_values = JSON.parse(JSON.stringify(values));;
+                    new_values.seo[name] = value
+                    setValues({
+                      ...new_values
+                    })
+                  }}
+                />
+            </ThemeProvider>
             <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
                   onClick={() => {

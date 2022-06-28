@@ -19,6 +19,9 @@ import { Editor } from "react-draft-wysiwyg";
 import { stateToHTML } from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import React from "react";
+import { ThemeProvider } from '@mui/material/styles';
+import { mandatoryTheam } from '../../../utils'
+
 import {
   EditorState,
   convertToRaw,
@@ -102,7 +105,7 @@ const NewProduct = (props) => {
       temp.subcategory = fieldValues.subcategory ? "" : "This field is required."
     if ('slug' in fieldValues)
       temp.slug = fieldValues.slug ? "" : "This field is required."
-    if(state==2){
+    if(state === 2){
       if ('title' in fieldValues.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required."
       if ('description' in fieldValues.seo)
@@ -114,29 +117,29 @@ const NewProduct = (props) => {
       temp.description = ''
       temp.keywords = ''
     }
+
+    // check if editor is empty or undefined
+    if ('primary_content' in fieldValues) {
+      let primary_content_lenght = editorState?.getCurrentContent().getPlainText('').length;
+      if (primary_content_lenght === 0){
+        temp.shortDesc = "This field is required."
+      }else{
+        temp.shortDesc = ''
+      }    
+    }
+
+    if ('secondary_content' in fieldValues) {
+      let secondary_content_length = editorStateLong?.getCurrentContent().getPlainText('').length;
+      console.log("secondary_content_length",secondary_content_length)
+      if (secondary_content_length === 0){
+        temp.longDesc = "This field is required."
+      }else{
+        temp.longDesc = ''
+      }  
+    }
     setErrors({
       ...temp
     })
-
-    if (!editorState) {
-      toast.error('Please add Primary Content.')
-      return false
-    }
-    if (!editorStateLong) {
-      toast.error('Please add Secondary Content.')
-      return false
-    }
-
-    //specifications validation
-    if (specFields[0].specName == '' || specFields[0].specValue == '') {
-      toast.error('Please add min one specification.')
-      return false
-    }
-    //images validation
-    if (images[0].url == '' ) {
-      toast.error('Please add at least one image.')
-      return false
-    }
 
     if (fieldValues == values) {
       let validated = Object.values(temp).every(x => x == "")
@@ -155,7 +158,7 @@ const NewProduct = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues, false, validate);
+  } = useForm(initialFormValues, true, validate);
 
   const [images, setImages] = useState([
     { id: uuidv4(), imgName: '', alttag: '', url: '' },
@@ -328,10 +331,12 @@ const NewProduct = (props) => {
 
 
             <Form>
+            <ThemeProvider theme={mandatoryTheam}>
               <Grid container>
                 <Grid item xs={6}>
                   <h2 style={{ marginLeft: '8px' }}>SKU : {values.sku}</h2>
                   <Controls.Input
+                    required
                     name='name'
                     label="Name"
                     value={values.name}
@@ -339,6 +344,7 @@ const NewProduct = (props) => {
                     onChange={handleInputChange}
                   />
                   <Controls.Select
+                    required
                     name='category'
                     label="Category"
                     error={errors.category}
@@ -352,6 +358,7 @@ const NewProduct = (props) => {
                     options={catergories}
                   />
                   <Controls.Input
+                    required
                     name='slug'
                     label="URL"
                     value={values.slug}
@@ -367,6 +374,7 @@ const NewProduct = (props) => {
                     items={availabilityItems}
                   />
                   <Controls.Input
+                    required
                     name='price'
                     label="Price"
                     value={values.price}
@@ -380,9 +388,12 @@ const NewProduct = (props) => {
                     value={values.subcategory}
                     onChange={handleInputChange}
                     options={subcatergories}
+                    required
                   />
                 </Grid>
-                <p>Primary Content</p>
+                <h3 style={{ marginLeft: '8px' }}>Primary Content </h3><p style={{ color: 'red' }}>*</p>
+                {errors.shortDesc && <p style={{ color: 'red', margin: '20px 20px' }}>{errors.shortDesc}</p>}
+              
                 <Editor
                   wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
                   // editorState={editorState}
@@ -393,9 +404,12 @@ const NewProduct = (props) => {
                   editorClassName="editorClassName"
                   onEditorStateChange={(editorState) => {
                     setEditorState(editorState)
+                    handleInputChange({ target: { name: 'primary_content', value: editorState } });
                   }}
                 />
-                <p>Secondary Content</p>
+
+                <h3 style={{ marginLeft: '8px' }}>Secondary Content </h3><p style={{ color: 'red' }}>*</p>
+                {errors.longDesc && <p style={{ color: 'red', margin: '20px 20px' }}>{errors.longDesc}</p>}
                 <Editor
                   wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
                   // editorState={editorState}
@@ -406,6 +420,7 @@ const NewProduct = (props) => {
                   editorClassName="editorClassName"
                   onEditorStateChange={(editorState) => {
                     setEditorStateLong(editorState)
+                    handleInputChange({ target: { name: 'secondary_content', value: editorState } });
                   }}
                 />
                 {/* <Controls.Input
@@ -421,10 +436,12 @@ const NewProduct = (props) => {
                   onChange={handleInputChange}
                 /> */}
               </Grid>
-              <h3>Specifications</h3>
+              <h3 style={{ marginLeft: '8px' }}>Specifications</h3>
+            
               {specFields.map(inputField => (
                 <div key={inputField.id}>
                   <TextField
+                    required
                     name="specName"
                     label="Specification Name"
                     variant="outlined"
@@ -432,6 +449,7 @@ const NewProduct = (props) => {
                     onChange={event => handleChangeInput(inputField.id, event)}
                   />
                   <TextField
+                    required
                     name="specValue"
                     label="Value"
                     variant="outlined"
@@ -464,11 +482,7 @@ const NewProduct = (props) => {
                     !inputField.imgName && (
                       <>
                         <input type="file" id="myFile" onChange={event => handleImageAdd(inputField.id, event)} style={{ display: 'none' }} />
-                        <label for="myFile" style={{
-                          cursor: 'pointer',
-                          color: '#0288d1',
-                          marginRight: '12px'
-                        }}>Select File</label>
+                        <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
                         <br />
                         <br />
                       </>
@@ -477,6 +491,7 @@ const NewProduct = (props) => {
 
                   {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
                   <TextField
+                    required
                     name="alttag"
                     label="Alt Tag"
                     variant="standard"
@@ -506,7 +521,7 @@ const NewProduct = (props) => {
                 </div>
               ))}
               <h3>SEO Metatags</h3>
-              {console.log(errors)}
+
               <Controls.Input
                 name='title'
                 label="Title"
@@ -583,7 +598,7 @@ const NewProduct = (props) => {
                   Hide
                 </Button>
               </Stack>
-
+              </ThemeProvider>
             </Form>
 
           </div>
