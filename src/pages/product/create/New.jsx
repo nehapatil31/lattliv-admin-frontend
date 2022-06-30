@@ -1,6 +1,8 @@
 import * as api from '../../../api'
 import * as access from '../../../access'
 import "./new.scss";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { url, state_enum } from '../../../config'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -326,7 +328,13 @@ const NewProduct = (props) => {
       try {
         if (productId) {
           const response = await api.updateProduct(productId, body);
-          console.log(response)
+          if(response.status === 401){
+            toast.error('You are not authorized to update this product',{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
+            window.location.href = "/login" 
+          }
   
           if (response.status === 200) {
             window.location.href = '/products?msg=' + msg;
@@ -338,7 +346,15 @@ const NewProduct = (props) => {
           }
         } else {
           const response = await api.createProduct(body);
-          console.log(response)
+
+          if(response.status === 401){
+            toast.error('You are not authorized to update this product',{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
+            window.location.href = "/login" 
+          }
+
           if (response.status === 200) {
             window.location.href = '/products?msg=' + msg;
   
@@ -350,8 +366,7 @@ const NewProduct = (props) => {
           }
         } 
       } catch (error) {
-        console.log(error)
-        toast.error("Some error occurred",{
+        toast.error(error.response.data.message,{
           autoClose: 9000,
           pauseOnHover: true,
         })
@@ -614,6 +629,12 @@ const NewProduct = (props) => {
                   })
                 }}
               />
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                <Alert severity="info">
+                  <AlertTitle>Info</AlertTitle>
+                  On Ready For Review and Publish <strong>Double ** </strong> are mandatory field
+                </Alert>
+              </Stack>
               <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
                 <Button
                   disabled={access.product_create ? false : true}

@@ -4,6 +4,11 @@ import React from "react";
 import Navbar from "../../components/navbar/Navbar";
 
 function Home() {
+    const user = JSON.parse(localStorage.getItem('profile'));
+    if(!user && window.location.pathname !='/login'){
+      window.location.href = '/login';
+      return null
+    }
     return (
         <div className="home">
             <Sidebar />

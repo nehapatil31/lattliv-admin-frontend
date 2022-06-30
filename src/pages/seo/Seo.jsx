@@ -33,6 +33,15 @@ function Seo() {
                 setProducts(response.data)
             }).catch(error => {
                 console.log(error)
+                if(error.response.status === 401 ){
+                    toast.error("Session Expired. Please Login Again",{
+                        autoClose: 9000,
+                        pauseOnHover: true,
+                    })
+                    setTimeout(() => {
+                        window.location.href = '/login'
+                    }, 1000);
+                }
             })
         }else {
             api.fetchCategories()

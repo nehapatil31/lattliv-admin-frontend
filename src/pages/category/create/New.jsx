@@ -1,4 +1,6 @@
 import * as access from "../../../access";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
 import { useForm, Form } from "../../../components/form/useForm";
@@ -12,10 +14,12 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { state_enum } from "../../../config";
 import { ThemeProvider } from "@mui/material/styles";
-import { mandatoryTheam } from "../../../utils";
+import { mandatoryTheam, mandatoryLabel } from "../../../utils";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
+
+
 const initialFormValues = {
   name: "",
   image: "",
@@ -185,7 +189,7 @@ const NewCategory = (props) => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("Some error occurred", {
+        toast.error(error.response.data.message, {
           autoClose: 9000,
           pauseOnHover: true,
         });
@@ -280,7 +284,7 @@ const NewCategory = (props) => {
               <Controls.Input
                 name="title"
                 error={errors.title}
-                label="Title"
+                label={mandatoryLabel('Title')}
                 value={values.seo.title}
                 onChange={(e) => {
                   let { name, value } = e.target;
@@ -302,7 +306,7 @@ const NewCategory = (props) => {
 
               <Controls.Input
                 name="description"
-                label="Description"
+                label={mandatoryLabel('Description')}
                 value={values.seo.description}
                 error={errors.description}
                 onChange={(e) => {
@@ -325,7 +329,7 @@ const NewCategory = (props) => {
               <Controls.Input
                 name="keywords"
                 error={errors.keywords}
-                label="Keywords"
+                label={mandatoryLabel('Keywords')}
                 value={values.seo.keywords}
                 onChange={(e) => {
                   let { name, value } = e.target;
@@ -347,7 +351,7 @@ const NewCategory = (props) => {
               />
               <div className="web-desc" style={{ display: "flex" }}>
                 <h3 style={{ marginLeft: "8px" }}>Website Description </h3>
-                <p style={{ color: "red" }}>*</p>
+                <p style={{ color: "red" }}>**</p>
                 {errors.webDesc && (
                   <p
                     className="error"
@@ -375,11 +379,18 @@ const NewCategory = (props) => {
                 onChange={() => onEditorChange(editorState)}
               />
             </ThemeProvider>
-            <Stack
+          <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert severity="info">
+              <AlertTitle>Info</AlertTitle>
+               On Ready For Review and Publish <strong>Double ** </strong> are mandatory field
+            </Alert>
+          </Stack>
+              <Stack
               direction="row"
               spacing={2}
               style={{ marginLeft: "8px", marginTop: "21px" }}
             >
+
               <Button
                 onClick={() => {
                   submitForm(state_enum.saved);

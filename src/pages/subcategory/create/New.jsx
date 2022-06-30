@@ -19,7 +19,9 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertFromHTML} from "draft-js"
 import { stateToHTML } from 'draft-js-export-html';
 import { ThemeProvider } from '@mui/material/styles';
-import { mandatoryTheam } from '../../../utils'
+import { mandatoryTheam, mandatoryLabel } from '../../../utils'
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 const initialFormValues = {
   name: '',
   parent: '',
@@ -202,7 +204,7 @@ const NewSubCategory = (props) => {
         }
       } catch (error) {
         console.log(error)
-        toast.error("Some error occurred",{
+        toast.error(error.response.data.message,{
           autoClose: 9000,
           pauseOnHover: true,
         })
@@ -290,7 +292,7 @@ const NewSubCategory = (props) => {
             <h3>SEO Metatags</h3>
             <Controls.Input
               name='title'
-              label="Title"
+              label={mandatoryLabel("Title")}
               value={values?.seo?.title}
               error={errors.title}
               onChange={(e) => {
@@ -312,7 +314,8 @@ const NewSubCategory = (props) => {
             />
             <Controls.Input
               name='description'
-              label="Description"
+              label= {mandatoryLabel("Description")}
+             
               error={errors.description}
               value={values.seo?.description}
               onChange={(e) => {
@@ -334,7 +337,7 @@ const NewSubCategory = (props) => {
             />
             <Controls.Input
               name='keywords'
-              label="Keywords"
+              label= {mandatoryLabel("Keywords")}
               error={errors.keywords}
               value={values.seo?.keywords}
               onChange={(e) => {
@@ -356,7 +359,7 @@ const NewSubCategory = (props) => {
             />
 
               <div className='web-desc' style={{display:'flex'}}>
-                <h3 style={{ marginLeft: '8px' }}>Website Description </h3><p style={{ color: 'red' }}>*</p>
+                <h3 style={{ marginLeft: '8px' }}>Website Description </h3><p style={{ color: 'red' }}>**</p>
                 {errors.webDesc && <p  className='error' style={{ color: 'red', margin: '20px 20px' }}>{errors.webDesc}</p>}
               </div>
 
@@ -376,6 +379,12 @@ const NewSubCategory = (props) => {
                 />
 
             <br />
+            <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert severity="info">
+              <AlertTitle>Info</AlertTitle>
+               On Ready For Review and Publish <strong>Double ** </strong> are mandatory field
+            </Alert>
+          </Stack>
             <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
               <Button
                 onClick={() => {

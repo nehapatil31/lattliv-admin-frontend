@@ -99,6 +99,10 @@ const NewStore = (props) => {
           setValues(dataObj);
         }).catch(error => {
           console.log(error)
+          toast.error(error.response.data.message,{
+            autoClose: 9000,
+            pauseOnHover: true,
+          })
         });
     }
   }, [])
@@ -109,8 +113,7 @@ const NewStore = (props) => {
         let body = {
           ...values
         }
-        // console.log('sending body', body)
-        // return false;
+
         if (storeId) {
           body.id = storeId;
           const response = await api.updateStore( body);
@@ -121,7 +124,7 @@ const NewStore = (props) => {
             window.location.href = '/stores?msg=' + msg;
   
           } else {
-            toast.error("Some error occurred",{
+            toast.error(response,{
               autoClose: 9000,
               pauseOnHover: true,
             })
@@ -135,7 +138,7 @@ const NewStore = (props) => {
             window.location.href = '/stores?msg=' + msg;
   
           } else {
-            toast.error("Some error occurred",{
+            toast.error(response,{
               autoClose: 9000,
               pauseOnHover: true,
             })
@@ -143,8 +146,7 @@ const NewStore = (props) => {
         }
       }
     } catch (error) {
-      console.log(error)
-      toast.error("Some error occurred",{
+      toast.error(error.response.data.message,{
         autoClose: 9000,
         pauseOnHover: true,
       })
