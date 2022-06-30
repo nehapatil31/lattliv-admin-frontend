@@ -13,6 +13,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
             ...values,
             [name]: value
         })
+        console.log('form',name,value)
         if (validateOnChange)
             validate({ [name]: value })
     }

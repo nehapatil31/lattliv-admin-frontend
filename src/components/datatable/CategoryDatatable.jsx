@@ -31,10 +31,16 @@ export default function CategoryDatatable({ categories }) {
 
           window.location.href = '/categories?msg=' + msg;
         } else {
-          toast.error("Some error occurred")
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+        })
         }
       }).catch(error => {
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+      })
       });
     // setData(data.filter((item) => item.id !== id));
   };
@@ -52,10 +58,16 @@ export default function CategoryDatatable({ categories }) {
 
           window.location.href = '/categories?msg=' + msg;
         } else {
-          toast.error("Some error occurred")
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+          })
         }
       }).catch(error => {
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       });
   }
   const columns = [

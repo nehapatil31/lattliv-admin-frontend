@@ -15,46 +15,72 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { state_enum } from '../../../config'
 import * as access from '../../../access'
-
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, ContentState, convertFromHTML} from "draft-js"
+import { stateToHTML } from 'draft-js-export-html';
+import { ThemeProvider } from '@mui/material/styles';
+import { mandatoryTheam } from '../../../utils'
 const initialFormValues = {
   name: '',
   parent: '',
+  image : '',
+  alttag:'',
   seo: {
     title: '',
     description: '',
-    keywords: ''
+    keywords: '',
+    webDesc: '',
   }
 }
 
 const NewSubCategory = (props) => {
   const { subcategoryId } = useParams();
   const [categories, setCategories] = useState();
+  const [editorState, setEditorState] = React.useState('')
 
   const validate = (fieldValues = values, state) => {
+
     let temp = { ...errors }
     if ('name' in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required."
+    if ('image' in fieldValues)
+      temp.image = fieldValues.image ? "" : "This field is required."
     if ('parent' in fieldValues)
       temp.parent = fieldValues.parent ? "" : "This field is required."
-
-    if (state == 2) {
-      if ('title' in fieldValues.seo)
+  
+    if(state === 2  || state === 6 || state === undefined){
+      if (fieldValues?.seo?.title !== undefined && 'title' in fieldValues?.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required."
-      if ('description' in fieldValues.seo)
+      if (fieldValues?.seo?.description !== undefined)
         temp.description = fieldValues.seo.description ? "" : "This field is required."
-      if ('keywords' in fieldValues.seo)
+      if (fieldValues?.seo?.keywords !== undefined)
         temp.keywords = fieldValues.seo.keywords ? "" : "This field is required."
-    } else {
-      temp.title = ''
-      temp.description = ''
-      temp.keywords = ''
+      if (fieldValues?.seo?.webDesc !== undefined)
+        temp.webDesc = (fieldValues.seo.webDesc === '<p><br></p>' || fieldValues.seo.webDesc ==='') ? "This field is required." : ""
     }
+
     setErrors({
       ...temp
     })
+    console.log("fieldValues",fieldValues)
+    console.log('values',values)
+    if (fieldValues === values)
+      return Object.values(temp).every(x => x === "")
+  }
 
-    if (fieldValues == values)
-      return Object.values(temp).every(x => x == "")
+  const setEditorValues = function (dataObj) {
+    let content1 =  dataObj?.seo?.webDesc ?  dataObj?.seo?.webDesc : ''
+    setEditorState(
+      () => {
+        const blocksFromHTML = convertFromHTML(content1)
+        const contentState = ContentState.createFromBlockArray(
+          blocksFromHTML.contentBlocks,
+          blocksFromHTML.entityMap
+        )
+        return EditorState.createWithContent(contentState)
+      }
+    )
+
   }
   const {
     values,
@@ -63,8 +89,53 @@ const NewSubCategory = (props) => {
     setErrors,
     handleInputChange,
     resetForm
-  } = useForm(initialFormValues, false, validate);
+  } = useForm(initialFormValues, true, validate);
 
+  const handleImageAdd = (event) => {
+    event.preventDefault();
+    const data = new FormData();
+    data.append('myFile', event.target.files[0]);
+    api.uploadFile(data)
+      .then(response => {
+
+        handleInputChange({
+          target: {
+            name: 'image',
+            value: response.data.url
+          }
+        })
+        setValues({
+          ...values,
+          image: {
+            alttag:'',
+            imgName: event.target.files[0].name,
+            url: response.data.url
+          }
+        })
+
+      }).catch(error => {
+        console.log(error)
+      });
+  }
+
+  const handleImageData = (event) => {
+    //get alt tag and name
+    const alttag = event.target.value;
+    handleInputChange({
+      target: {
+        name: 'alttag',
+        value: alttag
+      }
+    })
+    setValues({
+      ...values,
+      image: {
+        ...values.image,
+        alttag: alttag,
+      },
+    });
+  };
+  
   useEffect(() => {
 
   }, []);
@@ -78,6 +149,7 @@ const NewSubCategory = (props) => {
           api.fetchCategory(subcategoryId)
             .then(response => {
               setValues(response.data);
+              setEditorValues(response.data)
               console.log(response.data)
             }).catch(error => {
               console.log(error)
@@ -96,7 +168,8 @@ const NewSubCategory = (props) => {
         let body = {
           ...values,
           state: state,
-          createdBy: access.user_id
+          ...(state === 1) && {createdBy: access.user_id},
+          ...(state === 2) && {approvedBy: access.user_id},
         }
         if (subcategoryId) {
           const response = await api.updateCategory(subcategoryId, body);
@@ -107,7 +180,10 @@ const NewSubCategory = (props) => {
             window.location.href = '/categories?subcategory=true&&msg=' + msg;
   
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         } else {
           const response = await api.createSubcategory(body);
@@ -118,14 +194,35 @@ const NewSubCategory = (props) => {
             window.location.href = '/categories?subcategory=true&&msg=' + msg;
   
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         }
       } catch (error) {
         console.log(error)
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       }
     }
+  }
+
+  const onEditorChange = (editorState) => {
+    let new_values = JSON.parse(JSON.stringify(values));
+  
+    new_values.seo.webDesc = stateToHTML(editorState.getCurrentContent())
+    handleInputChange({
+      target: {
+        name: 'seo',
+        value: {
+          'webDesc':  new_values.seo.webDesc,
+        }
+      }
+    })
+    setValues({...new_values})
   }
 
   return (
@@ -136,23 +233,16 @@ const NewSubCategory = (props) => {
         <div className="form-container">
           <h1>{props.title}</h1>
           <Form>
+          <ThemeProvider theme={mandatoryTheam}>
 
             {categories && (
               <Controls.Select
+               required
                 name='parent'
                 error={errors.parent}
                 label="Category"
                 value={values.parent}
                 onChange={(e) => {
-                  // let category = catergories.find(i => i.id === e.target.value)
-
-                  // reset subcategory value
-                  // setValues({
-                  //   ...values,
-                  //   subcategory: ''
-                  // })
-
-                  // category.children && setSubcatergories(category.children)
                   handleInputChange(e)
                 }}
                 options={categories}
@@ -160,12 +250,42 @@ const NewSubCategory = (props) => {
             )}
 
             <Controls.Input
+             required
               name='name'
               error={errors.name}
               label="Name"
               value={values.name}
               onChange={handleInputChange}
             />
+
+            <div className='image-container'>
+              <input type="file" id="myFile" onChange={event => handleImageAdd(event)}   style={{display: 'none' }} />
+              <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
+              {values?.image?.url && (
+                  <a href={values.image.url} rel='noreferrer' target="_blank">
+                    <img src={values.image.url} alt={values.image.alttag}  style={{ height: '100px', width: '100px', border: '1px solid #B1B1B1',padding: '3px' }} />
+                    {values.image.imgName && <div className='image-label' style={{color:"#000000"}}> {values.image.imgName}</div>}
+                  </a>
+                )}
+            </div>
+            <div className="errror-container">
+             {errors.image && <span className="error">{errors.image}</span>}
+            </div>
+
+            <div className="altTag">
+              <TextField
+                required
+                name="alttag"
+                label="Alt Tag"
+                variant="standard"
+                value={values?.image?.alttag && values.image.alttag}
+                style={{ marginRight: "12px" }}
+                onChange={(event) => handleImageData(event)}
+              />
+
+            </div>
+            {errors.alttag && <span className="error" style={{margin:'9px'}}>{errors.alttag}</span>}
+
 
             <h3>SEO Metatags</h3>
             <Controls.Input
@@ -177,6 +297,14 @@ const NewSubCategory = (props) => {
                 let { name, value } = e.target
                 let new_values = JSON.parse(JSON.stringify(values));;
                 new_values.seo[name] = value
+                handleInputChange({
+                  target: {
+                    name: 'seo',
+                    value: {
+                      'title': value,
+                    }
+                  }
+                })
                 setValues({
                   ...new_values
                 })
@@ -191,6 +319,14 @@ const NewSubCategory = (props) => {
                 let { name, value } = e.target
                 let new_values = JSON.parse(JSON.stringify(values));;
                 new_values.seo[name] = value
+                handleInputChange({
+                  target: {
+                    name: 'seo',
+                    value: {
+                      'description': value,
+                    }
+                  }
+                })
                 setValues({
                   ...new_values
                 })
@@ -205,11 +341,39 @@ const NewSubCategory = (props) => {
                 let { name, value } = e.target
                 let new_values = JSON.parse(JSON.stringify(values));;
                 new_values.seo[name] = value
+                handleInputChange({
+                  target: {
+                    name: 'seo',
+                    value: {
+                      'keywords': value,
+                    }
+                  }
+                })
                 setValues({
                   ...new_values
                 })
               }}
             />
+
+              <div className='web-desc' style={{display:'flex'}}>
+                <h3 style={{ marginLeft: '8px' }}>Website Description </h3><p style={{ color: 'red' }}>*</p>
+                {errors.webDesc && <p  className='error' style={{ color: 'red', margin: '20px 20px' }}>{errors.webDesc}</p>}
+              </div>
+
+              
+                <Editor
+                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
+                  // editorState={editorState}
+                  editorState={editorState}
+
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={(editorState) => {
+                    setEditorState(editorState)
+                  }}
+                  onChange={()=>onEditorChange(editorState)}
+                />
 
             <br />
             <Stack direction="row" spacing={2} style={{ marginLeft: '8px', marginTop: '21px' }}>
@@ -242,6 +406,7 @@ const NewSubCategory = (props) => {
                 Hide
               </Button>
             </Stack>
+            </ThemeProvider>
           </Form>
           {/* <Button
             onClick={() => {

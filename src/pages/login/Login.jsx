@@ -26,7 +26,10 @@ export default function SignIn() {
   useEffect(() => {
     if (!isToastcalled && searchParams.get("msg")) {
       isToastcalled = true
-      toast.error(searchParams.get("msg"))
+      toast.error(searchParams.get("msg"),{
+        autoClose: 9000,
+        pauseOnHover: true,
+      })
     }
   }, [])
 

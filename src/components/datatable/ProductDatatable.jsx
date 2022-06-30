@@ -25,8 +25,10 @@ const ProductDatatable = () => {
   const handleDelete = () => {
     console.log(confirmOpen.id)
     let body = {
-      state: state_enum.trashed
+      state: state_enum.trashed,
+      deleted_by : access.user_id,
     }
+
     api.updateProduct(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
       // .then(results => results.json())
       .then(response => {
@@ -35,10 +37,16 @@ const ProductDatatable = () => {
 
           window.location.href = '/products?msg=' + msg;
         } else {
-          toast.error("Some error occurred")
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+          })
         }
       }).catch(error => {
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       });
 
   };
@@ -57,10 +65,16 @@ const ProductDatatable = () => {
 
           window.location.href = '/products?msg=' + msg;
         } else {
-          toast.error("Some error occurred")
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+        })
         }
       }).catch(error => {
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       });
   }
   useEffect(() => {

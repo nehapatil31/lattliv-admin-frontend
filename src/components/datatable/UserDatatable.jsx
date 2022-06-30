@@ -46,10 +46,16 @@ export default function UserDatatable() {
 
           window.location.href = '/users?msg=' + msg;
         } else {
-          toast.error("Some error occurred")
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+          })
         }
       }).catch(error => {
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       });
 
   };

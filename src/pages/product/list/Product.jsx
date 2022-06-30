@@ -16,7 +16,10 @@ function ProductList() {
     useEffect(() => {
         if (!isToastcalled && searchParams.get("msg")) {
             isToastcalled = true
-            toast.success(searchParams.get("msg"))
+            toast.success(searchParams.get("msg"),{
+                autoClose: 9000,
+                pauseOnHover: true,
+            })
         }
     }, [])
 

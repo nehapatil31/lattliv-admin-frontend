@@ -57,8 +57,8 @@ const NewStore = (props) => {
         ...temp
     })
 
-    if (fieldValues == values)
-        return Object.values(temp).every(x => x == "")
+    if (fieldValues === values)
+        return Object.values(temp).every(x => x === "")
   }
   const {
     values,
@@ -75,12 +75,13 @@ const NewStore = (props) => {
     data.append('myFile', event.target.files[0]);
     api.uploadFile(data)
       .then(response => {
-        console.log(response.data)
-        setImages({
-          ...images,
-          imgName: event.target.files[0].name,
-          alttag: event.target.files[0].name,
-          url: response.data.url
+        setValues({
+          ...values,
+          image: {
+            alttag: event.target.files[0].name,
+            imgName: event.target.files[0].name,
+            url: response.data.url
+          }
         })
 
       }).catch(error => {
@@ -94,8 +95,7 @@ const NewStore = (props) => {
       api.fetchStore(storeId)
         .then(response => {
           let dataObj = { ...response.data }
-
-
+          console.log(dataObj)
           setValues(dataObj);
         }).catch(error => {
           console.log(error)
@@ -109,6 +109,8 @@ const NewStore = (props) => {
         let body = {
           ...values
         }
+        // console.log('sending body', body)
+        // return false;
         if (storeId) {
           body.id = storeId;
           const response = await api.updateStore( body);
@@ -119,7 +121,10 @@ const NewStore = (props) => {
             window.location.href = '/stores?msg=' + msg;
   
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         } else {
           const response = await api.createStore(body);
@@ -130,13 +135,19 @@ const NewStore = (props) => {
             window.location.href = '/stores?msg=' + msg;
   
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         }
       }
     } catch (error) {
       console.log(error)
-      toast.error("Some error occurred")
+      toast.error("Some error occurred",{
+        autoClose: 9000,
+        pauseOnHover: true,
+      })
     }
   }
 
@@ -232,7 +243,12 @@ const NewStore = (props) => {
               <div className='image-container'>
                 <input type="file" id="myFile" onChange={event => handleImageAdd(event)}   style={{display: 'none' }} />
                 <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
-                {images.imgName && <div className='image-label'> {images.imgName}</div>}
+                {values?.image?.url && (
+                    <a href={values.image.url} rel='noreferrer' target="_blank">
+                      <img src={values.image.url} alt={values.image.alttag}  style={{ height: '100px', width: '100px', border: '1px solid #B1B1B1',padding: '3px' }} />
+                      {values.image.imgName && <div className='image-label' style={{color:"#000000"}}> {values.image.imgName}</div>}
+                    </a>
+                  )}
               </div>
               
               <br />

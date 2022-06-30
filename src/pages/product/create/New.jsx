@@ -21,7 +21,9 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import React from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import { mandatoryTheam } from '../../../utils'
-
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import {
   EditorState,
   convertToRaw,
@@ -118,6 +120,18 @@ const NewProduct = (props) => {
       temp.keywords = ''
     }
 
+    // images.map((image, index) => {
+    //   let isHeroImgCheck = false
+    //   if(image.imgName === ''){
+    //     temp.image = 'This field is required.'
+    //   }
+    //   if(image.isHeroImg){
+    //     isHeroImgCheck = true
+    //   }
+    //   if(!isHeroImgCheck){
+    //     temp.image = 'Atleast one image is required as hero image.'
+    //   }
+    // }) 
     // check if editor is empty or undefined
     if ('primary_content' in fieldValues) {
       let primary_content_lenght = editorState?.getCurrentContent().getPlainText('').length;
@@ -130,7 +144,7 @@ const NewProduct = (props) => {
 
     if ('secondary_content' in fieldValues) {
       let secondary_content_length = editorStateLong?.getCurrentContent().getPlainText('').length;
-      console.log("secondary_content_length",secondary_content_length)
+      
       if (secondary_content_length === 0){
         temp.longDesc = "This field is required."
       }else{
@@ -140,11 +154,14 @@ const NewProduct = (props) => {
     setErrors({
       ...temp
     })
-
-    if (fieldValues == values) {
-      let validated = Object.values(temp).every(x => x == "")
+    console.log('fieldValues',fieldValues)
+    if (fieldValues === values) {
+      let validated = Object.values(temp).every(x => x === "")
       if (!validated) {
-        toast.error('Validation errors')
+        toast.error('Validation errors',{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
         return false
       } else {
         return true
@@ -161,7 +178,7 @@ const NewProduct = (props) => {
   } = useForm(initialFormValues, true, validate);
 
   const [images, setImages] = useState([
-    { id: uuidv4(), imgName: '', alttag: '', url: '' },
+    { id: uuidv4(), imgName: '', alttag: '', url: '', isHeroImg: false },
   ]);
   const handleImageData = (id, event) => {
     const newInputFields = images.map(i => {
@@ -174,7 +191,7 @@ const NewProduct = (props) => {
     setImages(newInputFields);
   }
   const handleAddImages = () => {
-    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur: '' }])
+    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur: '', isHeroImg: false }])
   }
 
   const handleRemoveImages = id => {
@@ -196,6 +213,21 @@ const NewProduct = (props) => {
       }).catch(error => {
         console.log(error)
       });
+  }
+ const handleCheckbox = (id, event) => {
+    const values = [...images];
+    let img = values.find(value => value.id === id)
+    img.isHeroImg = event.target.checked
+    if(img.isHeroImg){
+      values.map(i => {
+        if(i.id !== id){
+          i.isHeroImg = false
+        }
+        return i
+      }
+      )
+    }
+    setImages(values);
   }
 
   const [specFields, setSpecFields] = useState([
@@ -236,6 +268,7 @@ const NewProduct = (props) => {
             .then(response => {
               let data = response.data;
               let dataObj = { ...response.data }
+              console.log("dataObj",dataObj)
               dataObj.category = data.category.parent.id
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
@@ -274,7 +307,8 @@ const NewProduct = (props) => {
       let body = {
         ...values,
         state: state,
-        createdBy: access.user_id,
+        ...(state === 1) && {createdBy: access.user_id},
+        ...(state === 2) && {approvedBy: access.user_id},
         specification: {
           specFields: specFields
         },
@@ -284,6 +318,7 @@ const NewProduct = (props) => {
         shortDesc: stateToHTML(editorState.getCurrentContent()),
         longDesc: stateToHTML(editorStateLong.getCurrentContent())
       }
+
       body.inStock = body.availability === "in_stock"
       body.category = body.subcategory
 
@@ -296,7 +331,10 @@ const NewProduct = (props) => {
           if (response.status === 200) {
             window.location.href = '/products?msg=' + msg;
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         } else {
           const response = await api.createProduct(body);
@@ -305,12 +343,18 @@ const NewProduct = (props) => {
             window.location.href = '/products?msg=' + msg;
   
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         } 
       } catch (error) {
         console.log(error)
-        toast.error("Some error occurred")
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
       }
     }
 
@@ -488,6 +532,13 @@ const NewProduct = (props) => {
                       </>
                     )
                   }
+                  {/* isHeroImg */}
+                  <FormGroup>
+                    <FormControlLabel label="Hero Img" control={<Checkbox 
+                    checked={inputField.isHeroImg}
+                      onChange={event => handleCheckbox(inputField.id, event)}
+                    />}  />
+                  </FormGroup>
 
                   {/* <input type="file" name="myFile" onChange={event=>handleImageAdd(inputField.id, event)} /> */}
                   <TextField
@@ -501,12 +552,11 @@ const NewProduct = (props) => {
                   />
 
                   {inputField.url && (
-                    <>
-                      <img src={inputField.url} style={{ height: '100px', width: '100px' }} />
-                      {/* <a href={inputField.url} target="_blank">Check image</a> */}
-                    </>
+                    <a href={inputField.url} rel='noreferrer' target="_blank">
+                      <img src={inputField.url} alt='product img'  style={{ height: '100px', width: '100px', border: '1px solid #B1B1B1',padding: '3px' }} />
+                    </a>
                   )}
-                  <IconButton disabled={specFields.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
+                  <IconButton disabled={images.length === 1} onClick={() => handleRemoveImages(inputField.id)}>
                     <RemoveIcon />
                   </IconButton>
                   <IconButton

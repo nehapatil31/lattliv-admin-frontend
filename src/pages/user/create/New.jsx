@@ -144,7 +144,10 @@ const NewUser = (props) => {
             window.location.href = '/users?msg=' + msg;
 
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         } else {
           const response = await api.createUser(body);
@@ -155,13 +158,19 @@ const NewUser = (props) => {
             window.location.href = '/users?msg=' + msg;
 
           } else {
-            toast.error("Some error occurred")
+            toast.error("Some error occurred",{
+              autoClose: 9000,
+              pauseOnHover: true,
+            })
           }
         }
       }
     } catch (error) {
       console.log(error)
-      toast.error("Some error occurred")
+      toast.error("Some error occurred",{
+        autoClose: 9000,
+        pauseOnHover: true,
+      })
     }
   }
 
