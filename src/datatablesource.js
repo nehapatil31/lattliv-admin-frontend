@@ -3,11 +3,11 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import React from "react";
 export const userColumns = [
-  { field: "sku", headerName: "SKU", width: 100 },
+  { field: "sku", headerName: "SKU", width: 80 },
   {
     field: "name",
     headerName: "Product Name",
-    width: 230,
+    width: 200,
     renderCell: (params) =>  (
       <Tooltip title={params.row.name} >
        <span className="table-cell-trucate">{params.row.name}</span>

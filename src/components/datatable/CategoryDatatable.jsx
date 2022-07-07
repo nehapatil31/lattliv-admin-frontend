@@ -71,7 +71,6 @@ export default function CategoryDatatable({ categories }) {
       });
   }
   const columns = [
-    // { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Name', flex:1 },
     {
       field: 'fullName',
@@ -126,6 +125,7 @@ export default function CategoryDatatable({ categories }) {
   ];
 
   const actionColumn = [
+
     {
       field: "action",
       autoHeight: true,

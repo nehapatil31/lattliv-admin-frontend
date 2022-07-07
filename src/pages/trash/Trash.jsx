@@ -60,7 +60,7 @@ function Trash() {
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
-            <Navbar />
+            <Navbar /> 
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">

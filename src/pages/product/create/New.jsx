@@ -22,10 +22,12 @@ import { stateToHTML } from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import React from "react";
 import { ThemeProvider } from '@mui/material/styles';
-import { mandatoryTheam } from '../../../utils'
+import { mandatoryTheam, mandatoryLabel } from '../../../utils'
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import InputAdornment from '@mui/material/InputAdornment';
+import slugify from 'react-slugify';
 import {
   EditorState,
   convertToRaw,
@@ -51,7 +53,7 @@ const initialFormValues = {
   shortDesc: '',
   longDesc: '',
   price: '',
-  specification: {},
+  specification: [],
   category: '',
   subcategory: '',
   state: '',
@@ -61,7 +63,8 @@ const initialFormValues = {
     title: '',
     description: '',
     keywords: ''
-  }
+  },
+  images: []
 }
 
 const NewProduct = (props) => {
@@ -108,55 +111,66 @@ const NewProduct = (props) => {
     if ('subcategory' in fieldValues)
       temp.subcategory = fieldValues.subcategory ? "" : "This field is required."
     if ('slug' in fieldValues)
-      temp.slug = fieldValues.slug ? "" : "This field is required."
-    if(state === 2){
-      if ('title' in fieldValues.seo)
+      temp.slug = fieldValues.slug && fieldValues.slug !=='/' ? "" : "This field is required."
+    if(state === 2  || state === 6 || state === undefined){
+      if (fieldValues?.seo?.title !== undefined && 'title' in fieldValues?.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required."
-      if ('description' in fieldValues.seo)
+      if (fieldValues?.seo?.description !== undefined)
         temp.description = fieldValues.seo.description ? "" : "This field is required."
-      if ('keywords' in fieldValues.seo)
+      if (fieldValues?.seo?.keywords !== undefined)
         temp.keywords = fieldValues.seo.keywords ? "" : "This field is required."
-    }else{
-      temp.title = ''
-      temp.description = ''
-      temp.keywords = ''
     }
 
-    // images.map((image, index) => {
-    //   let isHeroImgCheck = false
-    //   if(image.imgName === ''){
-    //     temp.image = 'This field is required.'
-    //   }
-    //   if(image.isHeroImg){
-    //     isHeroImgCheck = true
-    //   }
-    //   if(!isHeroImgCheck){
-    //     temp.image = 'Atleast one image is required as hero image.'
-    //   }
-    // }) 
+    //check atleast one specification is added
+    if (fieldValues?.specification?.length === 0)
+      temp.specification = "This field is required."
+    else {
+      temp.specification = ""
+      fieldValues?.specification?.forEach((item, index) => {
+        console.log(item)
+        if (item.specName === '')
+          temp.specification = "One of the spec Name field is required."
+        if (item.specValue === '')
+          temp.specification = "One of the spec Value field is required."
+      }
+      )
+    }
+
+    //validate image field
+    if (fieldValues?.images?.length === 0)
+      temp.images = "This field is required."
+    else {
+      temp.images = ""
+      let heroImage = fieldValues?.images?.find(item => item.isHeroImg === true)
+
+      if (!heroImage)
+        temp.images = "Hero Image is required."
+      else {
+        temp.images=''
+      }
+
+      fieldValues?.images?.forEach((item, index) => {
+        if (item.url === '')
+          temp.images = "Please Upload the Image."
+        if(item.alttag === '')
+          temp.images = "Please Enter the Alt Tag."
+      }
+      )
+    }
+
     // check if editor is empty or undefined
-    if ('primary_content' in fieldValues) {
-      let primary_content_lenght = editorState?.getCurrentContent().getPlainText('').length;
-      if (primary_content_lenght === 0){
-        temp.shortDesc = "This field is required."
-      }else{
-        temp.shortDesc = ''
-      }    
+    if ('shortDesc' in fieldValues) {
+      temp.shortDesc = (fieldValues.shortDesc === '<p><br></p>' || fieldValues.shortDesc ==='') ? "This field is required." : ""    
     }
 
-    if ('secondary_content' in fieldValues) {
-      let secondary_content_length = editorStateLong?.getCurrentContent().getPlainText('').length;
-      
-      if (secondary_content_length === 0){
-        temp.longDesc = "This field is required."
-      }else{
-        temp.longDesc = ''
-      }  
+    if ('longDesc' in fieldValues) {
+      temp.longDesc = (fieldValues.longDesc === '<p><br></p>' || fieldValues.longDesc ==='') ? "This field is required." : ""   
     }
+    console.log(temp)
     setErrors({
       ...temp
     })
-    console.log('fieldValues',fieldValues)
+
     if (fieldValues === values) {
       let validated = Object.values(temp).every(x => x === "")
       if (!validated) {
@@ -191,15 +205,32 @@ const NewProduct = (props) => {
     })
 
     setImages(newInputFields);
+    setValues({ ...values, images: newInputFields })
+    handleInputChange({
+      target: {
+        name:'images',
+        value:newInputFields
+      }
+    })
+    
   }
   const handleAddImages = () => {
-    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', ur: '', isHeroImg: false }])
+    setImages([...images, { id: uuidv4(), imgName: '', alttag: '', url: '', isHeroImg: false }])
   }
 
   const handleRemoveImages = id => {
-    const values = [...images];
-    values.splice(values.findIndex(value => value.id === id), 1);
-    setImages(values);
+    const new_values = [...images];
+    new_values.splice(new_values.findIndex(value => value.id === id), 1);
+    console.log(new_values)
+    setImages(new_values);
+    setValues({ ...values, images: new_values })
+    handleInputChange({
+      target: {
+        name:'images',
+        value:new_values
+      }
+    })
+    
   }
   const handleImageAdd = (id, event) => {
     event.preventDefault();
@@ -207,21 +238,30 @@ const NewProduct = (props) => {
     data.append('myFile', event.target.files[0]);
     api.uploadFile(data)
       .then(response => {
-        const values = [...images];
-        let img = values.find(value => value.id === id)
+       
+        const new_values = [...images];
+        let img = new_values.find(value => value.id === id)
+        console.log("res",img)
         img.url = response.data.url
         img.imgName = event.target.files[0].name
-        setImages(values);
+        setImages(new_values);
+        setValues({ ...values, images: new_values })
+        handleInputChange({
+          target: {
+            name:'images',
+            value:new_values
+          }
+        })
       }).catch(error => {
         console.log(error)
       });
   }
  const handleCheckbox = (id, event) => {
-    const values = [...images];
-    let img = values.find(value => value.id === id)
+    const new_values = [...images];
+    let img = new_values.find(value => value.id === id)
     img.isHeroImg = event.target.checked
     if(img.isHeroImg){
-      values.map(i => {
+      new_values.map(i => {
         if(i.id !== id){
           i.isHeroImg = false
         }
@@ -229,7 +269,14 @@ const NewProduct = (props) => {
       }
       )
     }
-    setImages(values);
+    setImages(new_values);
+    setValues({ ...values, images: new_values })
+    handleInputChange({
+      target: {
+        name:'images',
+        value:new_values
+      }
+    })
   }
 
   const [specFields, setSpecFields] = useState([
@@ -244,7 +291,14 @@ const NewProduct = (props) => {
       return i;
     })
 
+    handleInputChange({
+      target: {
+        name: 'specification',
+        value: newInputFields
+      }
+    })
     setSpecFields(newInputFields);
+    setValues({ ...values, specification: newInputFields })
   }
 
   const handleAddFields = () => {
@@ -274,6 +328,7 @@ const NewProduct = (props) => {
               dataObj.category = data.category.parent.id
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
+              dataObj.specification = data.specification?.specFields
 
               let category = categories.find(i => i.id === dataObj.category)
               category.children && setSubcatergories(category.children)
@@ -305,6 +360,7 @@ const NewProduct = (props) => {
   }, [])
 
   const submitForm = async function (state) {
+    console.log("sub",images)
     if (validate(values, state)) {
       let body = {
         ...values,
@@ -337,7 +393,15 @@ const NewProduct = (props) => {
           }
   
           if (response.status === 200) {
-            window.location.href = '/products?msg=' + msg;
+            let url = new URL(window.location.href)
+            let page = url.searchParams.get("page")
+            if(page){
+              window.location.href = `/seo?msg=${msg}`
+            }
+            else{
+              window.location.href = '/products?msg=' + msg
+            }
+
           } else {
             toast.error("Some error occurred",{
               autoClose: 9000,
@@ -376,6 +440,20 @@ const NewProduct = (props) => {
 
   }
 
+  const handleInputChangeSlug = (e) => {
+    let slug = e.target.value
+    slug = slug.replace(/\s+/g, '-').toLowerCase()
+    slug = slug.replace(/[^a-zA-Z0-9-]/g, '')
+    slug = `/${slug}`
+    setValues({ ...values, slug: slug })
+    console.log("hii",slug)
+    handleInputChange({
+      target: {
+        name: 'slug',
+        value: slug
+      }
+    })
+  }
   return (
     <div className="new">
       <Sidebar />
@@ -419,9 +497,10 @@ const NewProduct = (props) => {
                   <Controls.Input
                     required
                     name='slug'
-                    label="URL"
+                    label="URLs"
                     value={values.slug}
-                    onChange={handleInputChange}
+                    tabIndex="0" 
+                    onChange={handleInputChangeSlug}
                     error={errors.slug}
                   />
                 </Grid>
@@ -454,7 +533,8 @@ const NewProduct = (props) => {
                 {errors.shortDesc && <p style={{ color: 'red', margin: '20px 20px' }}>{errors.shortDesc}</p>}
               
                 <Editor
-                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
+                  wrapperStyle={{ border: "1px solid #ddd", height: "100%", margin: "8px", }}
+                  editorStyle={{ padding: "10px" , minHeight: "150px" }}
                   // editorState={editorState}
                   editorState={editorState}
 
@@ -463,14 +543,15 @@ const NewProduct = (props) => {
                   editorClassName="editorClassName"
                   onEditorStateChange={(editorState) => {
                     setEditorState(editorState)
-                    handleInputChange({ target: { name: 'primary_content', value: editorState } });
+                    handleInputChange({ target: { name: 'shortDesc', value: editorState } });
                   }}
                 />
 
                 <h3 style={{ marginLeft: '8px' }}>Secondary Content </h3><p style={{ color: 'red' }}>*</p>
                 {errors.longDesc && <p style={{ color: 'red', margin: '20px 20px' }}>{errors.longDesc}</p>}
-                <Editor
-                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
+                <Editor 
+                  wrapperStyle={{ border: "1px solid #ddd", height: "100%", margin: "8px", }}
+                  editorStyle={{ padding: "10px" , minHeight: "150px" }}
                   // editorState={editorState}
                   editorState={editorStateLong}
 
@@ -479,7 +560,7 @@ const NewProduct = (props) => {
                   editorClassName="editorClassName"
                   onEditorStateChange={(editorState) => {
                     setEditorStateLong(editorState)
-                    handleInputChange({ target: { name: 'secondary_content', value: editorState } });
+                    handleInputChange({ target: { name: 'longDesc', value: editorState } });
                   }}
                 />
                 {/* <Controls.Input
@@ -495,7 +576,7 @@ const NewProduct = (props) => {
                   onChange={handleInputChange}
                 /> */}
               </Grid>
-              <h3 style={{ marginLeft: '8px' }}>Specifications</h3>
+              <h3 style={{ marginLeft: '8px' }}>Specifications  {errors.specification && <span className="error">{errors.specification}</span>}</h3>
             
               {specFields.map(inputField => (
                 <div key={inputField.id}>
@@ -528,7 +609,7 @@ const NewProduct = (props) => {
                   <br />
                 </div>
               ))}
-              <h3>Images</h3>
+              <h3>Images {errors.images && <span className="error">{errors.images}</span>}</h3>
               {images.map(inputField => (
                 <div key={inputField.id}>
                   {
@@ -586,44 +667,82 @@ const NewProduct = (props) => {
                 </div>
               ))}
               <h3>SEO Metatags</h3>
-
               <Controls.Input
                 name='title'
-                label="Title"
+                label={mandatoryLabel('Title')}
                 value={values.seo.title}
                 error={errors.title}
                 onChange={(e) => {
                   let { name, value } = e.target
                   let new_values = JSON.parse(JSON.stringify(values));;
                   new_values.seo[name] = value
+                  handleInputChange({
+                    target: {
+                      name: 'seo',
+                      value: {
+                        'title': value,
+                      }
+                    }
+                  })
                   setValues({
                     ...new_values
                   })
                 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end" style={{color: values.seo.title.length > 56 ? 'red' :'black'}}>
+                    {values.seo.title.length}
+                    </InputAdornment>
+                  ),
+                }}
+                
               />
               <Controls.Input
                 name='description'
-                label="Description"
+                label={mandatoryLabel('Description')}
                 error={errors.description}
                 value={values.seo.description}
                 onChange={(e) => {
                   let { name, value } = e.target
                   let new_values = JSON.parse(JSON.stringify(values));;
                   new_values.seo[name] = value
+                  handleInputChange({
+                    target: {
+                      name: 'seo',
+                      value: {
+                        'description': value,
+                      }
+                    }
+                  })
                   setValues({
                     ...new_values
                   })
                 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end" style={{color: values.seo.description.length > 156 ? 'red' :'black'}}>
+                    {values.seo.description.length}
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Controls.Input
                 name='keywords'
-                label="Keywords"
+                label={mandatoryLabel('Keywords')}
                 error={errors.keywords}
                 value={values.seo.keywords}
                 onChange={(e) => {
                   let { name, value } = e.target
                   let new_values = JSON.parse(JSON.stringify(values));;
                   new_values.seo[name] = value
+                  handleInputChange({
+                    target: {
+                      name: 'seo',
+                      value: {
+                        'keywords': value,
+                      }
+                    }
+                  })
                   setValues({
                     ...new_values
                   })

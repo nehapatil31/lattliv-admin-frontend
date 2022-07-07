@@ -27,7 +27,7 @@ function Seo() {
     useEffect(() => {
         
 
-        if(value=='1'){
+        if(value ==='1'){
             api.fetchProducts()
             .then(response => {
                 setProducts(response.data)
@@ -96,9 +96,9 @@ function Seo() {
                     {access.product_read &&
                         <>
                             <div className="datatableTitle">
-                                All Products
+                            All Product SEO content
                             </div>
-                            <SeoDatatable data={products} />
+                            <SeoDatatable data={products} type='products' />
                         </>
                     }
 
@@ -109,9 +109,9 @@ function Seo() {
                     {access.category_read &&
                         <>
                             <div className="datatableTitle">
-                                All Categories
+                                All Categories SEO content
                             </div>
-                            <SeoDatatable data={categories} />
+                            <SeoDatatable data={categories}  type='categories'/>
                         </>
                     }
 
@@ -122,9 +122,9 @@ function Seo() {
                     {access.subcategory_read &&
                         <>
                             <div className="datatableTitle">
-                                All Sub Categories
+                                All Sub Categories SEO content
                             </div>
-                            <SeoDatatable data={subCategories} />
+                            <SeoDatatable data={subCategories}   type='subCategories'/>
                         </>
                     }
 

@@ -19,23 +19,22 @@ export default function SubCategoryDatatable({subCategories, categories}) {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
+
   const columns = [
-    // { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 200 },
-      {
-        field: 'parent',
-        headerName: 'Parent Category',
-        width: 160,
-        valueGetter: (params) =>{
-          let parent = params.row.parent;
-          let parentCategory = categories.find((item)=>item.id==parent)
-          return parentCategory.name
-        }
-      },
+    { field: 'name', headerName: 'Name', width: 180 },
+    {
+      field: 'parent',
+      headerName: 'Parent Category',
+      width: 160,
+      valueGetter: (params) =>{
+        let parent = params.row.parent;
+        let parentCategory = categories.find((item)=>item.id ===parent)
+        return parentCategory?.name || "-";
+      }
+    },
       {
         field: 'fullName',
         headerName: 'Created by',
-        // description: 'This column has a value getter and is not sortable.',
         sortable: false,
         width: 160,
         valueGetter: (params) =>params.row.createdBy?.name ? `${params.row.createdBy?.name}`:'-'
@@ -44,7 +43,7 @@ export default function SubCategoryDatatable({subCategories, categories}) {
       {
         field: "status",
         headerName: "Status",
-        width: 160,
+        width: 120,
         renderCell: (params) => {
           return (
             <div className={`cellWithStatus ${params.row.state.name}`}>

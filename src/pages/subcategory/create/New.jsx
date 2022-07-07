@@ -1,13 +1,9 @@
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
 import { useForm, Form } from "../../../components/form/useForm";
-import { url } from '../../../config'
 import Controls from '../../../components/form/Controls'
-import { toast, ToastContainer } from 'react-toastify';
-import { Grid, Button, Stack, TextField, IconButton, Typography } from "@mui/material";
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Box from '@mui/material/Box';
+import { toast } from 'react-toastify';
+import {  Button, Stack, TextField } from "@mui/material";
 import * as React from 'react'
 import * as api from '../../../api'
 import './new.scss'
@@ -22,6 +18,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { mandatoryTheam, mandatoryLabel } from '../../../utils'
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import InputAdornment from '@mui/material/InputAdornment';
+
 const initialFormValues = {
   name: '',
   parent: '',
@@ -57,8 +55,8 @@ const NewSubCategory = (props) => {
         temp.description = fieldValues.seo.description ? "" : "This field is required."
       if (fieldValues?.seo?.keywords !== undefined)
         temp.keywords = fieldValues.seo.keywords ? "" : "This field is required."
-      if (fieldValues?.seo?.webDesc !== undefined)
-        temp.webDesc = (fieldValues.seo.webDesc === '<p><br></p>' || fieldValues.seo.webDesc ==='') ? "This field is required." : ""
+      // if (fieldValues?.seo?.webDesc !== undefined)
+      //   temp.webDesc = (fieldValues.seo.webDesc === '<p><br></p>' || fieldValues.seo.webDesc ==='') ? "This field is required." : ""
     }
 
     setErrors({
@@ -311,6 +309,13 @@ const NewSubCategory = (props) => {
                   ...new_values
                 })
               }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" style={{color: values.seo.title.length > 56 ? 'red' :'black'}}>
+                  {values.seo.title.length}
+                  </InputAdornment>
+                ),
+              }}
             />
             <Controls.Input
               name='description'
@@ -333,6 +338,13 @@ const NewSubCategory = (props) => {
                 setValues({
                   ...new_values
                 })
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" style={{color: values.seo.description.length > 156 ? 'red' :'black'}}>
+                  {values.seo.description.length}
+                  </InputAdornment>
+                ),
               }}
             />
             <Controls.Input
@@ -359,13 +371,15 @@ const NewSubCategory = (props) => {
             />
 
               <div className='web-desc' style={{display:'flex'}}>
-                <h3 style={{ marginLeft: '8px' }}>Website Description </h3><p style={{ color: 'red' }}>**</p>
-                {errors.webDesc && <p  className='error' style={{ color: 'red', margin: '20px 20px' }}>{errors.webDesc}</p>}
+                <h3 style={{ marginLeft: '8px' }}>Website Description </h3>
+                {/* <p style={{ color: 'red' }}>**</p>
+                {errors.webDesc && <p  className='error' style={{ color: 'red', margin: '20px 20px' }}>{errors.webDesc}</p>} */}
               </div>
 
               
                 <Editor
-                  wrapperStyle={{ border: "1px solid #ddd", minHeight: "200px", margin: "8px" }}
+                 wrapperStyle={{ border: "1px solid #ddd", height: "100%", margin: "8px", width: "80%"}}
+                 editorStyle={{ padding: "10px" , minHeight: "150px" }}
                   // editorState={editorState}
                   editorState={editorState}
 

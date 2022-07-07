@@ -18,6 +18,7 @@ import { mandatoryTheam, mandatoryLabel } from "../../../utils";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 const initialFormValues = {
@@ -58,18 +59,18 @@ const NewCategory = (props) => {
         temp.keywords = fieldValues.seo.keywords
           ? ""
           : "This field is required.";
-      if (fieldValues?.seo?.webDesc !== undefined)
-        temp.webDesc =
-          fieldValues.seo.webDesc === "<p><br></p>" ||
-          fieldValues.seo.webDesc === ""
-            ? "This field is required."
-            : "";
+      // if (fieldValues?.seo?.webDesc !== undefined)
+      //   temp.webDesc =
+      //     fieldValues.seo.webDesc === "<p><br></p>" ||
+      //     fieldValues.seo.webDesc === ""
+      //       ? "This field is required."
+      //       : "";
     }
 
     setErrors({
       ...temp,
     });
-
+console.log(temp)
     if (fieldValues === values)
       return Object.values(temp).every((x) => x === "");
   };
@@ -302,6 +303,13 @@ const NewCategory = (props) => {
                     ...new_values,
                   });
                 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end" style={{color: values.seo.title.length > 56 ? 'red' :'black'}}>
+                    {values.seo.title.length}
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               <Controls.Input
@@ -324,6 +332,13 @@ const NewCategory = (props) => {
                   setValues({
                     ...new_values,
                   });
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end" style={{color: values.seo.description.length > 156 ? 'red' :'black'}}>
+                    {values.seo.description.length}
+                    </InputAdornment>
+                  ),
                 }}
               />
               <Controls.Input
@@ -351,23 +366,20 @@ const NewCategory = (props) => {
               />
               <div className="web-desc" style={{ display: "flex" }}>
                 <h3 style={{ marginLeft: "8px" }}>Website Description </h3>
-                <p style={{ color: "red" }}>**</p>
-                {errors.webDesc && (
+                {/* <p style={{ color: "red" }}>**</p> */}
+                {/* {errors.webDesc && (
                   <p
                     className="error"
                     style={{ color: "red", margin: "20px 20px" }}
                   >
                     {errors.webDesc}
                   </p>
-                )}
+                )} */}
               </div>
 
               <Editor
-                wrapperStyle={{
-                  border: "1px solid #ddd",
-                  minHeight: "200px",
-                  margin: "8px",
-                }}
+               wrapperStyle={{ border: "1px solid #ddd", height: "100%", margin: "8px", width: "80%"}}
+               editorStyle={{ padding: "10px" , minHeight: "150px" }}
                 // editorState={editorState}
                 editorState={editorState}
                 toolbarClassName="toolbarClassName"

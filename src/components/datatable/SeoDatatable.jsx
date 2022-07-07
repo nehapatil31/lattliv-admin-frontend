@@ -5,9 +5,33 @@ import * as access from '../../access'
 import { DataGrid } from "@mui/x-data-grid";
 import Tooltip from "@mui/material/Tooltip";
 
-const SeoDatatable = ({ data }) => {
+const SeoDatatable = ({ data , type }) => {
+    const columns = () => {
+        if(type === 'products'){
+            return {
+                field: "sku",
+                headerName: "SKU",
+                width: 100 
+            }
+        }
+        if(type === 'categories'){
+             return {
+                field: "id",
+                headerName: "ID",
+                width: 100 
+            }
+        }
+        if(type === 'subCategories'){
+            return {
+                field: "id",
+                headerName: "ID",
+                width: 100 
+            }
+        }
+
+    }           
     const tableColumns = [
-        // { field: "sku", headerName: "SKU", width: 100 },
+        columns(),
         {
             field: "name",
             headerName: "Name",
@@ -55,12 +79,10 @@ const SeoDatatable = ({ data }) => {
             width: 200,
             disableColumnFilter: true,
             renderCell: (params) => {
-                let apiUrl = `/products/${params.id}`
+                let page = 'seo';
+                let apiUrl = `/products/${params.id}?page=${page}`
                 return (
                     <div className="cellAction">
-                        {/* <Link to={apiUrl} style={{ textDecoration: "none" }}>
-                  <div className="viewButton">Edit</div>
-                </Link> */}
                         <Button
                             disabled={access.product_edit ? false : true}
                             onClick={() => {
