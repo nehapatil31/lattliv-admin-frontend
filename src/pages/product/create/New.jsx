@@ -58,7 +58,6 @@ const initialFormValues = {
   subcategory: '',
   state: '',
   slug: '',
-  createdBy: '',
   seo: {
     title: '',
     description: '',
@@ -101,6 +100,7 @@ const NewProduct = (props) => {
   const { productId } = useParams();
 
   const validate = (fieldValues = values, state) => {
+
     let temp = { ...errors }
     if ('name' in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required."
@@ -127,7 +127,7 @@ const NewProduct = (props) => {
     else {
       temp.specification = ""
       fieldValues?.specification?.forEach((item, index) => {
-        console.log(item)
+  
         if (item.specName === '')
           temp.specification = "One of the spec Name field is required."
         if (item.specValue === '')
@@ -166,7 +166,7 @@ const NewProduct = (props) => {
     if ('longDesc' in fieldValues) {
       temp.longDesc = (fieldValues.longDesc === '<p><br></p>' || fieldValues.longDesc ==='') ? "This field is required." : ""   
     }
-    console.log(temp)
+
     setErrors({
       ...temp
     })
@@ -221,7 +221,7 @@ const NewProduct = (props) => {
   const handleRemoveImages = id => {
     const new_values = [...images];
     new_values.splice(new_values.findIndex(value => value.id === id), 1);
-    console.log(new_values)
+
     setImages(new_values);
     setValues({ ...values, images: new_values })
     handleInputChange({
@@ -241,7 +241,7 @@ const NewProduct = (props) => {
        
         const new_values = [...images];
         let img = new_values.find(value => value.id === id)
-        console.log("res",img)
+
         img.url = response.data.url
         img.imgName = event.target.files[0].name
         setImages(new_values);
@@ -324,7 +324,7 @@ const NewProduct = (props) => {
             .then(response => {
               let data = response.data;
               let dataObj = { ...response.data }
-              console.log("dataObj",dataObj)
+
               dataObj.category = data.category.parent.id
               dataObj.subcategory = data.category.id
               dataObj.availability = data.inStock ? 'in_stock' : 'out_of_stock'
@@ -337,6 +337,7 @@ const NewProduct = (props) => {
                 setSpecFields(data.specification?.specFields)
               }
               if (data.images?.images) {
+                dataObj.images = data.images?.images;
                 setImages(data.images?.images)
               }
 
@@ -360,13 +361,11 @@ const NewProduct = (props) => {
   }, [])
 
   const submitForm = async function (state) {
-    console.log("sub",images)
+
     if (validate(values, state)) {
       let body = {
         ...values,
         state: state,
-        ...(state === 1) && {createdBy: access.user_id},
-        ...(state === 2) && {approvedBy: access.user_id},
         specification: {
           specFields: specFields
         },
@@ -446,7 +445,6 @@ const NewProduct = (props) => {
     slug = slug.replace(/[^a-zA-Z0-9-]/g, '')
     slug = `/${slug}`
     setValues({ ...values, slug: slug })
-    console.log("hii",slug)
     handleInputChange({
       target: {
         name: 'slug',
@@ -454,6 +452,8 @@ const NewProduct = (props) => {
       }
     })
   }
+  const isReadyForPublishOrHide = values.state.id ?? 0;
+
   return (
     <div className="new">
       <Sidebar />
@@ -772,7 +772,7 @@ const NewProduct = (props) => {
                   Ready for review
                 </Button>
                 <Button
-                  disabled={access.product_publish ? false : true}
+                  disabled={access.product_publish ?  (isReadyForPublishOrHide !== 2 ? true: false) :true}
                   onClick={() => {
                     submitForm(state_enum.published)
                   }}
@@ -780,7 +780,7 @@ const NewProduct = (props) => {
                   Publish
                 </Button>
                 <Button
-                  disabled={access.product_hide ? false : true}
+                  disabled={access.product_hide ? (isReadyForPublishOrHide === 6 ? false: true) : true}
                   onClick={() => {
                     submitForm(state_enum.hidden)
                   }}
