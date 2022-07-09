@@ -15,9 +15,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import Stack from '@mui/material/Stack';
 import { url, state_enum } from '../../config'
 import * as api from '../../api';
+import { useStyles } from "../../utils"
 
 const ProductDatatable = () => {
   const [data, setData] = useState();
+  const classes = useStyles();
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
@@ -95,6 +97,8 @@ const ProductDatatable = () => {
       }
       });
   }, []);
+
+
 
   const actionColumn = [
     {
@@ -185,7 +189,10 @@ const ProductDatatable = () => {
       </div>
       <br />
       {data && <DataGrid
-        className="datagrid"
+      
+      
+      className={classes.root}
+
         disableSelectionOnClick
         disableColumnSelector
         rows={data}

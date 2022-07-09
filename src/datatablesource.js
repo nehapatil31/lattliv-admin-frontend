@@ -2,6 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import React from "react";
+let count = 0;
 export const userColumns = [
   { field: "sku", headerName: "SKU", width: 80 },
   {
@@ -17,7 +18,7 @@ export const userColumns = [
   {
     field: "price",
     headerName: "Price (Rs)",
-    width: 100,
+    width: 120,
   },
   {
     field: "category",

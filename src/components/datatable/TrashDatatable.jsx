@@ -12,10 +12,11 @@ import { state_enum } from '../../config'
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import Stack from '@mui/material/Stack';
-
+import { useStyles } from "../../utils"
 const TrashDatatable = ({ data, type }) => {
     const [multiActionVisibility, setMultiActionVisibility] = useState(false);
     const [selectionModel, setSelectionModel] = React.useState([]);
+    const classes = useStyles();
 
     const updateState = (state) => {
         let body = [];
@@ -145,7 +146,7 @@ const TrashDatatable = ({ data, type }) => {
         </Stack>
       </div>
             {data && <DataGrid
-                className="datagrid"
+                className={classes.root}
                 disableSelectionOnClick
                 disableColumnSelector
                 rows={data}

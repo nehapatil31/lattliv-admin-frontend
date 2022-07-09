@@ -14,11 +14,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GradingIcon from '@mui/icons-material/Grading';
 import CheckIcon from '@mui/icons-material/Check';
 import Stack from '@mui/material/Stack';
-
+import { useStyles } from "../../utils"
 export default function SubCategoryDatatable({subCategories, categories}) {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
+  const classes = useStyles();
 
   const columns = [
     { field: 'name', headerName: 'Name', width: 180 },
@@ -193,7 +194,7 @@ export default function SubCategoryDatatable({subCategories, categories}) {
       <br/>
       {subCategories && <DataGrid
         rows={subCategories}
-        className="datagrid"
+        className={classes.root}
         disableSelectionOnClick
         disableColumnSelector
         columns={columns.concat(actionColumn)}

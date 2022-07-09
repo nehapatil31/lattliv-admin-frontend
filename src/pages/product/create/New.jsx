@@ -144,7 +144,7 @@ const NewProduct = (props) => {
       let heroImage = fieldValues?.images?.find(item => item.isHeroImg === true)
 
       if (!heroImage)
-        temp.images = "Hero Image is required."
+        temp.images = "Main Image is required."
       else {
         temp.images=''
       }
@@ -363,8 +363,12 @@ const NewProduct = (props) => {
   const submitForm = async function (state) {
 
     if (validate(values, state)) {
+      let data = { ...values }
+      data.slug = `https://lalltiv.in/product/${data.slug}`
+      delete data.createdBy
+
       let body = {
-        ...values,
+        ...data,
         state: state,
         specification: {
           specFields: specFields
@@ -443,7 +447,6 @@ const NewProduct = (props) => {
     let slug = e.target.value
     slug = slug.replace(/\s+/g, '-').toLowerCase()
     slug = slug.replace(/[^a-zA-Z0-9-]/g, '')
-    slug = `/${slug}`
     setValues({ ...values, slug: slug })
     handleInputChange({
       target: {
@@ -502,6 +505,7 @@ const NewProduct = (props) => {
                     tabIndex="0" 
                     onChange={handleInputChangeSlug}
                     error={errors.slug}
+                    helperText={`https://lalltiv.in/product/${values.slug}`}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -622,7 +626,7 @@ const NewProduct = (props) => {
                     !inputField.imgName && (
                       <>
                         <input type="file" id="myFile" onChange={event => handleImageAdd(inputField.id, event)} style={{ display: 'none' }} />
-                        <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
+                        <label htmlFor="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
                         <br />
                         <br />
                       </>
@@ -630,7 +634,7 @@ const NewProduct = (props) => {
                   }
                   {/* isHeroImg */}
                   <FormGroup>
-                    <FormControlLabel label="Hero Img" control={<Checkbox 
+                    <FormControlLabel label="Main Image" control={<Checkbox 
                     checked={inputField.isHeroImg}
                       onChange={event => handleCheckbox(inputField.id, event)}
                     />}  />
@@ -772,7 +776,7 @@ const NewProduct = (props) => {
                   Ready for review
                 </Button>
                 <Button
-                  disabled={access.product_publish ?  (isReadyForPublishOrHide !== 2 ? true: false) :true}
+                  disabled={access.product_publish ?  (isReadyForPublishOrHide === 2 ? true: false) :true}
                   onClick={() => {
                     submitForm(state_enum.published)
                   }}
@@ -780,7 +784,7 @@ const NewProduct = (props) => {
                   Publish
                 </Button>
                 <Button
-                  disabled={access.product_hide ? (isReadyForPublishOrHide === 6 ? false: true) : true}
+                  disabled={access.product_hide ? (isReadyForPublishOrHide === 6 ? true: false) : true}
                   onClick={() => {
                     submitForm(state_enum.hidden)
                   }}

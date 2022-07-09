@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import { state_enum } from '../../config'
 import ConfirmDialog from "../confirm/ConfirmDialog";
 import { toast, ToastContainer } from 'react-toastify';
+import { useStyles } from "../../utils"
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -20,6 +21,7 @@ const columns = [
 ];
 const StoreDatatable = () => {
   const [data, setData] = useState();
+  const classes = useStyles();
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
 
   const handleDelete = () => {
@@ -109,7 +111,7 @@ const StoreDatatable = () => {
       disableSelectionOnClick
       disableColumnSelector
         rows={data}
-        className="datagrid"
+        className={classes.root}
         columns={columns.concat(actionColumn)}
         pageSize={10}
         rowsPerPageOptions={[10]}

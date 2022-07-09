@@ -13,11 +13,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GradingIcon from '@mui/icons-material/Grading';
 import CheckIcon from '@mui/icons-material/Check';
 import Stack from '@mui/material/Stack';
-
+import { useStyles } from "../../utils"
 export default function CategoryDatatable({ categories }) {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const [multiActionVisibility, setMultiActionVisibility] = useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
+  const classes = useStyles();
   const handleDelete = () => {
     console.log(confirmOpen.id)
     let body = {
@@ -218,7 +219,7 @@ export default function CategoryDatatable({ categories }) {
       <br/>
       {categories && <DataGrid
         rows={categories}
-        className="datagrid"
+        className={classes.root}
         disableSelectionOnClick
         disableColumnSelector
         columns={columns.concat(actionColumn)}

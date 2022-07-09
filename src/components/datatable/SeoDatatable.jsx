@@ -4,8 +4,10 @@ import Button from '@mui/material/Button';
 import * as access from '../../access'
 import { DataGrid } from "@mui/x-data-grid";
 import Tooltip from "@mui/material/Tooltip";
+import { useStyles } from "../../utils"
 
 const SeoDatatable = ({ data , type }) => {
+    const classes = useStyles();
     const columns = () => {
         if(type === 'products'){
             return {
@@ -100,7 +102,7 @@ const SeoDatatable = ({ data , type }) => {
     return (
         <div className="datatable" style={{height: '95%'}}>
             {data && <DataGrid
-                className="datagrid"
+               className={classes.root}
                 disableSelectionOnClick
                 disableColumnSelector
                 rows={data}
