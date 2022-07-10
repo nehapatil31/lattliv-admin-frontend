@@ -25,9 +25,12 @@ export const mandatoryLabel = (label) => {
           '& .MuiDataGrid-columnHeaders': {
             background: '#007bff',
             color: '#fff',
-            fontWeight: 'bold',
             fontSize: '1.1rem',
             boxShadow: 'none',
+          },
+          '& .MuiDataGrid-columnHeaderTitle': {
+            fontWeight: 800,
+            color: '#fff',
           },
           '& .MuiDataGrid-row': {
             '&:nth-of-type(odd)': {

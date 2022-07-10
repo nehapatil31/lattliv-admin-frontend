@@ -1,19 +1,22 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import React from "react";
-let count = 0;
+
 export const userColumns = [
+  {
+    field: "serial",
+    headerName: "Sr. No.",
+    width: 70,
+  },
   { field: "sku", headerName: "SKU", width: 80 },
   {
     field: "name",
     headerName: "Product Name",
-    width: 200,
-    renderCell: (params) =>  (
-      <Tooltip title={params.row.name} >
-       <span className="table-cell-trucate">{params.row.name}</span>
-       </Tooltip>
-     ),
+    width: 180,
+    renderCell: (params) => (
+      <Tooltip title={params.row.name}>
+        <span className="table-cell-trucate">{params.row.name}</span>
+      </Tooltip>
+    ),
   },
   {
     field: "price",
@@ -26,10 +29,10 @@ export const userColumns = [
     width: 160,
     renderCell: (params) => {
       return (
-        <Tooltip title={params.row.category.parent?.name} >
-       <div className="rowitem">{params.row.category.parent?.name}</div>
-       </Tooltip>
-      )
+        <Tooltip title={params.row.category.parent?.name}>
+          <div className="rowitem">{params.row.category.parent?.name}</div>
+        </Tooltip>
+      );
       //return <div className="rowitem">{params.row.category.parent?.name}</div>;
     },
   },
@@ -39,10 +42,10 @@ export const userColumns = [
     width: 160,
     renderCell: (params) => {
       return (
-        <Tooltip title={params.row.category.name} >
-       <div className="rowitem">{params.row.category.name}</div>
-       </Tooltip>
-      )//<div className="rowitem">{params.row.category.name}</div>;
+        <Tooltip title={params.row.category.name}>
+          <div className="rowitem">{params.row.category.name}</div>
+        </Tooltip>
+      ); //<div className="rowitem">{params.row.category.name}</div>;
     },
   },
   {

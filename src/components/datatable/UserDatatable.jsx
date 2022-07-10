@@ -9,6 +9,11 @@ import ConfirmDialog from "../confirm/ConfirmDialog";
 import { toast, ToastContainer } from 'react-toastify';
 import { useStyles } from "../../utils"
 const columns = [
+  {
+    field: "serial",
+    headerName: "Sr. No.",
+    width: 70
+},
   { field: 'id', headerName: 'ID', width: 70 },
   { field: 'name', headerName: 'Name', width: 200 },
   { field: 'email', headerName: 'Email', width: 220 },
@@ -18,15 +23,6 @@ const columns = [
     type: 'number',
     width: 130,
   },
-  //   {
-  //     field: 'fullName',
-  //     headerName: 'Full name',
-  //     description: 'This column has a value getter and is not sortable.',
-  //     sortable: false,
-  //     width: 160,
-  //     valueGetter: (params) =>
-  //       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  //   },
 ];
 
 export default function UserDatatable() {
@@ -34,13 +30,13 @@ export default function UserDatatable() {
   const [confirmOpen, setConfirmOpen] = useState({ state: false, id: '' });
   const classes = useStyles();
   const handleDelete = () => {
-    console.log(confirmOpen.id)
     let body = {
       state: state_enum.trashed
     }
     api.updateUser(confirmOpen.id, body)//fetch(`${url.base_url}/products`)
       // .then(results => results.json())
       .then(response => {
+        
         if (response.status === 200) {
           let msg = "User is deleted."
 
@@ -63,12 +59,30 @@ export default function UserDatatable() {
   useEffect(() => {
     api.fetchUsers()
       .then(response => {
-        setData(response.data);
-        console.log(response.data)
+        
+        if (response.status === 200) {
+          //append a serial number to the data
+          let data = response.data.map((item, index) => {
+            return {
+              ...item,
+              serial: index + 1
+            }
+          }
+          )
+          setData(data)
+        } else {
+          toast.error("Some error occurred",{
+            autoClose: 9000,
+            pauseOnHover: true,
+          })
+        }
       }).catch(error => {
-        console.log(error)
-      });
-  }, []);
+        toast.error("Some error occurred",{
+          autoClose: 9000,
+          pauseOnHover: true,
+        })
+      })
+    }, []);
 
 
   const actionColumn = [
@@ -110,6 +124,7 @@ export default function UserDatatable() {
   ];
   return (
     <div className="datatable">
+       <ToastContainer icon={false} limit={1} autoClose={2000} />
       <ConfirmDialog
         title="Delete Post?"
         open={confirmOpen}

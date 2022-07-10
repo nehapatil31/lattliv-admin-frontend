@@ -30,10 +30,29 @@ function Seo() {
         if(value ==='1'){
             api.fetchProducts()
             .then(response => {
-                setProducts(response.data)
+              
+                //append a serial number to the data
+                if(response.status === 200){
+                    let data = response.data
+                    let serial = 1
+                    data.forEach(element => {
+                        element.serial = serial
+                        serial++
+                    })
+                    setProducts(data)
+                }
+                else{
+                    if(!isToastcalled){
+                        toast.error(response?.error,{
+                            autoClose: 9000,
+                            pauseOnHover: true,
+                        })
+                        isToastcalled = true
+                    }
+                }
             }).catch(error => {
                 console.log(error)
-                if(error.response.status === 401 ){
+                if(error?.response?.status === 401 ){
                     toast.error("Session Expired. Please Login Again",{
                         autoClose: 9000,
                         pauseOnHover: true,
@@ -48,8 +67,22 @@ function Seo() {
             .then(response => {
                 let subcategories = response.data.filter((item) => item.parent)
                 let categories = response.data.filter((item) => !item.parent)
-                setCategories(categories);
-                setSubCategories(subcategories);
+                //append a serial number to the data
+                if(response.status === 200){
+                    let serial = 1
+                    categories.forEach(element => {
+                        element.serial = serial
+                        serial++
+                    })
+                    serial =1;
+                    subcategories.forEach(element => {
+                        element.serial = serial
+                        serial++
+                    }
+                    )
+                    setCategories(categories)
+                    setSubCategories(subcategories)
+                }
             }).catch(error => {
                 console.log(error)
             });

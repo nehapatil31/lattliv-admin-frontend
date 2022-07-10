@@ -5,6 +5,7 @@ import * as access from '../../access'
 import { DataGrid } from "@mui/x-data-grid";
 import Tooltip from "@mui/material/Tooltip";
 import { useStyles } from "../../utils"
+import { toast, ToastContainer } from "react-toastify";
 
 const SeoDatatable = ({ data , type }) => {
     const classes = useStyles();
@@ -31,13 +32,19 @@ const SeoDatatable = ({ data , type }) => {
             }
         }
 
-    }           
+    }
+          
     const tableColumns = [
+        {
+            field: "serial",
+            headerName: "Sr. No.",
+            width: 100
+        },
         columns(),
         {
             field: "name",
             headerName: "Name",
-            width: 230,
+            width: 200,
             renderCell: (params) => (
                 <Tooltip title={params.row.name} >
                     <span className="table-cell-trucate">{params.row.name}</span>
@@ -47,7 +54,7 @@ const SeoDatatable = ({ data , type }) => {
         {
             field: "title",
             headerName: "Title",
-            width: 230,
+            width: 200,
             renderCell: (params) => (
                 <span className="table-cell-trucate">{params.row.seo?.title}</span>
             ),
@@ -55,7 +62,7 @@ const SeoDatatable = ({ data , type }) => {
         {
             field: "description",
             headerName: "Description",
-            width: 230,
+            width: 200,
             renderCell: (params) => {
                 return (
                     <div className="rowitem">{params.row.seo?.description}</div>
@@ -65,7 +72,7 @@ const SeoDatatable = ({ data , type }) => {
         {
             field: "keywords",
             headerName: "Keywords",
-            width: 230,
+            width: 200,
             renderCell: (params) => {
                 return (
                     <div className="rowitem">{params.row.seo?.keywords}</div>
@@ -78,7 +85,7 @@ const SeoDatatable = ({ data , type }) => {
             field: "action",
             headerName: "Action",
             sortable: false,
-            width: 200,
+            width: 100,
             disableColumnFilter: true,
             renderCell: (params) => {
                 let page = 'seo';
@@ -101,6 +108,7 @@ const SeoDatatable = ({ data , type }) => {
 
     return (
         <div className="datatable" style={{height: '95%'}}>
+            <ToastContainer icon={false} limit={1} autoClose={2000} />
             {data && <DataGrid
                className={classes.root}
                 disableSelectionOnClick
