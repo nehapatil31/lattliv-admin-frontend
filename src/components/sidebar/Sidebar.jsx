@@ -109,12 +109,16 @@ function Sidebar() {
                 <ul>
                     <p className="title">USER</p>
 
-                    <Link to="/login" style={{ textDecoration: "none" }}>
+                    {/* <Link to="/login" style={{ textDecoration: "none" }}> */}
                         <li>
                             <LogoutOutlinedIcon className="icon" />
-                            <span onClick={() => { localStorage.clear(); }}>Logout</span>
+                            <span onClick={() => { 
+                                localStorage.clear('profile'); 
+                                window.location.reload();
+                                
+                                }}>Logout</span>
                         </li>
-                    </Link>
+                    {/* </Link> */}
                 </ul>
 
                 {/* <div className="user-details">
