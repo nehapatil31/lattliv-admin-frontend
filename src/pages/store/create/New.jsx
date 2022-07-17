@@ -22,7 +22,7 @@ const initialFormValues = {
     place: "",
     address: "",
     email: "",
-    number: [],
+    number: '',
     manager: "",
     map: "",
     image: "",
@@ -34,17 +34,21 @@ const NewStore = (props) => {
     const { storeId } = useParams();
     const [images, setImages] = useState({ imgName: "", alttag: "", url: "" });
     const validate = (fieldValues = values) => {
+        console.log(fieldValues)
         let temp = { ...errors };
         if ("name" in fieldValues)
             temp.name = fieldValues.name ? "" : "This field is required.";
         if ("place" in fieldValues)
             temp.place = fieldValues.place ? "" : "This field is required.";
+        if ("number" in fieldValues)
+            temp.number = fieldValues.number ? "" : "This field is required.";
         if ("address" in fieldValues)
             temp.address = fieldValues.address ? "" : "This field is required.";
         if ("email" in fieldValues) {
             temp.email = fieldValues.email ? "" : "This field is required.";
             if (fieldValues.email) {
-                temp.email = /$^|.+@.+..+/.test(fieldValues.email)
+                var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                temp.email = EMAIL_REGEX.test(fieldValues.email)
                     ? ""
                     : "Email is not valid.";
             }
@@ -57,7 +61,7 @@ const NewStore = (props) => {
         setErrors({
             ...temp,
         });
-
+        console.log(temp)
         if (fieldValues === values)
             return Object.values(temp).every((x) => x === "");
     };
@@ -217,8 +221,9 @@ const NewStore = (props) => {
                                             onChange={handleInputChange}
                                         />
                                         <Controls.Input
+                                            required
                                             name="number"
-                                            label="Number(s)"
+                                            label="Telephone Number"
                                             value={values.number}
                                             onChange={handleInputChange}
                                             error={errors.number}
@@ -302,7 +307,7 @@ const NewStore = (props) => {
                                     variant="contained"
                                     color="info"
                                 >
-                                    Submit
+                                    {storeId ? "Update Location" : "Create New Location"}
                                 </Button>
                             </ThemeProvider>
                         </Form>

@@ -33,6 +33,7 @@ export const mandatoryLabel = (label) => {
             color: '#fff',
           },
           '& .MuiDataGrid-row': {
+            fontSize: '1rem',
             '&:nth-of-type(odd)': {
               backgroundColor: "white",
             },
@@ -41,8 +42,12 @@ export const mandatoryLabel = (label) => {
             },
           }, 
           '& .MuiDataGrid-row:hover': {
-            fontWeight: 'bold',
+            //gray color 
+            backgroundColor: '#DCDCDC	',
             transition: 'background-color 0.5s ease',
-          }
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none !important',
+          },
     }
   }));

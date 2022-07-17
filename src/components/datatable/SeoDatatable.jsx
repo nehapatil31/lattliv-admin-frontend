@@ -113,6 +113,7 @@ const SeoDatatable = ({ data , type }) => {
                className={classes.root}
                 disableSelectionOnClick
                 disableColumnSelector
+                disableColumnMenu
                 rows={data}
                 columns={tableColumns.concat(actionColumn)}
                 pageSize={10}

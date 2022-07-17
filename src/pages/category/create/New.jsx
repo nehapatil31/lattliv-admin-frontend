@@ -19,12 +19,16 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import InputAdornment from '@mui/material/InputAdornment';
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 
 const initialFormValues = {
   name: "",
-  image: "",
-  alttag: "",
+  image:{
+    alttag: '',
+    imgName:'',
+    url: '',
+  },
   seo: {
     title: "",
     description: "",
@@ -43,11 +47,14 @@ const NewCategory = (props) => {
   });
 
   const validate = (fieldValues = values, state) => {
+    console.log('fieldValues',fieldValues)
     let temp = { ...errors };
     if ("name" in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required.";
-    if ("image" in fieldValues)
-      temp.image = fieldValues.image ? "" : "This field is required.";
+    if ('image' in fieldValues)
+      temp.image = fieldValues?.image?.url ? "" : "This field is required."
+    if ('image' in fieldValues)
+      temp.alttag = fieldValues?.image?.alttag ? "" : "This field is required."
     if (state === 2 || state === 6 || state === undefined) {
       if (fieldValues?.seo?.title !== undefined && "title" in fieldValues?.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required.";
@@ -59,18 +66,13 @@ const NewCategory = (props) => {
         temp.keywords = fieldValues.seo.keywords
           ? ""
           : "This field is required.";
-      // if (fieldValues?.seo?.webDesc !== undefined)
-      //   temp.webDesc =
-      //     fieldValues.seo.webDesc === "<p><br></p>" ||
-      //     fieldValues.seo.webDesc === ""
-      //       ? "This field is required."
-      //       : "";
+
     }
 
     setErrors({
       ...temp,
     });
-console.log(temp)
+
     if (fieldValues === values)
       return Object.values(temp).every((x) => x === "");
   };
@@ -98,10 +100,14 @@ console.log(temp)
       .then((response) => {
         handleInputChange({
           target: {
-            name: "image",
-            value: response.data.url,
-          },
-        });
+            name: 'image',
+            value: {
+              ...values.image,
+              imgName: event.target.files[0].name,
+              url: response.data.url
+            }
+          }
+        })
         setImages({
           imgName: event.target.files[0].name,
           alttag: "",
@@ -111,7 +117,7 @@ console.log(temp)
         setValues({
           ...values,
           image: {
-            alttag: "",
+            ...values.image,
             imgName: event.target.files[0].name,
             url: response.data.url,
           },
@@ -126,6 +132,15 @@ console.log(temp)
   const handleImageData = (event) => {
     //get alt tag and name
     const alttag = event.target.value;
+    handleInputChange({
+      target: {
+        name: 'image',
+        value: {
+          ...values.image,
+          alttag: alttag,
+        },
+      }
+    })
     setValues({
       ...values,
       image: {
@@ -225,7 +240,7 @@ console.log(temp)
               <Controls.Input
                 required
                 name="name"
-                label="Name"
+                label="Category Name"
                 value={values.name}
                 onChange={handleInputChange}
                 error={errors.name}
@@ -244,6 +259,7 @@ console.log(temp)
                 {/* error msg */}
 
                 {values?.image?.url && (
+                  <div className="img-details">
                   <a href={values.image.url} rel="noreferrer" target="_blank">
                     <img
                       src={values.image.url}
@@ -255,30 +271,50 @@ console.log(temp)
                         padding: "3px",
                       }}
                     />
-                    {values.image.imgName && (
-                      <div className="image-label" style={{ color: "#000000" }}>
-                        {" "}
-                        {values.image.imgName}
-                      </div>
-                    )}
                   </a>
+                   {values.image.imgName && (
+                    <div
+                        className="image-label"
+                        style={{ color: "#000000" }} 
+                    >
+                        {values.image.imgName}
+                        <IconButton
+                            onClick={() => {
+                                setValues({
+                                    ...values,
+                                    image: {
+                                        alttag: "",
+                                        imgName: "",
+                                        url: "",
+                                    },
+                                });
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                  )}
+                 </div>
+                  
                 )}
               </div>
               <div className="errror-container">
                 {errors.image && <span className="error">{errors.image}</span>}
               </div>
 
-              <div className="altTag">
-                <TextField
-                  required
-                  name="alttag"
-                  label="Alt Tag"
-                  variant="standard"
-                  value={values?.image?.alttag && values.image.alttag}
-                  style={{ marginRight: "12px" }}
-                  onChange={(event) => handleImageData(event)}
-                />
-              </div>
+            <div className="altTag">
+              <TextField
+                required
+                name="alttag"
+                label="Alt Tag"
+                variant="standard"
+                value={values?.image.alttag}
+                style={{ marginRight: "12px" }}
+                onChange={(event) => handleImageData(event)}
+              />
+
+            </div>
+            {errors.alttag && <span className="error" style={{margin:'9px'}}>{errors.alttag}</span>}
 
               <br />
               <h3>SEO Metatags</h3>

@@ -274,7 +274,7 @@ const NewUser = (props) => {
               submitForm()
             }}
             variant="contained" color="info">
-            Submit
+            {userId ? "Update User" : "Add New User"}
           </Button>
           <br />
           <br />

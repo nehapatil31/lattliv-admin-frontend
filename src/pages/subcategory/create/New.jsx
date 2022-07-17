@@ -19,12 +19,17 @@ import { mandatoryTheam, mandatoryLabel } from '../../../utils'
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import InputAdornment from '@mui/material/InputAdornment';
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 
 const initialFormValues = {
   name: '',
   parent: '',
-  image : '',
-  alttag:'',
+  image:{
+    alttag: '',
+    imgName:'',
+    url: '',
+  },
   seo: {
     title: '',
     description: '',
@@ -44,7 +49,9 @@ const NewSubCategory = (props) => {
     if ('name' in fieldValues)
       temp.name = fieldValues.name ? "" : "This field is required."
     if ('image' in fieldValues)
-      temp.image = fieldValues.image ? "" : "This field is required."
+      temp.image = fieldValues?.image?.url ? "" : "This field is required."
+    if ('image' in fieldValues)
+      temp.alttag = fieldValues?.image?.alttag ? "" : "This field is required."
     if ('parent' in fieldValues)
       temp.parent = fieldValues.parent ? "" : "This field is required."
   
@@ -98,18 +105,23 @@ const NewSubCategory = (props) => {
     api.uploadFile(data)
       .then(response => {
 
-        handleInputChange({
-          target: {
-            name: 'image',
-            value: response.data.url
-          }
-        })
+ 
         setValues({
           ...values,
           image: {
             alttag:'',
             imgName: event.target.files[0].name,
             url: response.data.url
+          }
+        })
+        handleInputChange({
+          target: {
+            name: 'image',
+            value: {
+              ...values.image,
+              imgName: event.target.files[0].name,
+              url: response.data.url
+            }
           }
         })
 
@@ -123,8 +135,11 @@ const NewSubCategory = (props) => {
     const alttag = event.target.value;
     handleInputChange({
       target: {
-        name: 'alttag',
-        value: alttag
+        name: 'image',
+        value: {
+          ...values.image,
+          alttag: alttag,
+        },
       }
     })
     setValues({
@@ -240,7 +255,7 @@ const NewSubCategory = (props) => {
                required
                 name='parent'
                 error={errors.parent}
-                label="Category"
+                label="Select Parent Category"
                 value={values.parent}
                 onChange={(e) => {
                   handleInputChange(e)
@@ -253,7 +268,7 @@ const NewSubCategory = (props) => {
              required
               name='name'
               error={errors.name}
-              label="Name"
+              label="Sub Category Name"
               value={values.name}
               onChange={handleInputChange}
             />
@@ -262,10 +277,33 @@ const NewSubCategory = (props) => {
               <input type="file" id="myFile" onChange={event => handleImageAdd(event)}   style={{display: 'none' }} />
               <label for="myFile"  className='upload-file'>Select File  <span style={{color: "red" }}>*</span></label>
               {values?.image?.url && (
+                <div className='img-details'>
                   <a href={values.image.url} rel='noreferrer' target="_blank">
                     <img src={values.image.url} alt={values.image.alttag}  style={{ height: '100px', width: '100px', border: '1px solid #B1B1B1',padding: '3px' }} />
-                    {values.image.imgName && <div className='image-label' style={{color:"#000000"}}> {values.image.imgName}</div>}
                   </a>
+                  {values.image.imgName && (
+                    <div
+                        className="image-label"
+                        style={{ color: "#000000" }} 
+                    >
+                        {values.image.imgName}
+                        <IconButton
+                            onClick={() => {
+                                setValues({
+                                    ...values,
+                                    image: {
+                                        alttag: "",
+                                        imgName: "",
+                                        url: "",
+                                    },
+                                });
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                  )}
+                  </div>
                 )}
             </div>
             <div className="errror-container">
@@ -278,7 +316,7 @@ const NewSubCategory = (props) => {
                 name="alttag"
                 label="Alt Tag"
                 variant="standard"
-                value={values?.image?.alttag && values.image.alttag}
+                value={values?.image.alttag}
                 style={{ marginRight: "12px" }}
                 onChange={(event) => handleImageData(event)}
               />

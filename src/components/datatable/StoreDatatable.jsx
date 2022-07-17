@@ -10,14 +10,14 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useStyles } from "../../utils"
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'name', headerName: 'Name', width: 120 },
-  { field: 'place', headerName: 'Location', width: 120 },
-  { field: 'address', headerName: 'Address', width: 120 },
+  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'name', headerName: 'Name', width: 130 },
+  { field: 'place', headerName: 'Location', width: 130 },
+  { field: 'address', headerName: 'Address', width: 130 },
   { field: 'email', headerName: 'Email', width: 170 },
-  { field: 'manager', headerName: 'Manager', width: 120 },
-  { field: 'map', headerName: 'Map link', width: 100 },
-  { field: 'timings', headerName: 'Timings', width: 100 }
+  { field: 'manager', headerName: 'Manager', width: 130 },
+  { field: 'map', headerName: 'Map link', width: 110 },
+  { field: 'timings', headerName: 'Timings', width: 110 }
 ];
 const StoreDatatable = () => {
   const [data, setData] = useState();
