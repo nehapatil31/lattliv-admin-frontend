@@ -21,7 +21,7 @@ import { stateToHTML } from "draft-js-export-html";
 import InputAdornment from '@mui/material/InputAdornment';
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-
+import Unauthorized from "../../../utils/unauthorized";
 const initialFormValues = {
   name: "",
   image:{
@@ -176,32 +176,34 @@ const NewCategory = (props) => {
         };
         if (categoryId) {
           delete body?.parent;
-          const response = await api.updateCategory(categoryId, body);
-          console.log(response);
-          if (response.status === 200) {
-            let msg = "Category is updated !";
+          await api.updateCategory(categoryId, body)
+            .then((res)=>{
+                let msg = "Category is updated !";
+                window.location.href = "/categories?msg=" + msg;
+                
+            }).catch((err)=>{
+              Unauthorized(err);
+              toast.error(err.response.data.message, {
+                autoClose: 9000,
+                pauseOnHover: true,
+              });
+            })
 
-            window.location.href = "/categories?msg=" + msg;
-          } else {
-            toast.error("Some error occurred", {
-              autoClose: 9000,
-              pauseOnHover: true,
-            });
-          }
         } else {
           body.createdBy = access.user_id;
-          const response = await api.createCategory(body);
-          console.log(response);
-          if (response.status === 200) {
-            let msg = "Category is created !";
+          await api.createCategory(body)
+              .then((res)=>{
+                let msg = "Category is created !";
+                window.location.href = "/categories?msg=" + msg;
+                
+            }).catch((err)=>{
+              Unauthorized(err);
+              toast.error(err.response.data.message, {
+                autoClose: 9000,
+                pauseOnHover: true,
+              });
+            })
 
-            window.location.href = "/categories?msg=" + msg;
-          } else {
-            toast.error("Some error occurred", {
-              autoClose: 9000,
-              pauseOnHover: true,
-            });
-          }
         }
       } catch (error) {
         console.log(error);

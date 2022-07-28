@@ -39,6 +39,34 @@ export const createCategory = (newCategory) => API.post('categories/create', new
 export const updateBulk = (newData) => API.post('/states/update/bulk', newData);
 
 
+export const createBanner = (data) => API.post('/banner', data);
+export const fetchBanners = () => API.get('/banner');
+
+//tag
+export const createTag = (data) => API.post('/tag', data);
+export const fetchTags = () => API.get(`/tag`);
+export const fetchTag = (id) => API.get(`/tag/${id}`);
+export const updateTag = (id,data) => API.patch(`/tag/${id}`, data);
+export const deleteTag = (data) => API.delete(`/tag/`, {data:data});
+
+
+//section
+export const section = (data) => API.post('/section', data);
+export const updateSection= (id,data) => API.patch(`/section/${id}`, data);
+export const deleteSection = (data) => API.delete(`/section/`, {data:data});
+
+export const fetchSectionImage = (id) => API.get(`/section/image/${id}`);
+export const fetchSectionImages = () => API.get(`/section/image/`);
+
+export const fetchSection = (id) => API.get(`/section/noimage/${id}`);
+export const fetchSections = () => API.get(`/section/noimage/`);
+//comic
+export const createComic = (data) => API.post('/comic', data);
+export const fetchComics = () => API.get('/comic');
+export const fetchComic = (id) => API.get(`/comic/${id}`);
+export const updateComic = (id,data) => API.patch(`/comic/${id}`, data);
+export const deleteComic = (data) => API.delete(`/comic/`, {data:data});
+
 export const restoreItem = (data) => API.patch('/trash', data);
 export const deleteItem = (data) => {
     return API.delete('/trash', {data})

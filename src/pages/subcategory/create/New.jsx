@@ -21,7 +21,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import InputAdornment from '@mui/material/InputAdornment';
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-
+import Unauthorized from "../../../utils/unauthorized";
 const initialFormValues = {
   name: '',
   parent: '',
@@ -158,7 +158,9 @@ const NewSubCategory = (props) => {
     api.fetchCategories()
       .then(response => {
         // let subcategories = response.data.filter((item) => item.parent)
-        let categories = response.data.filter((item) => !item.parent)
+        let categories = response.data.filter((item) =>{
+          return !item.parent && item.state?.id === state_enum.published
+        } )
         setCategories(categories);
         if (subcategoryId) {
           api.fetchCategory(subcategoryId)
@@ -187,36 +189,35 @@ const NewSubCategory = (props) => {
           ...(state === 2) && {approvedBy: access.user_id},
         }
         if (subcategoryId) {
-          const response = await api.updateCategory(subcategoryId, body);
-          console.log(response)
-          if (response.status === 200) {
-            let msg = "Sub category is updated !"
-  
-            window.location.href = '/categories?subcategory=true&&msg=' + msg;
-  
-          } else {
-            toast.error("Some error occurred",{
-              autoClose: 9000,
-              pauseOnHover: true,
+          await api.updateCategory(subcategoryId, body)
+              .then((res)=>{
+                let msg = "Sub category is updated !";
+                window.location.href = '/categories?subcategory=true&&msg=' + msg;
+                
+            }).catch((err)=>{
+              Unauthorized(err);
+              toast.error(err.response.data.message, {
+                autoClose: 9000,
+                pauseOnHover: true,
+              });
             })
-          }
+
         } else {
-          const response = await api.createSubcategory(body);
-          console.log(response)
-          if (response.status === 200) {
-            let msg = "Subcategory is created !"
-  
-            window.location.href = '/categories?subcategory=true&&msg=' + msg;
-  
-          } else {
-            toast.error("Some error occurred",{
-              autoClose: 9000,
-              pauseOnHover: true,
+         await api.createSubcategory(body)
+            .then((res)=>{
+                let msg = "Sub category is created !";
+                window.location.href = '/categories?subcategory=true&&msg=' + msg;
+                
+            }).catch((err)=>{
+              Unauthorized(err);
+              toast.error(err.response.data.message, {
+                autoClose: 9000,
+                pauseOnHover: true,
+              });
             })
-          }
+  
         }
       } catch (error) {
-        console.log(error)
         toast.error(error.response.data.message,{
           autoClose: 9000,
           pauseOnHover: true,

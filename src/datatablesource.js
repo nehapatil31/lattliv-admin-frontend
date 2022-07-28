@@ -60,27 +60,7 @@ export const userColumns = [
       );
     },
   },
-  // {
-  //   field: "delete",
-  //   width: 75,
-  //   sortable: false,
-  //   disableColumnMenu: true,
-  //   renderHeader: () => {
-  //     return (
-  //       <IconButton
-  //         onClick={() => {
-  //           // const selectedIDs = new Set(selectionModel);
-  //           // you can call an API to delete the selected IDs
-  //           // and get the latest results after the deletion
-  //           // then call setRows() to update the data locally here
-  //           // setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
-  //         }}
-  //       >
-  //         <DeleteIcon />
-  //       </IconButton>
-  //     );
-  //   }
-  // }
+
 ];
 
 //temporary data

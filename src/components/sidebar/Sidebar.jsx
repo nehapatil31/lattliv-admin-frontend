@@ -14,10 +14,21 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import TakeoutDiningOutlinedIcon from '@mui/icons-material/TakeoutDiningOutlined';
 import { ReactComponent as Logo } from './logo.svg';
 import StoreMallDirectoryOutlinedIcon from '@mui/icons-material/StoreMallDirectoryOutlined';
-
+import HomeIcon from '@mui/icons-material/Home';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
+import ImageIcon from '@mui/icons-material/Image';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import CollectionsIcon from '@mui/icons-material/Collections';
 function Sidebar() {
     const { dispatch } = useContext(DarkModeContext);
+    const [open, setOpen] = React.useState(false);
 
+    const handleClick = () => {
+      setOpen(!open);
+    };
     return (
         <div className="sidebar">
             <div className="top">
@@ -103,6 +114,45 @@ function Sidebar() {
                             <span>Trash</span>
                         </li>
                     </Link>
+                    <Link to="#" style={{ textDecoration: "none" }} onClick={handleClick}>
+                        <li>
+                            <HomeIcon className="icon" />
+                            <span>HomePage Management</span>
+                            {open ? <ExpandLess  className="icon" /> : <ExpandMore  className="icon" />}
+                        </li>
+                    </Link>
+                    <Collapse in={open} timeout="auto" unmountOnExit style={{paddingLeft:"20px" }}>
+                        <Link to="/banner-image" style={{ textDecoration: "none"}}>
+                            <li>
+                                <ImageIcon className="icon" />
+                                <span>Banner Image</span>
+                            </li>
+                        </Link>
+                        <Link to="/tag" style={{ textDecoration: "none"}}>
+                            <li>
+                                <LocalOfferIcon className="icon" />
+                                <span>Tag</span>
+                            </li>
+                        </Link>
+                        <Link to="/custom-section" style={{ textDecoration: "none"}}>
+                            <li>
+                                <DashboardCustomizeIcon className="icon" />
+                                <span>Custom Section</span>
+                            </li>
+                        </Link>
+                        <Link to="/custom-section-image" style={{ textDecoration: "none"}}>
+                            <li>
+                                <ImageIcon className="icon" />
+                                <span>Custom Section Image</span>
+                            </li>
+                        </Link>
+                        <Link to="/comic" style={{ textDecoration: "none"}}>
+                            <li>
+                                <CollectionsIcon className="icon" />
+                                <span>Comic</span>
+                            </li>
+                        </Link>
+                    </Collapse>
                 </ul>
             </div>
             <div className="bottom">
