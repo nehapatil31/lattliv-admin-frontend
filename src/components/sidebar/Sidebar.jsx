@@ -153,6 +153,12 @@ function Sidebar() {
                             </li>
                         </Link>
                     </Collapse>
+                    <Link to="/leade-generation" style={{ textDecoration: "none" }}>
+                        <li>
+                            <DeleteOutlineOutlinedIcon className="icon" />
+                            <span>Frenchise Lead Generation</span>
+                        </li>
+                    </Link>
                 </ul>
             </div>
             <div className="bottom">

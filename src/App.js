@@ -27,7 +27,7 @@ import NewCustomSectionImage from "./pages/CustomSectionImage/create/New";
 
 import ComicList from "./pages/comic/list/Comic";
 import NewComic from "./pages/comic/create/New";
-
+import LeadeGeneration from "./pages/leadegeneration/LeadeGeneration"
 function App() {
 	const user = JSON.parse(localStorage.getItem("profile"));
 	if (!user && window.location.pathname !== "/login") {
@@ -184,6 +184,9 @@ function App() {
 									<NewComic title="Edit Comic" />
 								}
 							/>
+						</Route>
+						<Route path="leade-generation">
+							<Route index element={<LeadeGeneration />} />
 						</Route>
 					</Route>
 				</Routes>

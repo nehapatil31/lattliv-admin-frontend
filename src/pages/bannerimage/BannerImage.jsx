@@ -19,6 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
 import "./new.scss";
 import Unauthorized from "../../utils/unauthorized";
+
 //image
 const initialFormValues = {
   images: [],
@@ -255,7 +256,7 @@ console.log(temp)
                     style={{ marginRight: "12px" }}
                     onChange={(event) => handleImageData(inputField.id, event)}
                   />
-
+                <div>
                   {inputField.url && (
                     <a href={inputField.url} rel="noreferrer" target="_blank">
                       <img
@@ -274,11 +275,17 @@ console.log(temp)
                     disabled={images.length === 1}
                     onClick={() => handleRemoveImages(inputField.id)}
                   >
-                    <RemoveIcon />
+                    <Button variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                     Delete
+                    </Button>
+             
                   </IconButton>
                   <IconButton onClick={AddAnotherImagesSection}>
-                    <AddIcon />
+                  <Button variant="outlined" endIcon={<AddIcon />}>
+                    Add
+                   </Button>
                   </IconButton>
+                  </div>
                   <br />
                   <br />
                   <br />

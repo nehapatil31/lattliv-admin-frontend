@@ -74,3 +74,6 @@ export const deleteItem = (data) => {
 export const deleteStore = (data) => {
     return API.delete('/store', {data:data});
 };
+
+export const fetchLeads = () => API.get(`/lead/`);
+export const updateLeads = (id,data) => API.patch(`/lead/${id}`,data);
