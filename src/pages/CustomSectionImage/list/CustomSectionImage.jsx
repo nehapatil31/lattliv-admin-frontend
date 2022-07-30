@@ -23,22 +23,22 @@ function CustomSectionImagesList() {
         }
     }, [])
 
-    if (!access.product_read) {
-        return (<div>No product read access</div>)
+    if (!access.homepage_read) {
+        return (<div>No custom Section image read access</div>)
     }
     return (<div className='home'>
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-            {!access.product_read && 'No products read access'}
-            {access.product_read &&
+            {!access.homepage_read && 'No custom Section Image read access'}
+            {access.homepage_read &&
                 (<>
                     <div className="datatableTitle">
                         All Custom Section Image
 
                         <Button
-                            disabled={access.product_create ? false : true}
+                            disabled={access.homepage_create ? false : true}
                             onClick={() => {
                                 window.location.href = '/custom-section-image/new';
                             }}

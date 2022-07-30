@@ -15,7 +15,7 @@ import Navbar from "../../components/navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-
+import Controls from "../../components/form/Controls";
 import "react-toastify/dist/ReactToastify.css";
 import "./new.scss";
 import Unauthorized from "../../utils/unauthorized";
@@ -26,7 +26,7 @@ const initialFormValues = {
 };
 const BannerImage = (props) => {
   const [images, setImages] = useState([
-    { id: uuidv4(), imgName: "", alttag: "", url: "" },
+    { id: uuidv4(), imgName: "", alttag: "", url: "",redirect_url:'' },
   ]);
 
   const validate = (fieldValues = values, state) => {
@@ -207,9 +207,27 @@ console.log(temp)
                   <span className="error">{errors.images}</span>
                 )}
               </h3>
+              
               {images.map((inputField) => (
                 <div key={inputField.id}>
                   {inputField.imgName && (
+                    <>
+                    <div>
+                      {inputField.url && (
+                    <a href={inputField.url} rel="noreferrer" target="_blank">
+                      <img
+                        src={inputField.url}
+                        alt="product img"
+                        style={{
+                          height: "100px",
+                          width: "100px",
+                          border: "1px solid #B1B1B1",
+                          padding: "3px",
+                        }}
+                      />
+                    </a>
+                  )}
+                    </div>
                     <div>
                       Image name: {inputField.imgName}
                       <IconButton
@@ -229,7 +247,9 @@ console.log(temp)
                         <DeleteIcon />
                       </IconButton>
                     </div>
+                    </>
                   )}
+
                   {!inputField.imgName && (
                     <>
                       <input
@@ -256,21 +276,15 @@ console.log(temp)
                     style={{ marginRight: "12px" }}
                     onChange={(event) => handleImageData(inputField.id, event)}
                   />
+                  <Controls.Input
+                    name="redirect_url"
+                    label="Url"
+                    value={inputField.redirect_url}
+                
+                    onChange={(event) => handleImageData(inputField.id, event)}
+                  />
                 <div>
-                  {inputField.url && (
-                    <a href={inputField.url} rel="noreferrer" target="_blank">
-                      <img
-                        src={inputField.url}
-                        alt="product img"
-                        style={{
-                          height: "100px",
-                          width: "100px",
-                          border: "1px solid #B1B1B1",
-                          padding: "3px",
-                        }}
-                      />
-                    </a>
-                  )}
+                  
                   <IconButton
                     disabled={images.length === 1}
                     onClick={() => handleRemoveImages(inputField.id)}

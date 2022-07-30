@@ -54,11 +54,11 @@ const MenuProps = {
 
 const Types = [
   {
-    id: "Product",
+    id: "product",
     name: "Product",
   },
   {
-    id: "Comic",
+    id: "comic",
     name: "Comic",
   },
 ];

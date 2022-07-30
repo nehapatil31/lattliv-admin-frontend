@@ -416,7 +416,7 @@ const NewCategory = (props) => {
               </div>
 
               <Editor
-               wrapperStyle={{ border: "1px solid #ddd", height: "100%", margin: "8px", width: "80%"}}
+               wrapperStyle={{ border: "1px solid #ddd", margin: "8px", width: "80%"}}
                editorStyle={{ padding: "10px" , minHeight: "150px" }}
                 // editorState={editorState}
                 editorState={editorState}

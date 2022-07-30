@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import { mandatoryTheam } from '../../../utils'
+import Unauthorized from "../../../utils/unauthorized";
 const initialFormValues = {
   name: '',
   email: '',
@@ -50,6 +51,12 @@ const initialFormValues = {
       "view": false
     },
     "stores": {
+      "create": false,
+      "edit": false,
+      "delete": false,
+      "view": false
+    },
+    "homepage": {
       "create": false,
       "edit": false,
       "delete": false,
@@ -118,8 +125,9 @@ const NewUser = (props) => {
     if (userId) {
       api.fetchUser(userId)
         .then(response => {
-          setValues(response.data);
-          console.log(response.data)
+          let access  ={...values.access,...response.data.access};
+          setValues({...response.data,access});
+         
         }).catch(error => {
           console.log(error)
         });
@@ -136,33 +144,31 @@ const NewUser = (props) => {
         }
     
         if (userId) {
-          const response = await api.updateUser(userId, body);
-          console.log(response)
-          if (response.status === 200) {
+          await api.updateUser(userId, body)
+          .then((res) => {
             let msg = "User is updated !"
-
             window.location.href = '/users?msg=' + msg;
-
-          } else {
-            toast.error("Some error occurred",{
+          })
+          .catch((err) => {
+            Unauthorized(err);
+            toast.error(err.response.data.message, {
               autoClose: 9000,
               pauseOnHover: true,
-            })
-          }
+            });
+          });
         } else {
-          const response = await api.createUser(body);
-          console.log(response)
-          if (response.status === 201) {
+        await api.createUser(body)
+          .then((res) => {
             let msg = "User is created !"
-
             window.location.href = '/users?msg=' + msg;
-
-          } else {
-            toast.error("Some error occurred",{
+          })
+          .catch((err) => {
+            Unauthorized(err);
+            toast.error(err.response.data.message, {
               autoClose: 9000,
               pauseOnHover: true,
-            })
-          }
+            });
+          });
         }
       }
     } catch (error) {
@@ -186,6 +192,7 @@ const NewUser = (props) => {
         </Typography>
         <Box >
           {Object.keys(access[key]).map(item => {
+            console.log("v",values.access)
             return (<FormControlLabel
               key={item}
               label={item}

@@ -157,6 +157,7 @@ const ProductDatatable = () => {
 			width: 70,
 		},
 		{ field: "id", headerName: "ID", width: 80 },
+	
 		{
 			field: "name",
 			headerName: "Name",
@@ -169,6 +170,7 @@ const ProductDatatable = () => {
 				</Tooltip>
 			),
 		},
+		{ field: "type", headerName: "Type", width: 100 },
         {
 			field: "section",
 			headerName: "Section Name",

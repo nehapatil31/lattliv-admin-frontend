@@ -114,6 +114,7 @@ function Sidebar() {
                             <span>Trash</span>
                         </li>
                     </Link>
+                    { access.homepage_create && access.homepage_delete && access.homepage_edit && access.homepage_read && 
                     <Link to="#" style={{ textDecoration: "none" }} onClick={handleClick}>
                         <li>
                             <HomeIcon className="icon" />
@@ -121,6 +122,7 @@ function Sidebar() {
                             {open ? <ExpandLess  className="icon" /> : <ExpandMore  className="icon" />}
                         </li>
                     </Link>
+                    }
                     <Collapse in={open} timeout="auto" unmountOnExit style={{paddingLeft:"20px" }}>
                         <Link to="/banner-image" style={{ textDecoration: "none"}}>
                             <li>

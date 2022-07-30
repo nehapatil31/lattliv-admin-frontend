@@ -1,4 +1,5 @@
 const user = JSON.parse(localStorage.getItem('profile'));
+console.log("user",user)
 export const user_id = user?.data?.id;
 export const user_name = user?.data?.name;
 export const user_email = user?.data?.email;
@@ -35,3 +36,9 @@ export const store_read = user?.data?.access?.stores?.view;
 export const store_create = user?.data?.access?.stores?.create;
 export const store_delete = user?.data?.access?.stores?.delete;
 export const store_edit = user?.data?.access?.stores?.edit;
+
+
+export const homepage_read = user?.data?.access?.homepage?.view;
+export const homepage_create = user?.data?.access?.homepage?.create;
+export const homepage_delete = user?.data?.access?.homepage?.delete;
+export const homepage_edit = user?.data?.access?.homepage?.edit;

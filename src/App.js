@@ -175,13 +175,13 @@ function App() {
 							<Route
 								path="new"
 								element={
-									<NewComic title="Add Comic" />
+									<NewComic title="Add Comic/Catalogue" />
 								}
 							/>
 							<Route
 								path=":comicId"
 								element={
-									<NewComic title="Edit Comic" />
+									<NewComic title="Edit Comic/Catalogue" />
 								}
 							/>
 						</Route>

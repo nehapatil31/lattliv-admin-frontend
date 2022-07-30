@@ -30,7 +30,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EditorState, ContentState, convertFromHTML } from "draft-js";
 import Unauthorized from "../../../utils/unauthorized";
-
+ 
 const availabilityItems = [
   {
     id: "in_stock",
@@ -60,6 +60,7 @@ const initialFormValues = {
     keywords: "",
   },
   images: [],
+  blog:'',
 };
 
 const NewProduct = (props) => {
@@ -552,13 +553,10 @@ const NewProduct = (props) => {
                   <Grid xs={12}>
                     <Editor
                       wrapperStyle={{
-                        border: "1px solid #ddd",
-                        height: "100%",
-                        margin: "8px",
+                        border: "1px solid #ddd",margin: "8px", width: "90%"
                       }}
                       editorStyle={{
-                        padding: "10px",
-                        minHeight: "150px",
+                        padding: "10px" , minHeight: "150px" 
                       }}
                       // editorState={editorState}
                       editorState={editorState}
@@ -590,18 +588,15 @@ const NewProduct = (props) => {
                       </p>
                     )}
                   </Grid>
-                  <Grid xs={12} style={{ display: "flex" }}>
+                  <Grid xs={12} >
                     <Editor
-                      wrapperStyle={{
-                        border: "1px solid #ddd",
-                        height: "100%",
-                        margin: "8px",
+                       wrapperStyle={{
+                        border: "1px solid #ddd",margin: "8px", width: "90%"
                       }}
                       editorStyle={{
-                        padding: "10px",
-                        minHeight: "150px",
+                        padding: "10px" , minHeight: "150px" 
                       }}
-                      // editorState={editorState}
+                      //editorState={editorState}
                       editorState={editorStateLong}
                       toolbarClassName="toolbarClassName"
                       wrapperClassName="wrapperClassName"
@@ -668,6 +663,23 @@ const NewProduct = (props) => {
                   )}
                 </h3>
                 {images.map((inputField) => (
+                  <>
+                  <div>
+                  {inputField.url && (
+                      <a href={inputField.url} rel="noreferrer" target="_blank">
+                        <img
+                          src={inputField.url}
+                          alt="product img"
+                          style={{
+                            height: "100px",
+                            width: "100px",
+                            border: "1px solid #B1B1B1",
+                            padding: "3px",
+                          }}
+                        />
+                      </a>
+                    )}
+                  </div>
                   <div key={inputField.id}>
                     {inputField.imgName && (
                       <div>
@@ -734,35 +746,45 @@ const NewProduct = (props) => {
                       }
                     />
 
-                    {inputField.url && (
-                      <a href={inputField.url} rel="noreferrer" target="_blank">
-                        <img
-                          src={inputField.url}
-                          alt="product img"
-                          style={{
-                            height: "100px",
-                            width: "100px",
-                            border: "1px solid #B1B1B1",
-                            padding: "3px",
-                          }}
-                        />
-                      </a>
-                    )}
-                    <IconButton
+
+              
+                    <div>
+                <IconButton
                       disabled={images.length === 1}
                       onClick={() => handleRemoveImages(inputField.id)}
                     >
-                      <RemoveIcon />
+                      <Button variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                      Delete
+                      </Button>
+              
                     </IconButton>
                     <IconButton onClick={handleAddImages}>
-                      <AddIcon />
+                    <Button variant="outlined" endIcon={<AddIcon />}>
+                      Add
+                    </Button>
                     </IconButton>
+				        </div>
                     {/* {inputField.url && <a href={inputField.url} target="_blank">Check image</a>} */}
                     <br />
                     <br />
                     <br />
                   </div>
+                  </>
                 ))}
+               {access.product_publish && 
+               <>
+                  <h3>Blog</h3>
+                    <Controls.Input
+                    name="blog"
+                    label="Blog"
+                    value={values.blog}
+                    error={errors.blog}
+                    onChange={handleInputChange}
+                  />
+               </>
+
+               } 
+                
                 <h3>SEO Metatags</h3>
                 <Controls.Input
                   name="title"
