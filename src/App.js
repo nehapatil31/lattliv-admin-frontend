@@ -160,13 +160,13 @@ function App() {
 							<Route
 								path="new"
 								element={
-									<NewCustomSectionImage title="Add Custom Section Image" />
+									<NewCustomSectionImage title="Add Custom Collection" />
 								}
 							/>
 							<Route
 								path=":customsectionimageId"
 								element={
-									<NewCustomSectionImage title="Edit Custom Section Image" />
+									<NewCustomSectionImage title="Edit Custom Collection" />
 								}
 							/>
 						</Route>

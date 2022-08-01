@@ -23,6 +23,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import CollectionsIcon from '@mui/icons-material/Collections';
 function Sidebar() {
+
     const { dispatch } = useContext(DarkModeContext);
     const [open, setOpen] = React.useState(false);
 
@@ -145,22 +146,24 @@ function Sidebar() {
                         <Link to="/custom-section-image" style={{ textDecoration: "none"}}>
                             <li>
                                 <ImageIcon className="icon" />
-                                <span>Custom Section Image</span>
+                                <span>Custom Collection</span>
                             </li>
                         </Link>
                         <Link to="/comic" style={{ textDecoration: "none"}}>
                             <li>
                                 <CollectionsIcon className="icon" />
-                                <span>Comic</span>
+                                <span>Comic/catelogue</span>
                             </li>
                         </Link>
                     </Collapse>
+                    { access.leadmanagement_create && access.leadmanagement_delete && access.leadmanagement_edit && access.leadmanagement_read && 
                     <Link to="/leade-generation" style={{ textDecoration: "none" }}>
                         <li>
                             <DeleteOutlineOutlinedIcon className="icon" />
-                            <span>Frenchise Lead Generation</span>
+                            <span>Franchise lead management</span>
                         </li>
                     </Link>
+                    }
                 </ul>
             </div>
             <div className="bottom">

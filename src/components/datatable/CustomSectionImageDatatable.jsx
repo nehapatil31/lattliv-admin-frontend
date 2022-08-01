@@ -78,16 +78,16 @@ const CustomSectionImageDatatable = () => {
       .then((response) => {
         if (response.status === 200) {
           let data = response.data;
-
-          data = data.map((element) => {
-            if(element.comics.length > 0){
-                element.type = "Comic";
-            }else{
-                element.type = "Product";
-            }
-            return element;
-            });
-            console.log("data", data);
+          console.log('data new',data)
+          // data = data.map((element) => {
+          //   if(element.comics.length > 0){
+          //       element.type = "Comic";
+          //   }else{
+          //       element.type = "Product";
+          //   }
+          //   return element;
+          //   });
+          //   console.log("data", data);
           let serial = 1;
           data.forEach((element) => {
             element.serial = serial;

@@ -1,4 +1,3 @@
-
 import "./datatable.scss";
 
 import Tooltip from "@mui/material/Tooltip";
@@ -9,19 +8,19 @@ import { DataGrid } from "@mui/x-data-grid";
 
 import * as api from "../../api";
 import { useStyles } from "../../utils";
-import EditIcon from '@mui/icons-material/Edit';
-import ActionsUpdate from '../confirm/ActionsUpdate';
+import EditIcon from "@mui/icons-material/Edit";
+import ActionsUpdate from "../confirm/ActionsUpdate";
 const LeadeGenerationDatatable = () => {
 	const [data, setData] = useState();
 	const classes = useStyles();
-    const [rowId, setRowId] = useState(null);
+	const [rowId, setRowId] = useState(null);
 
 	useEffect(() => {
 		api.fetchLeads()
 			.then((response) => {
 				if (response.status === 200) {
 					let data = response.data;
-					console.log('data',data)
+					console.log("data", data);
 					let serial = 1;
 					data.forEach((element) => {
 						element.serial = serial;
@@ -49,7 +48,6 @@ const LeadeGenerationDatatable = () => {
 			});
 	}, []);
 
-
 	const userColumns = [
 		{
 			field: "serial",
@@ -57,7 +55,7 @@ const LeadeGenerationDatatable = () => {
 			width: 70,
 		},
 		{ field: "id", headerName: "ID", width: 50 },
-        {
+		{
 			field: "name",
 			headerName: "Name",
 			width: 180,
@@ -69,7 +67,7 @@ const LeadeGenerationDatatable = () => {
 				</Tooltip>
 			),
 		},
-        {
+		{
 			field: "email",
 			headerName: "Email",
 			width: 180,
@@ -81,45 +79,42 @@ const LeadeGenerationDatatable = () => {
 				</Tooltip>
 			),
 		},
-        { field: "location", headerName: "location", width: 140 },
-        { field: "mobile", headerName: "mobile", width: 140 },
-        { field: "status",
-         headerName: "status", 
-         width: 180,
-          editable: true,
-        type: "singleSelect",
-        valueOptions: [
-            { value: 'In-progress', label: "In-progress" },
-            { value: 'Pending', label: "Pending" },
-            { value: 'Completed', label: "Completed" }
-          ],
-        renderCell: (params) => (
-            <Tooltip title={params.row.status}>
-                <span className="table-cell-trucate">
-                    {params.row.status} <EditIcon  style={{marginLeft:'20px'}}/>
-                </span>
-            </Tooltip>
-        ),
-         },
-         {
-            field: 'actions',
-            headerName: 'Actions',
-            type: 'actions',
-            renderCell: (params) => (
-              <ActionsUpdate {...{ params, rowId, setRowId }} />
-            ),
-         }
-    
-
-		
+		{ field: "location", headerName: "location", width: 140 },
+		{ field: "mobile", headerName: "mobile", width: 140 },
+		{
+			field: "status",
+			headerName: "status",
+			width: 180,
+			editable: true,
+			type: "singleSelect",
+			valueOptions: [
+				{ value: "In-progress", label: "In-progress" },
+				{ value: "Pending", label: "Pending" },
+				{ value: "Completed", label: "Completed" },
+			],
+			renderCell: (params) => (
+				<Tooltip title={params.row.status}>
+					<span className="table-cell-trucate">
+						{params.row.status}{" "}
+						<EditIcon style={{ marginLeft: "20px" }} />
+					</span>
+				</Tooltip>
+			),
+		},
+		{
+			field: "actions",
+			headerName: "Actions",
+			type: "actions",
+			renderCell: (params) => (
+				<ActionsUpdate {...{ params, rowId, setRowId }} />
+			),
+		},
 	];
 
 	return (
 		<div className="datatable">
 			<ToastContainer icon={false} limit={1} autoClose={2000} />
-            <div className="datatableTitle">
-            Frenchise Lead Generation
-                            </div>
+			<div className="datatableTitle">Frenchise Lead Management</div>
 			<br />
 			{data && (
 				<DataGrid
@@ -130,7 +125,7 @@ const LeadeGenerationDatatable = () => {
 					columns={userColumns}
 					pageSize={10}
 					rowsPerPageOptions={[10]}
-                    onCellEditCommit={(params) => setRowId(params.id)}
+					onCellEditCommit={(params) => setRowId(params.id)}
 				/>
 			)}
 		</div>

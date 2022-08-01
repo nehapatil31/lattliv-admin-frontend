@@ -23,16 +23,16 @@ function LeadeGeneration() {
         }
     }, [])
 
-    if (!access.product_read) {
-        return (<div>No product read access</div>)
+    if (!access.leadmanagement_read) {
+        return (<div>No leadmanagement read access</div>)
     }
     return (<div className='home'>
         <Sidebar />
         <ToastContainer icon={false} limit={1} autoClose={2000} />
         <div className="homeContainer">
             <Navbar />
-            {!access.product_read && 'No products read access'}
-            {access.product_read &&
+            {!access.leadmanagement_read && 'No lead Management read access'}
+            {access.leadmanagement_read &&
                 (<>
                       <LeadeGenerationDatatable />
                   

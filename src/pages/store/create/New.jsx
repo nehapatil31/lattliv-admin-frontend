@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button ,TextField} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useForm, Form } from "../../../components/form/useForm";
 import Controls from "../../../components/form/Controls";
@@ -93,6 +93,27 @@ const NewStore = (props) => {
                 console.log(error);
             });
     };
+
+    const handleImageData = (event) => {
+        //get alt tag and name
+        const alttag = event.target.value;
+        handleInputChange({
+          target: {
+            name: 'image',
+            value: {
+              ...values.image,
+              alttag: alttag,
+            },
+          }
+        })
+        setValues({
+          ...values,
+          image: {
+            ...values.image,
+            alttag: alttag,
+          },
+        });
+      };
 
     useEffect(() => {
         if (storeId) {
@@ -293,9 +314,23 @@ const NewStore = (props) => {
                                                     </IconButton>
                                                 </div>
                                             )}
+                  
                                         </div>
                                     )}
+                                
                                 </div>
+                                <div className="altTag">
+                                    <TextField
+                                        
+                                        name="alttag"
+                                        label="Alt Tag"
+                                        variant="standard"
+                                        value={values?.image.alttag}
+                                        style={{ marginRight: "12px" }}
+                                        onChange={(event) => handleImageData(event)}
+                                    />
+
+                                    </div>
 
                                 <br />
                                 <br />

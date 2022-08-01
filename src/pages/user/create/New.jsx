@@ -16,6 +16,9 @@ import { useParams } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import { mandatoryTheam } from '../../../utils'
 import Unauthorized from "../../../utils/unauthorized";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+
 const initialFormValues = {
   name: '',
   email: '',
@@ -57,6 +60,12 @@ const initialFormValues = {
       "view": false
     },
     "homepage": {
+      "create": false,
+      "edit": false,
+      "delete": false,
+      "view": false
+    },
+    "leadmanagement":{
       "create": false,
       "edit": false,
       "delete": false,
@@ -147,6 +156,11 @@ const NewUser = (props) => {
           await api.updateUser(userId, body)
           .then((res) => {
             let msg = "User is updated !"
+            //update to local storage
+            let profile = JSON.parse(localStorage.getItem('profile'));
+            profile.data.access = res.data.access;
+            localStorage.setItem('profile', JSON.stringify(profile));
+
             window.location.href = '/users?msg=' + msg;
           })
           .catch((err) => {
@@ -275,6 +289,14 @@ const NewUser = (props) => {
               {accessHtml}
             </ThemeProvider>
           </Form>
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="info">
+              <AlertTitle>Info</AlertTitle>
+              To access <strong>Homepage Management</strong> & <strong>Lead Management</strong>
+              , please select All Check Box (<strong>create ,edit, delete, view</strong>) of  permission.
+            </Alert>
+          </Stack>
+          <br></br>
        
           <Button
             onClick={() => {

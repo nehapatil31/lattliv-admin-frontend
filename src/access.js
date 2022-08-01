@@ -1,5 +1,6 @@
 const user = JSON.parse(localStorage.getItem('profile'));
-console.log("user",user)
+
+//if user acces chnages then update local storage
 export const user_id = user?.data?.id;
 export const user_name = user?.data?.name;
 export const user_email = user?.data?.email;
@@ -42,3 +43,8 @@ export const homepage_read = user?.data?.access?.homepage?.view;
 export const homepage_create = user?.data?.access?.homepage?.create;
 export const homepage_delete = user?.data?.access?.homepage?.delete;
 export const homepage_edit = user?.data?.access?.homepage?.edit;
+
+export const leadmanagement_read = user?.data?.access?.leadmanagement?.view;
+export const leadmanagement_create = user?.data?.access?.leadmanagement?.create;
+export const leadmanagement_delete = user?.data?.access?.leadmanagement?.delete;
+export const leadmanagement_edit = user?.data?.access?.leadmanagement?.edit;

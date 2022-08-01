@@ -458,7 +458,7 @@ const NewProduct = (props) => {
     });
   };
   const isReadyForPublishOrHide = values.state.id ?? 0;
-
+console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
   return (
     <div className="new">
       <Sidebar />
@@ -698,7 +698,7 @@ const NewProduct = (props) => {
                             console.log(images);
                           }}
                         >
-                          <DeleteIcon />
+                          <DeleteIcon  style={{color:'red'}}/>
                         </IconButton>
                       </div>
                     )}
@@ -753,8 +753,8 @@ const NewProduct = (props) => {
                       disabled={images.length === 1}
                       onClick={() => handleRemoveImages(inputField.id)}
                     >
-                      <Button variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
-                      Delete
+                      <Button  disabled={images.length === 1} variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                       Delete
                       </Button>
               
                     </IconButton>
@@ -918,11 +918,7 @@ const NewProduct = (props) => {
                   </Button>
                   <Button
                     disabled={
-                      access.product_publish
-                        ? isReadyForPublishOrHide === 2
-                          ? true
-                          : false
-                        : true
+                      access.product_publish ? (isReadyForPublishOrHide === 0) ? true : false : true
                     }
                     onClick={() => {
                       submitForm(state_enum.published);
@@ -934,11 +930,7 @@ const NewProduct = (props) => {
                   </Button>
                   <Button
                     disabled={
-                      access.product_hide
-                        ? isReadyForPublishOrHide === 6
-                          ? true
-                          : false
-                        : true
+                      access.product_hide ? isReadyForPublishOrHide === state_enum.published ? false : true : true
                     }
                     onClick={() => {
                       submitForm(state_enum.hidden);
