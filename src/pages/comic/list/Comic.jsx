@@ -35,7 +35,7 @@ function ComicList() {
             {access.homepage_read &&
                 (<>
                     <div className="datatableTitle">
-                        All Comic 
+                        All Comic/Catalogue
 
                         <Button
                             disabled={access.homepage_create ? false : true}
@@ -43,7 +43,7 @@ function ComicList() {
                                 window.location.href = '/comic/new';
                             }}
                             variant="contained">
-                            Add New Comic
+                            Add New Comic/Catalogue
                         </Button>
                     </div>
                     <ComicDatatable />
