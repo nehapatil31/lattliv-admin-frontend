@@ -40,7 +40,7 @@ function Trash() {
             });
           }
           setProducts(prod);
-          let cat = response?.data.filter((i) => i.type == "category");
+          let cat = response?.data.filter((i) => i.type == "category"||i.type == "subcategory");
           //append a serial number to the data
           if (cat) {
             let serial = 1;
