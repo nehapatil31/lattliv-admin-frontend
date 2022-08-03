@@ -46,7 +46,7 @@ const BannerImage = (props) => {
         }else{
           temp.redirect_url = "";
         }
-        console.log('ssfieldValues',item.redirect_url)
+    
       });
     }
 

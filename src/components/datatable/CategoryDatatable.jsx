@@ -76,21 +76,21 @@ export default function CategoryDatatable({ categories }) {
     {
       field: "serial",
       headerName: "Sr. No.",
-      width: 100,
+      width: 80,
     },
-    { field: "name", headerName: "Name", flex: 1 },
+    { field: "name", headerName: "Name", width: 160, },
     {
       field: "fullName",
       headerName: "Created by",
       sortable: false,
-      flex: 1,
+      width: 160,
       valueGetter: (params) =>
         params.row.createdBy?.name ? `${params.row.createdBy?.name}` : "-",
     },
     {
       field: "children",
       headerName: "Sub Category",
-      flex: 1,
+      width: 200,
       renderCell: (params) => {
         if (!params.row.children.length) return <div>No sub categories</div>;
         let children = "";
@@ -122,7 +122,7 @@ export default function CategoryDatatable({ categories }) {
     {
       field: "status",
       headerName: "Status",
-      flex: 1,
+      width: 120,
       renderCell: (params) => {
         console.log(params.row)
         return (
@@ -135,7 +135,7 @@ export default function CategoryDatatable({ categories }) {
     {
       field: "image",
       headerName: "Image",
-      flex: 1,
+      width: 160,
       renderCell: (params) => {
         console.log(params.row)
         return (
@@ -159,7 +159,7 @@ export default function CategoryDatatable({ categories }) {
       autoHeight: true,
       headerName: "Action",
       sortable: false,
-      flex: 1,
+      width: 200,
       disableColumnFilter: true,
       renderCell: (params) => {
         let apiUrl = `/categories/${params.id}`;
