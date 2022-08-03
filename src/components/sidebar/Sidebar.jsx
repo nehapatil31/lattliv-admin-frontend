@@ -152,7 +152,7 @@ function Sidebar() {
                         <Link to="/comic" style={{ textDecoration: "none"}}>
                             <li>
                                 <CollectionsIcon className="icon" />
-                                <span>Comic/catelogue</span>
+                                <span>Comic/Catalogue</span>
                             </li>
                         </Link>
                     </Collapse>

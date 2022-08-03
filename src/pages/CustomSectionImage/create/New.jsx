@@ -262,7 +262,7 @@ const fetchAllComic = (type) => {
 	};
 
 	const submitForm = async function (state) {
-		if (validate(values, state)) {
+		if (!validate(values, state)) {
 			if (values.type === "product" && values.tag === "") {
 				toast.error("Tag is required", {
 					autoClose: 9000,
@@ -293,8 +293,7 @@ const fetchAllComic = (type) => {
 				...(values.type === "comic"  && { comics: values.comics }),
         ...( values.type === "catalogue" && { comics: values.comics }),
 			};
-      console.log('body',body)
-// return false;
+ 
 			try {
 				if (customsectionimageId) {
 					await api
@@ -349,6 +348,7 @@ const fetchAllComic = (type) => {
         value: value,
       },
     });
+
 
 
   }
@@ -491,7 +491,7 @@ const fetchAllComic = (type) => {
 							{(values.type === "comic" || values.type === "catalogue")  && (
 								<FormControl sx={{ m: 1, width: 300 }}>
 									<InputLabel id="demo-multiple-checkbox-label">
-										Comic
+										{values.type}
 									</InputLabel>
 									<Select
 										labelId="demo-multiple-checkbox-label"

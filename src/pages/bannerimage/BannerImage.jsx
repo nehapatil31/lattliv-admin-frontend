@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useForm, Form } from "../../components/form/useForm";
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { mandatoryTheam } from "../../utils";
+import { mandatoryTheam, validURL } from "../../utils";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Stack, TextField, IconButton } from "@mui/material";
 
@@ -41,6 +41,12 @@ const BannerImage = (props) => {
       fieldValues?.images?.forEach((item, index) => {
         if (item.url === "") temp.images = "Please Upload the Image.";
         if (item.alttag === "") temp.images = "Please Enter the Alt Tag.";
+        if(item.redirect_url !== '' && item.redirect_url !== undefined && !validURL(item.redirect_url) ){
+          temp.redirect_url = "Once of the url field is invalid . Please Enter Valid URL.";
+        }else{
+          temp.redirect_url = "";
+        }
+        console.log('ssfieldValues',item.redirect_url)
       });
     }
 
@@ -283,13 +289,14 @@ console.log(temp)
                 
                     onChange={(event) => handleImageData(inputField.id, event)}
                   />
+                    
                 <div>
                   
                   <IconButton
                     disabled={images.length === 1}
                     onClick={() => handleRemoveImages(inputField.id)}
                   >
-                    <Button variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                    <Button   disabled={images.length === 1} variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
                      Delete
                     </Button>
              
@@ -301,10 +308,13 @@ console.log(temp)
                   </IconButton>
                   </div>
                   <br />
-                  <br />
-                  <br />
+           
                 </div>
               ))}
+              <div>{errors.redirect_url && (
+                  <span className="error">{errors.redirect_url}</span>
+                )}</div>
+               
             </ThemeProvider>
 
             <Stack
