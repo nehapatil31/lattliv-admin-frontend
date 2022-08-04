@@ -157,9 +157,9 @@ const NewUser = (props) => {
           .then((res) => {
             let msg = "User is updated !"
             //update to local storage
-            let profile = JSON.parse(localStorage.getItem('profile'));
-            profile.data.access = res.data.access;
-            localStorage.setItem('profile', JSON.stringify(profile));
+            // let profile = JSON.parse(localStorage.getItem('profile'));
+            // profile.data.access = res.data.access;
+            // localStorage.setItem('profile', JSON.stringify(profile));
 
             window.location.href = '/users?msg=' + msg;
           })
