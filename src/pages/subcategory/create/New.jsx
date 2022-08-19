@@ -192,8 +192,14 @@ const NewSubCategory = (props) => {
           await api.updateCategory(subcategoryId, body)
               .then((res)=>{
                 let msg = "Sub category is updated !";
-                window.location.href = '/categories?subcategory=true&&msg=' + msg;
-                
+                let url = new URL(window.location.href);
+                let page = url.searchParams.get("page");
+                if (page) {
+                  window.location.href = `/seo?msg=${msg}`;
+                } else {
+                  window.location.href = '/categories?subcategory=true&&msg=' + msg;
+                }
+               
             }).catch((err)=>{
               Unauthorized(err);
               toast.error(err.response.data.message, {

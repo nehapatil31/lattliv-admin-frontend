@@ -20,6 +20,7 @@ function LeadeGeneration() {
                 autoClose: 9000,
                 pauseOnHover: true,
             })
+            window.history.pushState({}, '', window.location.pathname);
         }
     }, [])
 
@@ -28,7 +29,7 @@ function LeadeGeneration() {
     }
     return (<div className='home'>
         <Sidebar />
-        <ToastContainer icon={false} limit={1} autoClose={2000} />
+        {/* <ToastContainer icon={false} limit={1} autoClose={2000} /> */}
         <div className="homeContainer">
             <Navbar />
             {!access.leadmanagement_read && 'No lead Management read access'}

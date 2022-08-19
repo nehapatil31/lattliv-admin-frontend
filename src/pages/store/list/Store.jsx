@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import * as access from '../../../access'
 import React from "react";
 import Button from '@mui/material/Button';
-
+ 
 function StoreList() {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -20,6 +20,7 @@ function StoreList() {
                 autoClose: 9000,
                 pauseOnHover: true,
             })
+            window.history.pushState({}, '', window.location.pathname);
         }
     }, [])
 
@@ -28,7 +29,7 @@ function StoreList() {
     }
     return (<div className='home'>
         <Sidebar />
-        <ToastContainer icon={false} limit={1} autoClose={2000} />
+        {/* <ToastContainer icon={false} limit={1} autoClose={2000} /> */}
         <div className="homeContainer">
             <Navbar />
             {!access.product_read && 'No products read access'}

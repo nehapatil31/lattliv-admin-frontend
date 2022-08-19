@@ -179,7 +179,13 @@ const NewCategory = (props) => {
           await api.updateCategory(categoryId, body)
             .then((res)=>{
                 let msg = "Category is updated !";
-                window.location.href = "/categories?msg=" + msg;
+                let url = new URL(window.location.href);
+                let page = url.searchParams.get("page");
+                if (page) {
+                  window.location.href = `/seo?msg=${msg}`;
+                } else {
+                  window.location.href = "/categories?msg=" + msg;
+                }
                 
             }).catch((err)=>{
               Unauthorized(err);

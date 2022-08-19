@@ -88,8 +88,17 @@ const SeoDatatable = ({ data , type }) => {
             width: 100,
             disableColumnFilter: true,
             renderCell: (params) => {
+                console.log('type',params.id)
                 let page = 'seo';
-                let apiUrl = `/products/${params.id}?page=${page}`
+                let apiUrl = '';
+                if(type === 'products'){
+                     apiUrl = `/products/${params.id}?page=${page}`
+                }else if(type === 'categories'){
+                     apiUrl = `/categories/${params.id}?page=${page}`
+                }else if(type === 'subCategories'){
+                     apiUrl = `/subcategories/${params.id}?page=${page}`
+                }
+                // let apiUrl = `/products/${params.id}?page=${page}`
                 return (
                     <div className="cellAction">
                         <Button

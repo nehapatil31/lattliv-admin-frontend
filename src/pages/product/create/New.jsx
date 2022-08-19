@@ -125,17 +125,17 @@ const NewProduct = (props) => {
     }
 
     //check atleast one specification is added
-    if (fieldValues?.specification?.length === 0)
-      temp.specification = "This field is required.";
-    else {
-      temp.specification = "";
-      fieldValues?.specification?.forEach((item, index) => {
-        if (item.specName === "")
-          temp.specification = "One of the spec Name field is required.";
-        if (item.specValue === "")
-          temp.specification = "One of the spec Value field is required.";
-      });
-    }
+    // if (fieldValues?.specification?.length === 0)
+    //   temp.specification = "This field is required.";
+    // else {
+    //   temp.specification = "";
+    //   fieldValues?.specification?.forEach((item, index) => {
+    //     if (item.specName === "")
+    //       temp.specification = "One of the spec Name field is required.";
+    //     if (item.specValue === "")
+    //       temp.specification = "One of the spec Value field is required.";
+    //   });
+    // }
 
     //validate image field
     if (fieldValues?.images?.length === 0)
@@ -165,17 +165,17 @@ const NewProduct = (props) => {
           : "";
     }
 
-    if ("longDesc" in fieldValues) {
-      temp.longDesc =
-        fieldValues.longDesc === "<p><br></p>" || fieldValues.longDesc === ""
-          ? "This field is required."
-          : "";
-    }
+    // if ("longDesc" in fieldValues) {
+    //   temp.longDesc =
+    //     fieldValues.longDesc === "<p><br></p>" || fieldValues.longDesc === ""
+    //       ? "This field is required."
+    //       : "";
+    // }
 
     setErrors({
       ...temp,
     });
-
+console.log(errors)
     if (fieldValues === values) {
       let validated = Object.values(temp).every((x) => x === "");
       if (!validated) {
@@ -380,9 +380,10 @@ const NewProduct = (props) => {
   }, []);
 
   const submitForm = async function (state) {
+
     if (validate(values, state)) {
       let data = { ...values };
-      data.slug = `https://lalltiv.in/product/${data.slug}`;
+   //   data.slug = `https://lalltiv.in/product/${data.slug}`;
       delete data.createdBy;
 
       let body = {
@@ -394,8 +395,8 @@ const NewProduct = (props) => {
         images: {
           images: images,
         },
-        shortDesc: stateToHTML(editorState.getCurrentContent()),
-        longDesc: stateToHTML(editorStateLong.getCurrentContent()),
+        shortDesc: values.shortDesc,
+        longDesc: values.longDesc ,
       };
 
       body.inStock = body.availability === "in_stock";
@@ -403,7 +404,7 @@ const NewProduct = (props) => {
 
       let msg = productId ? "Product is updated !" : "Product is created !";
       try {
-        if (productId) {
+        if (productId) { 
           await api
             .updateProduct(productId, body)
             .then((res) => {
@@ -568,7 +569,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                         handleInputChange({
                           target: {
                             name: "shortDesc",
-                            value: editorState,
+                            value: stateToHTML(editorState?.getCurrentContent()),
                           },
                         });
                       }}
@@ -576,7 +577,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                   </Grid>
                   <Grid xs={12} style={{ display: "flex" }}>
                     <h3 style={{ marginLeft: "8px" }}>Secondary Content </h3>
-                    <p style={{ color: "red" }}>*</p>
+                    {/* <p style={{ color: "red" }}>*</p> */}
                     {errors.longDesc && (
                       <p
                         style={{
@@ -606,7 +607,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                         handleInputChange({
                           target: {
                             name: "longDesc",
-                            value: editorState,
+                            value: stateToHTML(editorStateLong?.getCurrentContent()),
                           },
                         });
                       }}
@@ -623,7 +624,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                 {specFields.map((inputField) => (
                   <div key={inputField.id}>
                     <TextField
-                      required
+                      
                       name="specName"
                       label="Specification Name"
                       variant="outlined"
@@ -633,7 +634,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                       }
                     />
                     <TextField
-                      required
+                      
                       name="specValue"
                       label="Value"
                       variant="outlined"
@@ -642,6 +643,25 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                         handleChangeInput(inputField.id, event)
                       }
                     />
+                      <div>
+                      <IconButton
+                        disabled={specFields.length === 1}
+                        onClick={() => handleRemoveFields(inputField.id)}
+                      >
+                      <Button  disabled={specFields.length === 1} variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                       Delete
+                      </Button>
+              
+                      </IconButton>
+                      <IconButton onClick={handleAddFields}>
+                      <Button variant="outlined" endIcon={<AddIcon />}>
+                        Add
+                      </Button>
+                    </IconButton>
+
+                      </div>
+                    
+{/* 
                     <IconButton
                       disabled={specFields.length === 1}
                       onClick={() => handleRemoveFields(inputField.id)}
@@ -650,7 +670,7 @@ console.log('isReadyForPublishOrHide',isReadyForPublishOrHide)
                     </IconButton>
                     <IconButton onClick={handleAddFields}>
                       <AddIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <br />
                     <br />
                     <br />

@@ -10,6 +10,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useStyles } from "../../utils"
 
 const columns = [
+  {
+    field: "serial",
+    headerName: "Sr. No.",
+    width: 70,
+  },
   { field: 'id', headerName: 'ID', width: 90 },
   { field: 'name', headerName: 'Name', width: 130 },
   { field: 'place', headerName: 'Location', width: 130 },
@@ -48,12 +53,18 @@ const StoreDatatable = () => {
       });
 
   };
-
+ 
   useEffect(() => {
     api.fetchStores()
       .then(response => {
-        setData(response.data);
-        console.log(response.data)
+        let data = response.data;
+        let serial = 1;
+        data.forEach((element) => {
+          element.serial = serial;
+          serial++;
+        });
+        setData(data);
+        console.log(data)
       }).catch(error => {
         console.log(error)
       });

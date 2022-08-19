@@ -19,12 +19,13 @@ function UserList() {
                 autoClose: 9000,
                 pauseOnHover: true,
             })
+            window.history.pushState({}, '', window.location.pathname);
         }
     }, [])
 
     return (<div className='home'>
         <Sidebar />
-        <ToastContainer icon={false} limit={1} autoClose={2000} />
+        {/* <ToastContainer icon={false} limit={1} autoClose={2000} /> */}
         <div className="homeContainer">
             <Navbar />
 

@@ -143,7 +143,7 @@ export default function CategoryDatatable({ categories }) {
        {
         params.row?.image?.url && (
           <a href={params.row.image.url} rel='noreferrer' target="_blank">
-          <img src={params.row.image.url} alt={params.row.image.alttag}  style={{ height: '75px', width: '75px', border: '1px solid #B1B1B1',padding: '3px' }} />
+          <img src={params.row.image.url} alt={params.row.image.alttag}  style={{ height: '50px', width: '50px', border: '1px solid #B1B1B1',padding: '3px' }} />
         </a>
         )
        }

@@ -25,8 +25,12 @@ const initialFormValues = {
     number: '',
     manager: "",
     map: "",
-    image: "",
     timings: "",
+    image:{
+        alttag: '',
+        imgName:'',
+        url: '',
+      },
 };
 
 const NewStore = (props) => {
@@ -40,8 +44,8 @@ const NewStore = (props) => {
             temp.name = fieldValues.name ? "" : "This field is required.";
         if ("place" in fieldValues)
             temp.place = fieldValues.place ? "" : "This field is required.";
-        if ("number" in fieldValues)
-            temp.number = fieldValues.number ? "" : "This field is required.";
+        // if ("number" in fieldValues)
+        //     temp.number = fieldValues.number ? "" : "This field is required.";
         if ("address" in fieldValues)
             temp.address = fieldValues.address ? "" : "This field is required.";
         if ("email" in fieldValues) {
@@ -53,6 +57,10 @@ const NewStore = (props) => {
                     : "Email is not valid.";
             }
         }
+        if ('image' in fieldValues)
+            temp.alttag = fieldValues?.image?.alttag ? "" : "This field is required."
+        if ('image' in fieldValues)
+            temp.image = fieldValues?.image?.url ? "" : "This field is required."
 
         if ("map" in fieldValues)
             temp.map = fieldValues.map ? "" : "This field is required.";
@@ -83,7 +91,7 @@ const NewStore = (props) => {
                 setValues({
                     ...values,
                     image: {
-                        alttag: event.target.files[0].name,
+                        alttag: '',
                         imgName: event.target.files[0].name,
                         url: response.data.url,
                     },
@@ -142,7 +150,7 @@ const NewStore = (props) => {
 
                 if (storeId) {
                     body.id = storeId;
-                    const response = await api.updateStore(body);
+                    const response = await api.updateStore(storeId,body);
                     console.log(response);
                     if (response.status === 200) {
                         let msg = "Store is updated !";
@@ -242,7 +250,7 @@ const NewStore = (props) => {
                                             onChange={handleInputChange}
                                         />
                                         <Controls.Input
-                                            required
+                                            
                                             name="number"
                                             label="Telephone Number"
                                             value={values.number}
@@ -261,7 +269,7 @@ const NewStore = (props) => {
                                 </Grid>
 
                                 <br />
-                                <div className="image-container">
+                                {/* <div className="image-container">
                                     <input
                                         type="file"
                                         id="myFile"
@@ -330,7 +338,81 @@ const NewStore = (props) => {
                                         onChange={(event) => handleImageData(event)}
                                     />
 
-                                    </div>
+                                    </div> */}
+
+
+
+              <div className="image-container">
+                <input
+                  type="file"
+                  id="myFile"
+                  onChange={(event) => handleImageAdd(event)}
+                  style={{ display: "none" }}
+                />
+                <label for="myFile" className="upload-file">
+                  Select File <span style={{ color: "red" }}>*</span>
+                </label>
+                {/* error msg */}
+
+                {values?.image?.url && (
+                  <div className="img-details">
+                  <a href={values.image.url} rel="noreferrer" target="_blank">
+                    <img
+                      src={values.image.url}
+                      alt={values.image.alttag}
+                      style={{
+                        height: "100px",
+                        width: "100px",
+                        border: "1px solid #B1B1B1",
+                        padding: "3px",
+                      }}
+                    />
+                  </a>
+                   {values.image.imgName && (
+                    <div
+                        className="image-label"
+                        style={{ color: "#000000" }} 
+                    >
+                        {values.image.imgName}
+                        <IconButton
+                            onClick={() => {
+                                setValues({
+                                    ...values,
+                                    image: {
+                                        alttag: "",
+                                        imgName: "",
+                                        url: "",
+                                    },
+                                });
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                  )}
+                 </div>
+                  
+                )}
+              </div>
+              <div className="errror-container">
+                {errors.image && <span className="error">{errors.image}</span>}
+              </div>
+
+            <div className="altTag">
+              <TextField
+                required
+                name="alttag"
+                label="Alt Tag"
+                variant="standard"
+                value={values?.image.alttag}
+                style={{ marginRight: "12px" }}
+                onChange={(event) => handleImageData(event)}
+              />
+
+            </div>
+            {errors.alttag && <span className="error" style={{margin:'9px'}}>{errors.alttag}</span>}
+
+              <br />
 
                                 <br />
                                 <br />

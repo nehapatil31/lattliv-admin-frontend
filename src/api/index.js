@@ -33,7 +33,7 @@ export const createStore = (newStore) => API.post('/store', newStore);
 export const updateProduct = (id, product) => API.post(`/products/update/${id}`, product);
 export const updateCategory = (id, category) => API.post(`/categories/update/${id}`, category);
 export const updateUser = (id, user) => API.post(`/user/update/${id}`, user);
-export const updateStore = (store) => API.patch(`/store`, store);
+export const updateStore = (id,store) => API.patch(`/store/${id}`, store);
 
 export const createCategory = (newCategory) => API.post('categories/create', newCategory);
 export const updateBulk = (newData) => API.post('/states/update/bulk', newData);

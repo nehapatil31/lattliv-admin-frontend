@@ -88,6 +88,7 @@ const ProductDatatable = () => {
             element.serial = serial;
             serial++;
           });
+          console.log('data',data)
           setData(data);
         } else {
           toast.error("Some error occurred", {
@@ -216,7 +217,7 @@ const ProductDatatable = () => {
             Publish
           </Button>
         </Stack>
-      </div>
+      </div> 
       <br />
       {data && (
         <DataGrid

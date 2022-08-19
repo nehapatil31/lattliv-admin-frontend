@@ -54,7 +54,7 @@
           cursor: pointer;
   
           &:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+          //  background-color: rgba(255, 255, 255, 0.05);
           }
   
           .icon {
@@ -116,3 +116,9 @@
     // }
   }
   
+  a.active  li{
+		background-color: #eaf6ff;
+		border-left: 5px solid #1d3a6a;
+		padding-left: 20px;
+	}
+
