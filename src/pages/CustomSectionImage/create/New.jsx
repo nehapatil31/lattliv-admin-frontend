@@ -149,7 +149,7 @@ const NewCustomSectionImage = (props) => {
 	useEffect(() => {
 		api.fetchTags()
 			.then((response) => {
-        console.log('response tag',response.data)
+				console.log("response tag", response.data);
 				setTags(response.data);
 			})
 			.catch((error) => {
@@ -157,20 +157,20 @@ const NewCustomSectionImage = (props) => {
 			});
 	}, []);
 
-const fetchAllComic = (type) => {
-  api.fetchComics()
-  .then((response) => {
-    setAllComic(response.data.filter((item) => {
-      return item.type === type
-     }))
-    // setAllComic(response.data);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
-
-
+	const fetchAllComic = (type) => {
+		api.fetchComics()
+			.then((response) => {
+				setAllComic(
+					response.data.filter((item) => {
+						return item.type === type;
+					})
+				);
+				// setAllComic(response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 
 	useEffect(() => {
 		if (customsectionimageId) {
@@ -183,7 +183,7 @@ const fetchAllComic = (type) => {
 						tag: response.data?.tag?.id,
 						image: response.data.image,
 
-            //remove this
+						//remove this
 						...(response.data.comics.length > 0
 							? {
 									type: "comic",
@@ -262,7 +262,8 @@ const fetchAllComic = (type) => {
 	};
 
 	const submitForm = async function (state) {
-		if (!validate(values, state)) {
+		console.log("values", values, validate(values, state));
+		if (validate(values, state)) {
 			if (values.type === "product" && values.tag === "") {
 				toast.error("Tag is required", {
 					autoClose: 9000,
@@ -277,12 +278,12 @@ const fetchAllComic = (type) => {
 					pauseOnHover: true,
 				});
 
-        if (values.type === "catalogue" && values.catalogue === "") {
-          toast.error("catalogue is required", {
-            autoClose: 9000,
-            pauseOnHover: true,
-          });
-        }
+				if (values.type === "catalogue" && values.catalogue === "") {
+					toast.error("catalogue is required", {
+						autoClose: 9000,
+						pauseOnHover: true,
+					});
+				}
 				return false;
 			}
 			let body = {
@@ -290,10 +291,10 @@ const fetchAllComic = (type) => {
 				image: values.image,
 				type: values.type,
 				...(values.type === "product" && { tag: values.tag }),
-				...(values.type === "comic"  && { comics: values.comics }),
-        ...( values.type === "catalogue" && { comics: values.comics }),
+				...(values.type === "comic" && { comics: values.comics }),
+				...(values.type === "catalogue" && { comics: values.comics }),
 			};
- 
+
 			try {
 				if (customsectionimageId) {
 					await api
@@ -337,22 +338,18 @@ const fetchAllComic = (type) => {
 		}
 	};
 
-  const handleSelectChangeType = (event) => {
-    const {name , value} = event.target;
+	const handleSelectChangeType = (event) => {
+		const { name, value } = event.target;
 
-    fetchAllComic(value);
+		fetchAllComic(value);
 
-    handleInputChange({
-      target: {
-        name: name,
-        value: value,
-      },
-    });
-
-
-
-  }
-
+		handleInputChange({
+			target: {
+				name: name,
+				value: value,
+			},
+		});
+	};
 
 	return (
 		<div className="new">
@@ -478,17 +475,18 @@ const fetchAllComic = (type) => {
 								/>
 							</div>
 							{errors.alttag && (
-                <div>
-								<span
-									className="error"
-									style={{ margin: "9px" }}
-								>
-									{errors.alttag}
-								</span>
-                </div>
+								<div>
+									<span
+										className="error"
+										style={{ margin: "9px" }}
+									>
+										{errors.alttag}
+									</span>
+								</div>
 							)}
 
-							{(values.type === "comic" || values.type === "catalogue")  && (
+							{(values.type === "comic" ||
+								values.type === "catalogue") && (
 								<FormControl sx={{ m: 1, width: 300 }}>
 									<InputLabel id="demo-multiple-checkbox-label">
 										{values.type}

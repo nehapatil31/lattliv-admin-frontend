@@ -27,7 +27,7 @@ import NewCustomSectionImage from "./pages/CustomSectionImage/create/New";
 
 import ComicList from "./pages/comic/list/Comic";
 import NewComic from "./pages/comic/create/New";
-import LeadeGeneration from "./pages/leadegeneration/LeadeGeneration"
+import LeadeGeneration from "./pages/leadegeneration/LeadeGeneration";
 function App() {
 	const user = JSON.parse(localStorage.getItem("profile"));
 	if (!user && window.location.pathname !== "/login") {
@@ -156,7 +156,10 @@ function App() {
 							/>
 						</Route>
 						<Route path="custom-section-image">
-							<Route index element={<CustomSectionImagesList />} />
+							<Route
+								index
+								element={<CustomSectionImagesList />}
+							/>
 							<Route
 								path="new"
 								element={
