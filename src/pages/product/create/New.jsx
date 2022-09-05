@@ -345,7 +345,7 @@ const NewProduct = (props) => {
 			.then((response) => {
 				// let subcategories = response.data.filter((item) => item.parent)
 				let categories = response.data.filter((item) => {
-					return !item.parent && item.state.id === 2;
+					return !item.parent;
 				});
 				setcatergories(categories);
 
