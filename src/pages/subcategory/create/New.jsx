@@ -55,7 +55,7 @@ const NewSubCategory = (props) => {
     if ('parent' in fieldValues)
       temp.parent = fieldValues.parent ? "" : "This field is required."
   
-    if(state === 2  || state === 6 || state === undefined){
+    if(state === 2  || state === 5 || state === undefined){
       if (fieldValues?.seo?.title !== undefined && 'title' in fieldValues?.seo)
         temp.title = fieldValues.seo.title ? "" : "This field is required."
       if (fieldValues?.seo?.description !== undefined)

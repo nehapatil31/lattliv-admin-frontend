@@ -113,7 +113,7 @@ const NewProduct = (props) => {
 				fieldValues.slug && fieldValues.slug !== "/"
 					? ""
 					: "This field is required.";
-		if (state === 2 || state === 6 || state === undefined) {
+		if (state === 2 || state === 5 || state === undefined) {
 			if (
 				fieldValues?.seo?.title !== undefined &&
 				"title" in fieldValues?.seo
