@@ -104,6 +104,7 @@ const NewCustomSection = (props) => {
 			let body = {
 				tag: values.tag,
 				name: values.name,
+				type: "section"
 			};
 
 			try {
