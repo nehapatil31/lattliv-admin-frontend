@@ -214,7 +214,7 @@ console.log(temp)
                 )}
               </h3>
               
-              {images.map((inputField) => (
+              {images && images.map((inputField) => (
                 <div key={inputField.id}>
                   {inputField.imgName && (
                     <>
