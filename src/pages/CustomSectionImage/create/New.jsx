@@ -94,14 +94,8 @@ const NewCustomSectionImage = (props) => {
 			temp.tag = "";
 		}
 
-		if ("image" in fieldValues)
-			temp.image = fieldValues?.image?.url
-				? ""
-				: "This field is required.";
-		if ("image" in fieldValues)
-			temp.alttag = fieldValues?.image?.alttag
-				? ""
-				: "This field is required.";
+		if ("image" in fieldValues) temp.image = fieldValues?.image?.url ? "" : "This field is required.";
+		if ("image" in fieldValues) temp.alttag = fieldValues?.image?.alttag ? "" : "This field is required.";
 
 		setErrors({
 			...temp,
@@ -121,14 +115,11 @@ const NewCustomSectionImage = (props) => {
 		}
 	};
 
-	const {
-		values,
-		setValues,
-		errors,
-		setErrors,
-		handleInputChange,
-		resetForm,
-	} = useForm(initialFormValues, true, validate);
+	const { values, setValues, errors, setErrors, handleInputChange, resetForm } = useForm(
+		initialFormValues,
+		true,
+		validate
+	);
 
 	const handleChange = (event) => {
 		const {
@@ -149,7 +140,6 @@ const NewCustomSectionImage = (props) => {
 	useEffect(() => {
 		api.fetchTags()
 			.then((response) => {
-				console.log("response tag", response.data);
 				setTags(response.data);
 			})
 			.catch((error) => {
@@ -176,7 +166,17 @@ const NewCustomSectionImage = (props) => {
 		if (customsectionimageId) {
 			api.fetchSectionImage(customsectionimageId)
 				.then((response) => {
+					let aComic = response?.data?.comics;
 					console.log("customsectionimage", response.data);
+					let new_comic = [];
+					response.data.comics.forEach((comic) => {
+						new_comic.push(comic.id);
+					});
+					let comicType = aComic.map((item) => {
+						return item.type;
+					})[0];
+
+					let newType = aComic.length > 0 ? comicType : "product";
 					setValues({
 						...values,
 						name: response.data.name,
@@ -186,18 +186,18 @@ const NewCustomSectionImage = (props) => {
 						//remove this
 						...(response.data.comics.length > 0
 							? {
-									type: "comic",
+									type: newType,
 							  }
 							: {
 									type: "product",
 							  }),
+						comics: new_comic,
 					});
 					setImages(response.data.image);
-					let new_comic = [];
-					response.data.comics.forEach((comic) => {
-						new_comic.push(comic.id);
-					});
+
 					setComic(new_comic);
+
+					fetchAllComic(newType);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -262,7 +262,6 @@ const NewCustomSectionImage = (props) => {
 	};
 
 	const submitForm = async function (state) {
-		console.log("values", values, validate(values, state));
 		if (validate(values, state)) {
 			if (values.type === "product" && values.tag === "") {
 				toast.error("Tag is required", {
@@ -300,11 +299,9 @@ const NewCustomSectionImage = (props) => {
 					await api
 						.updateSection(customsectionimageId, body)
 						.then((res) => {
-							let msg =
-								"Custom Section Image Updated Succesfully.";
+							let msg = "Custom Section Image Updated Succesfully.";
 
-							window.location.href =
-								"/custom-section-image?msg=" + msg;
+							window.location.href = "/custom-section-image?msg=" + msg;
 						})
 						.catch((err) => {
 							Unauthorized(err);
@@ -318,8 +315,7 @@ const NewCustomSectionImage = (props) => {
 						.section(body)
 						.then((res) => {
 							let msg = "Custom Section Image Added Succesfully.";
-							window.location.href =
-								"/custom-section-image?msg=" + msg;
+							window.location.href = "/custom-section-image?msg=" + msg;
 						})
 						.catch((err) => {
 							Unauthorized(err);
@@ -391,14 +387,7 @@ const NewCustomSectionImage = (props) => {
 								/>
 							)}
 
-							<h4>
-								Images{" "}
-								{errors.images && (
-									<span className="error">
-										{errors.images}
-									</span>
-								)}
-							</h4>
+							<h4>Images {errors.images && <span className="error">{errors.images}</span>}</h4>
 							<div className="image-container">
 								<input
 									type="file"
@@ -407,18 +396,13 @@ const NewCustomSectionImage = (props) => {
 									style={{ display: "none" }}
 								/>
 								<label for="myFile" className="upload-file">
-									Select File{" "}
-									<span style={{ color: "red" }}>*</span>
+									Select File <span style={{ color: "red" }}>*</span>
 								</label>
 								{/* error msg */}
 
 								{values?.image?.url && (
 									<div className="img-details">
-										<a
-											href={values.image.url}
-											rel="noreferrer"
-											target="_blank"
-										>
+										<a href={values.image.url} rel="noreferrer" target="_blank">
 											<img
 												src={values.image.url}
 												alt={values.image.alttag}
@@ -431,10 +415,7 @@ const NewCustomSectionImage = (props) => {
 											/>
 										</a>
 										{values.image.imgName && (
-											<div
-												className="image-label"
-												style={{ color: "#000000" }}
-											>
+											<div className="image-label" style={{ color: "#000000" }}>
 												{values.image.imgName}
 												<IconButton
 													onClick={() => {
@@ -456,11 +437,7 @@ const NewCustomSectionImage = (props) => {
 								)}
 							</div>
 							<div className="errror-container">
-								{errors.image && (
-									<span className="error">
-										{errors.image}
-									</span>
-								)}
+								{errors.image && <span className="error">{errors.image}</span>}
 							</div>
 
 							<div className="altTag">
@@ -476,21 +453,15 @@ const NewCustomSectionImage = (props) => {
 							</div>
 							{errors.alttag && (
 								<div>
-									<span
-										className="error"
-										style={{ margin: "9px" }}
-									>
+									<span className="error" style={{ margin: "9px" }}>
 										{errors.alttag}
 									</span>
 								</div>
 							)}
 
-							{(values.type === "comic" ||
-								values.type === "catalogue") && (
+							{(values.type === "comic" || values.type === "catalogue") && (
 								<FormControl sx={{ m: 1, width: 300 }}>
-									<InputLabel id="demo-multiple-checkbox-label">
-										{values.type}
-									</InputLabel>
+									<InputLabel id="demo-multiple-checkbox-label">{values.type}</InputLabel>
 									<Select
 										labelId="demo-multiple-checkbox-label"
 										id="demo-multiple-checkbox"
@@ -504,9 +475,7 @@ const NewCustomSectionImage = (props) => {
 											selected.forEach((item) => {
 												allComic.filter((newComic) => {
 													if (newComic.id === item) {
-														newSelected.push(
-															newComic.name
-														);
+														newSelected.push(newComic.name);
 													}
 												});
 											});
@@ -530,9 +499,7 @@ const NewCustomSectionImage = (props) => {
 													),
 												}}
 												onChange={(e) => {
-													return setSearchText(
-														e.target.value
-													);
+													return setSearchText(e.target.value);
 												}}
 												onKeyDown={(e) => {
 													if (e.key !== "Escape") {
@@ -547,35 +514,19 @@ const NewCustomSectionImage = (props) => {
 													.filter((item) => {
 														return item.name
 															.toLowerCase()
-															.includes(
-																searchText.toLowerCase()
-															);
+															.includes(searchText.toLowerCase());
 													})
 													.map((item) => {
 														return (
-															<MenuItem
-																key={item.id}
-																value={item.id}
-															>
-																<ListItemText
-																	primary={
-																		item.name
-																	}
-																/>
+															<MenuItem key={item.id} value={item.id}>
+																<ListItemText primary={item.name} />
 															</MenuItem>
 														);
 													})
 											: allComic.map((item) => {
 													return (
-														<MenuItem
-															key={item.id}
-															value={item.id}
-														>
-															<ListItemText
-																primary={
-																	item.name
-																}
-															/>
+														<MenuItem key={item.id} value={item.id}>
+															<ListItemText primary={item.name} />
 														</MenuItem>
 													);
 											  })}
@@ -584,11 +535,7 @@ const NewCustomSectionImage = (props) => {
 							)}
 						</ThemeProvider>
 
-						<Stack
-							direction="row"
-							spacing={2}
-							style={{ marginLeft: "8px", marginTop: "21px" }}
-						>
+						<Stack direction="row" spacing={2} style={{ marginLeft: "8px", marginTop: "21px" }}>
 							<Button
 								onClick={() => {
 									submitForm(state_enum.saved);
